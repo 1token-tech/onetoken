@@ -10,6 +10,7 @@ class Quote:
         self.sess = None
         self.ws = None
         self.last_tick_dict = {}
+        self.tick_queue = {}
         self.host = 'http://alihk-debug.qbtrade.org:3014/ws' if not host else host
 
     def error(self, e, msg):
@@ -54,14 +55,33 @@ class Quote:
             if 'uri' in data and data['uri'] == 'single-tick-verbose':
                 tick = Ticker.from_dict_v2(data['data'])
                 self.last_tick_dict[tick.contract] = tick
+                if tick.contract in self.tick_queue:
+                    self.tick_queue[tick.contract].put_nowait(tick)
         except:
             print('parse error')
 
-    async def subscribe_tick(self, contract):
+    async def subscribe_tick(self, contract, on_update=None):
         if self.ws:
-            await self.ws.send_json({'uri': 'subscribe-single-tick-verbose', 'contract': contract})
+            try:
+                await self.ws.send_json({'uri': 'subscribe-single-tick-verbose', 'contract': contract})
+            except Exception as e:
+                print(f'subscribe {contract} failed...', e)
+            else:
+                self.tick_queue[contract] = asyncio.Queue()
+                if on_update:
+                    asyncio.ensure_future(self.handle_q(contract, on_update))
         else:
             print('ws is not ready...')
+
+    async def handle_q(self, contract, on_update):
+        while contract in self.tick_queue:
+            q = self.tick_queue[contract]
+            tk = await q.get()
+            if on_update:
+                if asyncio.iscoroutinefunction(on_update):
+                    await on_update(tk)
+                else:
+                    on_update(tk)
 
     def get_last_tick(self, contract):
         return self.last_tick_dict.get(contract, None)
