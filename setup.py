@@ -1,0 +1,28 @@
+from setuptools import setup, find_packages
+
+setup(name='btp',
+      author='QbTrade',
+      url='https://github.com/qbtrade/btp',
+      author_email='markx914@gmail.com',
+      packages=find_packages(),
+      version='0.1',
+      install_requires=[
+          # 'pytz',
+          # 'pyyaml',
+          # 'sqlalchemy',
+          # 'requests',
+          # 'aiohttp',
+          # 'fluent-logger',
+          # 'oss2',
+          # 'jinja2',
+          # 'autobahn==0.17.1',
+          # 'docopt',
+          # 'datadog',
+          # 'colorama',
+          # 'arrow',
+          # 'psutil',
+          # 'lxml',
+          # 'oss2',
+      ],
+      zip_safe=False,
+      )
