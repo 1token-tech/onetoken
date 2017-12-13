@@ -1,0 +1,95 @@
+import json
+
+import arrow
+from aiohttp import web
+
+from . import Contract
+
+class Const:
+    SUCCESS = 'SUCCESS'
+    EXCHNAGE_ERROR = 'EXCHANGE_ERROR'  # 访问远程的服务器返回500 或者另外一些意想不到的错误
+    EXCHANGE_TIMEOUT = 'EXCHANGE_TIMEOUT'  # 访问远程服务器 timeout
+    LOGIC_ERROR = 'LOGIC_ERROR'  # 下单价格不对。 下单钱不够 订单号不存在等
+
+
+class ServiceError(Exception):
+    def __init__(self, code, message='', labels=None):
+        self.code = code
+        self.message = message
+        if labels:
+            self.labels = labels
+        else:
+            self.labels = {}
+
+    def __str__(self):
+        return f'ServiceError<{self.code},{self.labels},{self.message}>'
+
+
+class HTTPError(ServiceError):
+    TIMEOUT = 'TIMEOUT'  # timeout
+    RESPONSE_5XX = 'RESPONSE_5XX'  # 服务器返回5xx错误
+    RESPONSE_4XX = 'RESPONSE_4XX'  # 服务器返回4xx错误
+    NOT_200 = 'NOT_200'  # 服务器返回4xx错误
+    NOT_JSON = 'NOT_JSON'  # 不是 json 格式
+    HTTP_ERROR = 'HTTP_ERROR'  # client 出错
+
+    def __init__(self, code, message=''):
+        self.code = code
+        self.message = message
+
+    def __str__(self):
+        return f'HTTPError<{self.code},{self.message}>'
+
+
+class Code:
+    REF_KEY_NOT_FOUND = None
+    ENTRUST_NO_NOT_FOUND = None
+    CLIENT_CANCEL = None
+    CONTRACT_NOT_EXIST = None
+    NOT_200 = None
+    NOT_JSON = None
+    TIMEOUT = None
+    WEBSOCKET_UNHEALTH = None
+    ACCOUNT_WAITTING_CREATE = None
+    ACCOUNT_NOT_EXIST = None
+    SUCCESS = None
+    WEBSOCKET_CONNECTING = None
+    ACCOUNT_TOO_FREQUENT = None
+    SOME_ERROR = None
+    UNEXPECT_ERROR = None
+    UNKNOW_METHOD = None
+    NO_PERMISSION = None
+
+
+def set_code():
+    for k in Code.__dict__:
+        import re
+        if re.match('^[A-Z_]*$', k):
+            setattr(Code, k, k)
+
+
+set_code()
+
+
+def dumper(obj):
+    if isinstance(obj, Contract):
+        return obj.symbol
+    if isinstance(obj, arrow.Arrow):
+        return obj.isoformat()
+    return obj
+
+
+def jsonify_err(err, status=400):
+    if isinstance(err, ServiceError):
+        return web.Response(body={'code': err.code, 'message': err.message},
+                            content_type='application/json',
+                            status=status)
+    else:
+        return web.Response(body=json.dumps({'code': "NOT_SERVICE_ERROR"}),
+                            content_type='application/json',
+                            status=500)
+
+
+def jsonify(dic, status=200):
+    text = json.dumps(dic, default=dumper)
+    return web.Response(body=text.encode('utf-8'), content_type='application/json', status=status)
