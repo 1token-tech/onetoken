@@ -7,7 +7,7 @@ setup(name='btp',
       packages=find_packages(),
       version='0.1',
       install_requires=[
-          # 'pytz',
+            'requests', 'pandas', 'arrow',# 'pytz',
           # 'pyyaml',
           # 'sqlalchemy',
           # 'requests',

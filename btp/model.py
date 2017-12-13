@@ -1,18 +1,14 @@
 import json
 import logging
 import re
-from abc import ABCMeta, abstractmethod
 from datetime import datetime
-from functools import lru_cache, partial
 from typing import Dict
-from typing import List
 
 import arrow
 import dateutil
 import dateutil.parser
 import pandas as pd
 import requests
-import yaml
 
 from . import util
 
@@ -98,10 +94,10 @@ class DealedTrans:
         for key in cls.keys:
             if key in dct:
                 setattr(trans, key, dct[key])
-        if trans.account:
-            trans.account = AccountApi.get_by_symbol(trans.account)
-        if trans.contract:
-            trans.contract = ContractApi.get_by_symbol(trans.contract)
+        # if trans.account:
+        #     trans.account = AccountApi.get_by_symbol(trans.account)
+        # if trans.contract:
+        #     trans.contract = ContractApi.get_by_symbol(trans.contract)
         if trans.dealed_time:
             trans.dealed_time = dateutil.parser.parse(trans.dealed_time)
         return trans
@@ -112,7 +108,8 @@ class DealedTrans:
         lst = json.loads(message)
         logging.debug(lst)
         for item in lst:
-            con = ContractApi.get_by_symbol(item[0])
+            # con = ContractApi.get_by_symbol(item[0])
+            con = item[0]
             tm = arrow.Arrow.fromtimestamp(item[1]).datetime
             dealed = DealedTrans(contract=con, dealed_time=tm, dealed_price=item[2], bs=item[3], dealed_amount=item[4])
             rtn.append(dealed)
@@ -122,7 +119,8 @@ class DealedTrans:
     @staticmethod
     def from_ws_str(message):
         item = json.loads(message)
-        con = ContractApi.get_by_symbol(item[0])
+        # con = ContractApi.get_by_symbol(item[0])
+        con = item[0]
         tm = arrow.Arrow.fromtimestamp(item[1]).datetime
         dealed = DealedTrans(contract=con, dealed_time=tm, dealed_price=item[2], bs=item[3], dealed_amount=item[4])
         logging.debug(dealed)
@@ -381,13 +379,13 @@ class Order:
 
     def __str__(self):
         if self.entrust_time:
-            lst = (self.ref_key[:4], self.entrust_time.strftime('%H:%M:%S'), self.contract.symbol,
+            lst = (self.ref_key[:4], self.entrust_time.strftime('%H:%M:%S'), self.contract,
                    self.avg_dealed_price, self.entrust_price, self.bs, self.dealed_amount, self.entrust_amount,
                    self.status)
             return '<{} {} {} {}/{} {} {}/{} {}>'.format(*lst)
         else:
             return '(%s, %s,%s,%s,%s,%s)' % (
-                self.ref_key, self.contract.symbol, self.entrust_price, self.bs, '---', self.entrust_amount)
+                self.ref_key, self.contract, self.entrust_price, self.bs, '---', self.entrust_amount)
 
     def __repr__(self):
         return str(self)
@@ -580,32 +578,34 @@ class Ticker(Model):
         if self.exchange_time:
             dct['exchange_time'] = self.exchange_time.isoformat()
         if self.contract:
-            dct['symbol'] = self.contract.symbol
+            dct['symbol'] = self.contract
         return dct
 
     @staticmethod
     def from_dct(dct):
-        con = ContractApi.get_by_symbol(dct['symbol'])
+        # con = ContractApi.get_by_symbol(dct['symbol'])
+        con = dct['symbol']
         return Ticker(tm=dateutil.parser.parse(dct['tm']), price=dct['price'], bids=dct['bids'], asks=dct['asks'],
                       contract=con, volume=dct['volume'])
 
     def to_mongo_dict(self):
         dct = {'tm': self.tm, 'price': self.price, 'volume': self.volume, 'asks': self.asks, 'bids': self.bids}
         if self.contract:
-            dct['contract'] = self.contract.symbol
+            dct['contract'] = self.contract
         return dct
 
     def to_short_list(self):
         b = ','.join(['{},{}'.format(x['price'], x['volume']) for x in self.bids])
         a = ','.join(['{},{}'.format(x['price'], x['volume']) for x in self.asks])
-        lst = [self.contract.symbol, self.tm.timestamp(), self.price, self.volume, b, a]
+        lst = [self.contract, self.tm.timestamp(), self.price, self.volume, b, a]
         return lst
 
     @staticmethod
     def from_short_list(lst):
         if isinstance(lst[0], str):
             # convert string to contract
-            lst[0] = ContractApi.get_by_symbol(lst[0])
+            # lst[0] = ContractApi.get_by_symbol(lst[0])
+            lst[0] = lst[0]
         bids, asks = lst[4], lst[5]
         bids = [{'price': float(p), 'volume': float(v)} for p, v in zip(bids.split(',')[::2], bids.split(',')[1::2])]
         asks = [{'price': float(p), 'volume': float(v)} for p, v in zip(asks.split(',')[::2], asks.split(',')[1::2])]
@@ -621,7 +621,7 @@ class Ticker(Model):
         dct = {'time': self.tm.isoformat(), 'last': self.last, 'volume': self.volume, 'asks': self.asks,
                'bids': self.bids}
         if self.contract:
-            dct['contract'] = self.contract.symbol
+            dct['contract'] = self.contract
         if self.source:
             dct['source'] = self.source
         if self.exchange_time:
@@ -636,7 +636,8 @@ class Ticker(Model):
             return cls.from_dict_v2(json.loads(dict_or_str))
         d = dict_or_str
         t = Ticker(tm=arrow.get(d['time']),
-                   contract=ContractApi.get_by_symbol(d['contract']),
+                   # contract=ContractApi.get_by_symbol(d['contract']),
+                   contract=d['contract'],
                    volume=d['volume'],
                    asks=d['asks'],
                    bids=d['bids'],
@@ -667,7 +668,7 @@ class Zhubi:
 
     def to_dict_v2(self):
         dct = {'time': self.time.isoformat(), 'price': self.price, 'bs': self.bs, 'amount': self.amount,
-               'contract': self.contract.symbol}
+               'contract': self.contract}
         if self.source:
             dct['source'] = self.source
         return dct
