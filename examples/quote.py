@@ -1,38 +1,18 @@
 import asyncio
-import aiohttp
-import json
 
-from btp import Ticker
+from btp import Quote
 
 
 async def main():
-    session = aiohttp.ClientSession()
-    async with session.ws_connect('http://localhost:3000/ws') as ws:
-        print('connected', ws)
-        await ws.send_json({'uri': 'subscribe-single-tick-verbose', 'contract': 'btc.usd:xtc.bitfinex'})
-        try:
-            async for msg in ws:
-                if msg.type == aiohttp.WSMsgType.TEXT:
-                    print(msg.data)
-                    parse_tick(msg.data)
-                elif msg.type == aiohttp.WSMsgType.CLOSED:
-                    print('closed')
-                    break
-                elif msg.type == aiohttp.WSMsgType.ERROR:
-                    print('error', msg)
-                    break
-        except KeyboardInterrupt:
-            print('keyboard interrupt')
-            ws.close()
+    contract = 'btc.usd:xtc.bitfinex'
+    quote = Quote()
+    await quote.init()
+    await quote.subscribe_tick(contract)
 
-
-def parse_tick(plant_data):
-    try:
-        data = json.loads(plant_data)
-        tick = Ticker.from_dict_v2(data['data'])
-        print(tick)
-    except:
-        print('parse error')
+    while True:
+        await asyncio.sleep(2)
+        tk = quote.get_last_tick(contract)
+        print(tk)
 
 
 if __name__ == '__main__':

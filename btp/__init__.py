@@ -7,6 +7,7 @@ from .model import Model, ApiClient, Exchange, \
 from .logger import log
 
 from .account import Account
+from .quote import Quote
 
 from . import autil
 from . import util

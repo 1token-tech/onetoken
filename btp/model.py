@@ -918,6 +918,8 @@ class Format:
 
 
 class TickerApi:
+
+
     @staticmethod
     def get_last(contract):
         from .quote import redis_client
