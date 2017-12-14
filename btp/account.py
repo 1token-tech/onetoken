@@ -1,24 +1,17 @@
 import asyncio
 import json
-import yaml
 import os
-import logging
-
-try:
-    import jwt
-except:
-    logging.warning('install pyjwt first')
 
 import aiohttp
+import jwt
+import yaml
 
-from . import Order
-from . import OrderPool
 from . import autil
-from . import util
 from . import log
+from . import util
 
 
-class config:
+class Config:
     api_host = 'http://api.qbtrade.org'
 
 
@@ -36,18 +29,10 @@ def merge_slash(url):
     return url
 
 
-def use_trans_host(symbol):
-    return False
-    # if 'xtc.huobix' in symbol or 'xtc.jubi' in symbol or 'xtc.bitmex' in symbol:
-    #     return True
-    # else:
-    #     return False
-
-
 def get_trans_host(symbol, host):
     sp = symbol.split('@')
     if host is None:
-        return config.api_host + f'/trans/{sp[1]}/{sp[0]}'
+        return Config.api_host + f'/trans/{sp[1]}/{sp[0]}'
     else:
         return host + f'/{sp[1]}/{sp[0]}'
 
@@ -62,71 +47,41 @@ def gen_jwt(secret, uid):
 
 
 class Account:
-    def __init__(self, symbol: str, subscribe_order_update=False, remove_finished_order=True, loop=None, host=None,
-                 strategy=None, auth=True, no_strategy_warning=True):
+    def __init__(self, symbol: str, loop=None, host=None):
         """
 
         :param symbol:
-        :param subscribe_order_update:
-        :param remove_finished_order:
         :param loop:
         :param host:
         """
-        self.auth = auth
-        if auth:
-            path = os.path.expanduser('~/.qb/auth_config.yml')
-            if not os.path.isfile(path):
-                path = os.path.expanduser('~/.qb/auth_config.yaml')
-                log.warning('please change suffix to *.yml')
-            try:
-                user_config = open(path).read()
-                user_config = yaml.load(user_config)
-            except Exception as e:
-                log.exception('failed to read auth config...', e)
-                raise Exception(f'failed to read auth config at {path}')
-            try:
-                self.user_name = user_config['user']
-                self.secret = open(os.path.expanduser(user_config['secret_path'])).read()
-            except Exception as e:
-                log.exception('failed to get user id or secret...', e)
-                assert False
+        path = os.path.expanduser('~/.qb/auth_config.yml')
+        if not os.path.isfile(path):
+            log.warning('~/.qb/auth_config.yml not exist')
+        try:
+            user_config = open(path).read()
+            user_config = yaml.load(user_config)
+        except Exception as e:
+            log.exception('failed to read auth config...', e)
+            raise Exception(f'failed to read auth config at {path}')
+        try:
+            self.user_name = user_config['user']
+            self.secret = open(os.path.expanduser(user_config['secret_path'])).read()
+        except Exception as e:
+            log.exception('failed to get user id or secret...', e)
+            assert False
 
-        if strategy is None and no_strategy_warning:
-            log.warning('set strategy will let others know this account is being used')
-        else:
-            # from . import autil
-            # import functools
-            # asyncio.ensure_future(autil.loop_call(functools.partial(register_strategy, symbol, strategy), 60))
-            log.warning('strategy tag is not available yet。。')
         self.symbol = symbol
-        # self.orders = {}
-        self.order_pool = OrderPool(self)
-        self.order_q = {}
-        self.remove_finished_order = remove_finished_order
 
-        if subscribe_order_update:
-            log.warning('order subscribe is not available yet。。')
-            # asyncio.ensure_future(self.subscribe_redis_order_update())
         log.debug('async account init {}'.format(symbol))
         self.session = aiohttp.ClientSession(loop=loop)
-        if use_trans_host(symbol):
-            self.host = get_trans_host(symbol, host)
-            log.info(f'use host {self.host}')
-        else:
-            if host is None:
-                self.host = config.api_host + '/trade/'
-            else:
-                self.host = host
-            self.host += '/' + self.symbol
+        self.host = get_trans_host(symbol, host)
+        log.info(f'use host {self.host}')
         self.host = merge_slash(self.host)
         log.debug('host', self.host)
         self.last_info = None
-        self.conn = None
         self.closed = False
 
     def close(self):
-        if self.conn:
-            self.conn.close()
         self.session.close()
         self.closed = True
 
@@ -147,26 +102,21 @@ class Account:
     async def cancel_use_ref_key(self, ref_key):
         log.debug('cancel use ref_key', ref_key)
 
-        # res = await autil.http(self.session.post, url=self.host + '/orders', data=data, timeout=15)
         data = {'ref_key': ref_key}
-        # t = await autil.http(self.session.delete, url=self.host + '/orders/' + ref_key, timeout=15, data=data)
         t = await self.api_call('delete', '/orders/' + ref_key, data=data)
         return t
 
     async def cancel_use_entrust_no(self, entrust_no):
         log.debug('cancel use entrust_no', entrust_no)
-        # t = await autil.http(self.session.delete, url=self.host + '/orders_entrust_no/' + entrust_no, timeout=15)
         t = await self.api_call('delete', '/orders_entrust_no/' + entrust_no)
         return t
 
     async def cancel_all(self):
         log.debug('cancel all')
-        # t = await autil.http(self.session.delete, url=self.host + '/orders', timeout=15)
         t = await self.api_call('delete', '/orders')
         return t
 
     async def get_info(self, timeout=15):
-        # y = await autil.http(self.session.get, url=self.host + '/info', timeout=timeout)
         y, err = await self.api_call('get', '/info', timeout=timeout)
         if err:
             return None, err
@@ -189,13 +139,13 @@ class Account:
 
     async def place_and_cancel(self, con, price, bs, amount, sleep, options=None, on_trade=None, on_update=None):
         k = util.rand_ref_key()
-        res1, err = await self.place_order(con, price, bs, amount,
-                                           ref_key=k,
-                                           options=options,
-                                           on_trade=on_trade,
-                                           on_update=on_update)
+        res1, err1 = await self.place_order(con, price, bs, amount,
+                                            ref_key=k,
+                                            options=options)
         await asyncio.sleep(sleep)
-        res2, err = await self.cancel_use_ref_key(k)
+        res2, err2 = await self.cancel_use_ref_key(k)
+        if err1 or err2:
+            return (res1, res2), (err1, err2)
         return [res1, res2], None
 
     async def get_health(self):
@@ -217,7 +167,7 @@ class Account:
         log.debug(res)
         return res
 
-    async def place_order(self, con, price, bs, amount, ref_key=None, on_update=None, on_trade=None, tags=None,
+    async def place_order(self, con, price, bs, amount, ref_key=None, tags=None,
                           options=None, **kwargs):
         """
         # call post api.qbtrade.org/trade/{acc}/orders
@@ -229,8 +179,6 @@ class Account:
         :param amount:
         :param ref_key:
         :param tags: a key value dict
-        :param on_update:
-        :param on_trade: when something dealed, on_trade will be called
         :param kwargs: anything that will be passed to post
         :return:
         """
@@ -239,15 +187,6 @@ class Account:
         if ref_key is None:
             ref_key = util.rand_ref_key()
 
-        if on_update or on_trade:
-            o = self.order_pool.fetch(ref_key, create=True)
-            o.contract = con
-            o.entrust_price = price
-            o.bs = bs
-            o.entrust_amount = amount
-            o.ref_key = ref_key
-            self.order_q[ref_key] = asyncio.Queue()
-            asyncio.ensure_future(self.handle_q(ref_key, on_update, on_trade))
         data = {'contract': con,
                 'price': price,
                 'bs': bs,
@@ -268,45 +207,6 @@ class Account:
     def is_running(self):
         return not self.closed
 
-    async def handle_q(self, ref_key, on_update, on_trade):
-        """
-        :param ref_key:
-        :param on_update: callback
-        :param on_trade: callback
-        :return:
-        """
-        q = self.order_q[ref_key]
-        last_dealed_amount = 0
-        while True:
-            try:
-                order = await q.get()
-                self.order_pool.pool[order.ref_key] = order
-                log.debug('on update order {}'.format(order))
-                if on_update is not None:
-                    assert callable(on_update), 'on_update is not callable'
-                    if asyncio.iscoroutinefunction(on_update):
-                        await on_update(order)
-                    else:
-                        on_update(order)
-                if on_trade is not None:
-                    if order.dealed_amount > last_dealed_amount:
-                        last_dealed_amount = order.dealed_amount
-                        trans = order.dealed_trans[-1]
-                        log.debug('dealed-trans {}'.format(trans.to_dict()))
-                        if asyncio.iscoroutinefunction(on_trade):
-                            await on_trade(trans)
-                        else:
-                            on_trade(trans)
-                if order.status in Order.ENDING_STATUSES:
-                    log.debug('{} finished with status {}'.format(order.ref_key[:4], order.status))
-                    break
-            except:
-                log.exception('handle q failed')
-        if self.remove_finished_order:
-            # remove finished order in pool
-            del self.order_pool.pool[ref_key]
-            del self.order_q[ref_key]
-
     async def api_call(self, method, endpoint, params=None, data=None, timeout=15):
         method = method.lower()
         if method == 'get':
@@ -320,10 +220,7 @@ class Account:
         else:
             raise Exception('invalid http method:{}'.format(method))
 
-        if self.auth:
-            headers = {'jwt': gen_jwt(self.secret, self.user_name)}
-        else:
-            headers = None
+        headers = {'jwt': gen_jwt(self.secret, self.user_name)}
 
         url = self.host + endpoint
         res, err = await autil.http_go(func, url=url, data=data, params=params, headers=headers, timeout=timeout)
