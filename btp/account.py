@@ -66,12 +66,12 @@ class Account:
         self.closed = False
 
     def close(self):
-        self.session.close()
+        if self.session and not self.session.closed:
+            self.session.close()
         self.closed = True
 
     def __del__(self):
-        if self.session:
-            self.session.close()
+        self.close()
 
     def __str__(self):
         return '<{}>'.format(self.symbol)
