@@ -137,7 +137,7 @@ class Account:
                 log.warning('con {} not in position'.format(con.symbol))
                 return 0.0
 
-    async def place_and_cancel(self, con, price, bs, amount, sleep, options=None, on_trade=None, on_update=None):
+    async def place_and_cancel(self, con, price, bs, amount, sleep, options=None):
         k = util.rand_ref_key()
         res1, err1 = await self.place_order(con, price, bs, amount,
                                             ref_key=k,
@@ -167,10 +167,9 @@ class Account:
         log.debug(res)
         return res
 
-    async def place_order(self, con, price, bs, amount, ref_key=None, tags=None,
-                          options=None, **kwargs):
+    async def place_order(self, con, price, bs, amount, ref_key=None, tags=None, options=None):
         """
-        # call post api.qbtrade.org/trade/{acc}/orders
+        # call post api.qbtrade.org/trans/{exchange}/{acc}/orders
         just pass request, and handle order update --> fire callback and ref_key
         :param options:
         :param con:
@@ -179,7 +178,6 @@ class Account:
         :param amount:
         :param ref_key:
         :param tags: a key value dict
-        :param kwargs: anything that will be passed to post
         :return:
         """
         log.debug('place order', con=con, price=price, bs=bs, amount=amount, ref_key=ref_key)
@@ -197,8 +195,6 @@ class Account:
             data['tags'] = ','.join(['{}:{}'.format(k, v) for k, v in tags.items()])
         if options:
             data['options'] = json.dumps(options)
-            # data['options'] = ','.join(['{}:{}'.format(k, v) for k, v in options.items()])
-        # res = await autil.http(self.session.post, url=self.host + '/orders', data=data, timeout=15)
         res = await self.api_call('post', '/orders', data=data)
         log.debug(res)
         return res
