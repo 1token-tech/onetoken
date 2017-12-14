@@ -1,10 +1,3 @@
-import json
-
-import arrow
-from aiohttp import web
-
-from . import Contract
-
 class Const:
     SUCCESS = 'SUCCESS'
     EXCHNAGE_ERROR = 'EXCHANGE_ERROR'  # 访问远程的服务器返回500 或者另外一些意想不到的错误
@@ -69,27 +62,3 @@ def set_code():
 
 
 set_code()
-
-
-def dumper(obj):
-    if isinstance(obj, Contract):
-        return obj.symbol
-    if isinstance(obj, arrow.Arrow):
-        return obj.isoformat()
-    return obj
-
-
-def jsonify_err(err, status=400):
-    if isinstance(err, ServiceError):
-        return web.Response(body={'code': err.code, 'message': err.message},
-                            content_type='application/json',
-                            status=status)
-    else:
-        return web.Response(body=json.dumps({'code': "NOT_SERVICE_ERROR"}),
-                            content_type='application/json',
-                            status=500)
-
-
-def jsonify(dic, status=200):
-    text = json.dumps(dic, default=dumper)
-    return web.Response(body=text.encode('utf-8'), content_type='application/json', status=status)

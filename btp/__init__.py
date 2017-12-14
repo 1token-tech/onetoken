@@ -1,8 +1,4 @@
-from .model import Model, ApiClient, Exchange, \
-    DealedTrans, Order, \
-    OrderPool, PositionList, SmartOrder, Ticker, TickerApi, TickerWithNetValue, Candle, \
-    Currency, Contract, TickerApi, \
-    ContractCategory, Format, TimeRange, Zhubi
+from .model import DealedTrans, Order, OrderPool, Ticker, Zhubi
 
 from .logger import log
 

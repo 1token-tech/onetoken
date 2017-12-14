@@ -1,14 +1,11 @@
 import json
 import logging
-import re
-from datetime import datetime
 from typing import Dict
 
 import arrow
 import dateutil
 import dateutil.parser
 import pandas as pd
-import requests
 
 from . import util
 
@@ -16,67 +13,6 @@ from . import util
 class Model:
     def serialize(self, protocol):
         return protocol.dumps(self)
-
-
-class ContractCategory:
-    FUND = 'FUND'
-    STOCK = 'STOCK'
-    INDEX = 'INDEX'
-    FUTURE = 'FUTURE'
-    OPTION = 'OPTION'
-    BOND = 'BOND'
-    NAV = 'NAV'
-    ESTIMATION = 'ESTIMATION'
-
-    types = [FUND, STOCK, INDEX, FUTURE, OPTION, BOND]
-
-
-class SymbolCompare:
-    @property
-    def symbol(self):
-        raise NotImplementedError()
-
-    def __hash__(self):
-        return hash(self.symbol)
-
-    def __eq__(self, other):
-        return self.symbol == other.symbol
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
-
-
-class Exchange(SymbolCompare):
-    """
-    a contract should be in and only in one exchange
-    """
-
-    def __init__(self, realm, name, uid=None, symbol=None):
-        self.realm = realm
-        self.name = name
-        self.uid = uid
-        self.given_symbol = symbol
-
-    @property
-    def symbol(self):
-        """
-        :return: a unique symbol accrossing all world
-        """
-        if self.given_symbol:
-            return self.given_symbol
-        return 'exchange.{}.{}'.format(self.realm, self.name)
-
-    @classmethod
-    def from_rest_dict(cls, dct):
-        return cls(name=dct['name'], realm=dct['realm'], uid=dct['id'], symbol=dct['symbol'])
-        # return cls(dct['realm'], dct['name'])
-
-    @classmethod
-    def from_mongo_dict(cls, dct):
-        return Exchange(dct['realm'], dct['name'])
-
-    def to_mongo_dict(self):
-        return {'realm': self.realm, 'name': self.name, 'symbol': self.symbol, 'class': self.__class__.__name__}
 
 
 class DealedTrans:
@@ -126,20 +62,6 @@ class DealedTrans:
         logging.debug(dealed)
         return dealed
 
-    """
-    {
-        "account" : "djw@huatai",
-        "deal_no" : 2495, # used in broker systme, type string
-        "entrust_no" : 3315, # connect to broker system, type string
-        "deal_amount" : 500.0,
-        "contract" : Contract
-        "bs" : "b",
-        "deal_time" : ISODate("2015-10-15T01:36:07Z"),
-        "deal_price" : 0.922
-        "entrust_ref_key": "oiO76234d..." # with length 40
-    }
-    """
-
     keys = ['account',
             'entrust_ref_key',
             'dealed_time',
@@ -168,43 +90,11 @@ class DealedTrans:
 
     def to_dict(self):
         body = {key: getattr(self, key) for key in self.keys}
-        body['account'] = body['account'].symbol
-        body['contract'] = body['contract'].symbol
         body['dealed_time'] = body['dealed_time'].isoformat()
         return body
 
 
 class Order:
-    """
-    sample in the database
-    {
-      "_id" : ObjectId("561f1db1b8be1e372c2e12d0"),
-      "accountid" : "djw@huatai",
-      "entrust_price" : 0.922,
-      "deal_amount" : 500.0,
-      "deal_history" : [{
-          "accountid" : "djw@huatai",
-          "deal_no" : 2495,
-          "entrust_no" : 3315,
-          "deal_amount" : 500.0,
-          "fund_code" : "159930",
-          "bs" : "b",
-          "deal_time" : ISODate("2015-10-15T01:36:07Z"),
-          "deal_price" : 0.922
-        }],
-      "bs" : "b",
-      "entrust_time" : ISODate("2015-10-15T01:36:07Z"),
-      "entrust_status" : "已成",
-      "date" : "2015-10-15",
-      "avg_deal_price" : 0.922,
-      "entrust_no" : 3315,
-      "entrust_amount" : 500.0,
-      "fund_code" : "159930"
-      "option" : {'market' : true, ...}
-    }
-
-    """
-
     BUY = 'b'
     SELL = 's'
 
@@ -276,10 +166,6 @@ class Order:
         return sum(x.dealed_amount for x in self.dealed_trans)
 
     def to_dict(self):
-        """
-        okay, let's be more strict, this must be json compatible, which means datetime must be convert to isoformat
-        :return:
-        """
         t = {'bs': self.bs,
              'entrust_time': self.entrust_time.isoformat(),
              'entrust_no': self.entrust_no,
@@ -438,63 +324,13 @@ class OrderPool:
             del self.pool[o.ref_key]
 
 
-class PositionList(list):
-    def __init__(self):
-        super().__init__()
-
-    def __getitem__(self, item):
-        if isinstance(item, int):
-            return super().__getitem__(item)
-        else:
-            for x in self:
-                if x.contract == item:
-                    return x
-
-
-class SmartOrder:
-    CHASE = 'chase'  # deprecated
-    LIMIT = 'limit'  # deprecated
-    MARKETHARD = 'market_hard'  # depreacated
-
-    LIMIT_PLUS = 'limit_plus'
-    LIMIT_MINUS = 'limit_minus'
-    MIDDLE = 'middle'
-    LAST = 'last'
-    MARKET = 'market'
-    MARKET_HARD = 'market_hard'
-
-    STATS = 'stats'  # pick strategy based on statistics
-    RANDOM = 'random'  # pick strategy randomly (uniformly)
-    ALL = [LIMIT_PLUS, MIDDLE, LAST, MARKET, MARKET_HARD, LIMIT_MINUS]
-
-    @staticmethod
-    def get_by_symbol(symbol):
-        simple = re.sub(r'[^A-Za-z_]', '', symbol).upper()
-        return getattr(SmartOrder, simple)
-
-
-class TimeRange:
-    ASHARE = ['ashare', '0930-1130', '1300-1500']
-
-
 class Ticker(Model):
     def __init__(self, tm, price, volume=0, bids=None, asks=None, contract=None,
                  source=None,
                  exchange_time=None,
                  amount=None,
                  **kwargs):
-        """
-        :param datetime tm: time
-        :param price:
-        :param volume: 上一个tick到这一个tick之间的成交量
-                       成交量 单位会比较奇怪 如果是现货的话 比如 btc.usd 单位就是btc
-                       期货的话 单位各式各样 bitmex的单位是1美元 okex的单位是100美元(btc) 或者10美元(ltc)
-        :param amount: 成交额 单位一定是rmb
-        :param source: where the tick come from xueqiu/sina/exchange
-        :param bids: [{'price': ..., 'volume': ...}, ...]
-        :param asks: [{'price': ..., 'volume': ...}, ...]
-        :return:
-        """
+
         # internally use python3's datetime
         if isinstance(tm, arrow.Arrow):
             tm = tm.datetime
@@ -675,274 +511,3 @@ class Zhubi:
 
     def __str__(self):
         return '({contract} {price} {bs} {amount} {time})'.format(**self.__dict__)
-
-
-class TickerWithNetValue(Ticker):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if 'netvalue' in kwargs:
-            self.netvalue = kwargs['netvalue']
-        else:
-            self.netvalue = 0
-
-    @property
-    def detail_str(self):
-        s = '%s %s %s ' % (self.price, self.netvalue, self.tm) + '\n'
-        s += ' '.join('(%s,%s)' % (x['price'], x['volume']) for x in self.bids) + '\n'
-        s += ' '.join('(%s,%s)' % (x['price'], x['volume']) for x in self.asks)
-        return s
-
-    def to_dict(self):
-        dct = super().to_dict()
-        dct['netvalue'] = self.netvalue
-        return dct
-
-
-def unixtimestamp(tm):
-    import time
-    return str(int(time.mktime(tm.timetuple())))
-
-
-class Candle:
-    def __init__(self, tm, array, contract, duration='1day'):
-        self.tm = tm
-        self.o = float(array[0])
-        self.h = float(array[1])
-        self.l = float(array[2])
-        self.c = float(array[3])
-        if len(array) == 5:
-            self.v = float(array[4])
-        else:
-            self.v = 0
-        self.ohlc = array
-        self.contract = contract
-        self.duration = duration
-
-    def to_dict(self):
-        return {'o': self.o, 'h': self.h, 'l': self.h, 'c': self.c, 'contract': self.contract,
-                'duration': self.duration, 'tm': self.tm}
-
-    def __str__(self):
-        return str(self.tm) + ' (%.2f %.2f %.2f %.2f %.2f)' % (self.o, self.h, self.l, self.c, self.v)
-
-    def __repr__(self):
-        return str(self)
-
-
-class InvalidtimeError(Exception):
-    pass
-
-
-# noinspection PyPep8Naming
-class classproperty(object):
-    def __init__(self, getter):
-        self.getter = getter
-
-    def __get__(self, instance, owner):
-        return self.getter(owner)
-
-
-class Currency:
-    base = {'cny': 1, 'usd': 6.6, 'hkd': 0.83, 'jpy': 0.059, 'krw': 0.0058}
-
-    # noinspection PyPep8Naming
-    @classproperty
-    def USDCNY(self):
-        return self.convert('usd', 'cny')
-
-    # noinspection PyPep8Naming
-    @classproperty
-    def HKDCNY(self):
-        return self.convert('hkd', 'cny')
-
-    # noinspection PyPep8Naming
-    @classproperty
-    def JPYCNY(self):
-        return self.convert('jpy', 'cny')
-
-    # noinspection PyPep8Naming
-    @classproperty
-    def KRWCNY(self):
-        return self.convert('krw', 'cny')
-
-    @classmethod
-    def convert(cls, a, b):
-        """
-        convert(usd, cny) ---> 6.8
-
-        :param a:
-        :param b:
-        :return:
-        """
-        return cls.base[a] / cls.base[b]
-
-
-class Contract:
-    @classmethod
-    def convert(cls, con: 'Contract'):
-        return cls(con.exchange, con.name, con.min_change, con.alias, con.category, con.first_day, con.last_day,
-                   con.exec_price, con.currency)
-
-    def __init__(self, exchange: 'Exchange', name: str, min_change=0.001, alias="", category='STOCK', first_day=None,
-                 last_day=None, exec_price=None, currency=None, uid=None, **kwargs):
-        assert isinstance(exchange, Exchange)
-        assert isinstance(min_change, float) or isinstance(min_change, int)
-        self.name = name
-        self.exchange = exchange
-        self.category = category
-        # self.data = []
-        # """:type: list[Ticker]"""
-        # self.ohlc = defaultdict(list)
-        # self.symbol = symbol
-        self.min_change = min_change
-        self.alias = alias
-        self.exec_price = exec_price
-        self.first_day = first_day  # the listing date of the contract
-        self.last_day = last_day  # the last date that this contract could be executed
-        self.currency = currency
-        self.uid = uid  # the id use in postgres, for postgres use only
-
-    def __hash__(self):
-        return hash(self.symbol)
-
-    def __eq__(self, other):
-        return self.symbol == other.symbol
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
-
-    @property
-    def symbol(self):
-        return self.name + ':' + self.exchange.symbol
-
-    @property
-    def short_symbol(self):
-        suffix = self.exchange.symbol
-        if suffix == 'exchange.cn.sse':
-            suffix = 'sh'
-        elif suffix == 'exchange.cn.sze':
-            suffix = 'sz'
-        else:
-            suffix = suffix.replace('exchange.xtc', 'xtc')
-            suffix = suffix.replace('exchange.cn', '')
-        return self.name + ':' + suffix
-
-    # @property
-    # def symbol(self):
-    #     return self.symbol
-
-    def __str__(self):
-        if self.exchange.realm == 'xtc':
-            return '<Con:{}:{}>'.format(self.name, self.exchange.name)
-        else:
-            return '<Con:{}>'.format(self.name)
-
-    def __repr__(self):
-        return '<{}:{}>'.format(self.__class__.__name__, self.symbol)
-
-
-class BondContract(Contract):
-    pass
-
-
-class ApiClient:
-    sess = requests.session()
-
-    retries = 4
-
-    def __init__(self, host='http://localhost/'):
-        self.host = host
-        self.timeout = 5
-
-    def get(self, endpoint, params=None):
-        from . import util
-        res = util.http_try(self.sess.get, url=self.host + endpoint, params=params, timeout=self.timeout)
-        return res
-
-    def post(self, endpoint, data=None):
-        """
-        it can only post json data, all my would be better follow json rule?
-        :param endpoint:
-        :param data:
-        :return:
-        """
-        res = self.sess.post(url=self.host + endpoint, json=data, timeout=self.timeout)
-        try:
-            return res.json()
-        except:
-            logging.warning('get failed endpoint: {} params: {} res: {}'.format(self.host + endpoint, data, res))
-            raise
-
-    def put(self, endpoint, uid, data=None):
-        """
-        it can only post json data, all my would be better follow json rule?
-        :param endpoint:
-        :param uid:
-        :param data:
-        :return:
-        """
-        uid = str(uid)
-        res = self.sess.put(url=self.host + endpoint + '/' + uid, json=data, timeout=self.timeout)
-        try:
-            return res.json()
-        except:
-            logging.warning(
-                'put failed endpoint: {} params: {} res: {}'.format(self.host + endpoint + '/' + uid, data, res))
-            raise
-
-    def delete(self, endpoint, params=None):
-        res = self.sess.delete(self.host + endpoint, params=params, timeout=self.timeout)
-        try:
-            return res.json()
-        except:
-            logging.warning('get failed endpoint: {} params: {} res: {}'.format(self.host + endpoint, params, res))
-            raise
-
-
-client = ApiClient()
-
-
-class EndPoint:
-    CONTRACTCOLLECTIONS = 'contract-collections'
-    ETFDETAILS = 'etf-detail'
-    EXCHANGES = 'exchanges'
-    ACCOUNTS = 'accounts'
-    ACCOUNTCONTAINERS = 'account-containers'
-    CONTRACTS = 'contracts'
-    DEALEDTRANS = 'dealed-trans'
-
-
-class Format:
-    JSON = 'JSON'
-    DATAFRAME = 'DATAFRAME'
-
-
-class TickerApi:
-
-
-    @staticmethod
-    def get_last(contract):
-        from .quote import redis_client
-        # t = client.get('tickers/{}/last'.format(contract.symbol))
-        if isinstance(contract, Contract):
-            t = redis_client.get('tick.v2:' + contract.symbol)
-        else:
-            t = redis_client.get('tick.v2:' + contract)
-        # from . import Ticker
-        return Ticker.from_dict_v2(t.decode('utf8'))
-
-    @staticmethod
-    async def get_last_async(contract):
-        from . import util
-        conn = await util.get_async_redis_conn()
-        if isinstance(contract, Contract):
-            contract = contract.symbol
-        t = await conn.get('tick.v2:' + contract)
-        # print(t)
-        if t is None:
-            raise ValueError(f'{contract} not exist')
-        try:
-            return Ticker.from_dict_v2(t)
-        except:
-            logging.exception('failed')
-            raise ValueError(f'{contract} not exist')

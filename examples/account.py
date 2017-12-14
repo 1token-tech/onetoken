@@ -1,10 +1,10 @@
 import asyncio
 
-from btp import Account, Contract, util
+from btp import Account, util
 
 
 async def main():
-    acc = Account('leo@xtc.huobip')
+    acc = Account('tyz@xtc.huobip')
 
     # 获取账号 info
     info, err = await acc.get_info()
