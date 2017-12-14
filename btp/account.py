@@ -15,20 +15,6 @@ class Config:
     api_host = 'http://api.qbtrade.org'
 
 
-def merge_slash(url):
-    if url.startswith('http://'):
-        begin = len('http://')
-    elif url.startswith('https://'):
-        begin = len('https://')
-    else:
-        begin = 0
-    tail = url[begin:]
-    while tail.find('//') >= 0:
-        tail = tail.replace('//', '/')
-    url = url[:begin] + tail
-    return url
-
-
 def get_trans_host(symbol, host):
     sp = symbol.split('@')
     if host is None:
@@ -75,8 +61,6 @@ class Account:
         log.debug('async account init {}'.format(symbol))
         self.session = aiohttp.ClientSession(loop=loop)
         self.host = get_trans_host(symbol, host)
-        log.info(f'use host {self.host}')
-        self.host = merge_slash(self.host)
         log.debug('host', self.host)
         self.last_info = None
         self.closed = False
