@@ -1,10 +1,12 @@
 import asyncio
 
-from btp import Quote
+import btp
+from btp import Quote, log
 
 
 def on_update(tk):
     print(tk)
+    log.info(tk)
 
 
 async def sub_func():
@@ -29,6 +31,7 @@ async def get_last():
         await asyncio.sleep(2)
         tk = quote.get_last_tick(contract)
         print(tk)
+        log.info(tk)
 
 
 async def main():
@@ -36,4 +39,6 @@ async def main():
 
 
 if __name__ == '__main__':
+    import logging
+    btp.log_level(logging.INFO)
     asyncio.get_event_loop().run_until_complete(main())

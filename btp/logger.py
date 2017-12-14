@@ -30,3 +30,8 @@ def set_log():
 
 
 set_log()
+
+
+def log_level(level):
+    print(f'set log level to {level}')
+    log.setLevel(level)
