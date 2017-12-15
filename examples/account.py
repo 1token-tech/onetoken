@@ -5,7 +5,7 @@ from btp import Account, util, log
 
 
 async def main():
-    acc = Account('tyz@xtc.huobip')
+    acc = Account('leo@xtc.huobip')
 
     # 获取账号 info
     info, err = await acc.get_info()
