@@ -12,7 +12,7 @@ class Quote:
         self.ws = None
         self.last_tick_dict = {}
         self.tick_queue = {}
-        self.host = 'http://alihk-debug.qbtrade.org:3014/ws' if not host else host
+        self.host = 'http://alihk-debug.qbtrade.org:3019/ws' if not host else host
 
     def error(self, e, msg):
         if self.sess:
@@ -50,7 +50,6 @@ class Quote:
     # await ws.send_json({'uri': 'subscribe-single-tick-verbose', 'contract': 'btc.usd:xtc.bitfinex'})
 
     def parse_tick(self, plant_data):
-        print(plant_data)
         try:
             data = json.loads(plant_data)
             # print(data)
