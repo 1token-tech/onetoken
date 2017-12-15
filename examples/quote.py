@@ -28,7 +28,7 @@ async def get_last():
 
 
 async def main():
-    await get_last()
+    await sub_func()
 
 
 if __name__ == '__main__':
