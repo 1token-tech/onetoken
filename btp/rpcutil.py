@@ -6,16 +6,12 @@ class Const:
 
 
 class ServiceError(Exception):
-    def __init__(self, code, message='', labels=None):
+    def __init__(self, code, message=''):
         self.code = code
         self.message = message
-        if labels:
-            self.labels = labels
-        else:
-            self.labels = {}
 
     def __str__(self):
-        return f'ServiceError<{self.code},{self.labels},{self.message}>'
+        return 'ServiceError<{},{}>'.format(self.code, self.message)
 
 
 class HTTPError(ServiceError):
@@ -31,7 +27,7 @@ class HTTPError(ServiceError):
         self.message = message
 
     def __str__(self):
-        return f'HTTPError<{self.code},{self.message}>'
+        return 'HTTPError<{},{}>'.format(self.code, self.message)
 
 
 class Code:

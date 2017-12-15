@@ -18,7 +18,7 @@ def set_log():
         def new_func(*args, **kwargs):
             # print('-------wrapper----------', args, kwargs)
             left = ' '.join(str(x) for x in args)
-            right = ' '.join(f'{k}={v}' for k, v in kwargs.items())
+            right = ' '.join('{}={}'.format(k, v) for k, v in kwargs.items())
             new = ' '.join(filter(None, [left, right]))
             orig(new)
 
@@ -33,5 +33,5 @@ set_log()
 
 
 def log_level(level):
-    print(f'set log level to {level}')
+    print('set log level to {}'.format(level))
     log.setLevel(level)

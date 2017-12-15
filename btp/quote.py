@@ -17,7 +17,7 @@ class Quote:
         self.running = False
 
     async def init(self):
-        log.debug(f'Connecting to {HOST}')
+        log.debug('Connecting to {}'.format(HOST))
 
         try:
             self.sess = aiohttp.ClientSession()
@@ -69,7 +69,7 @@ class Quote:
             try:
                 await self.ws.send_json({'uri': 'subscribe-single-tick-verbose', 'contract': contract})
             except Exception as e:
-                log.warning(f'subscribe {contract} failed...', e)
+                log.warning('subscribe {} failed...'.format(contract), e)
             else:
                 self.tick_queue[contract] = asyncio.Queue()
                 if on_update:

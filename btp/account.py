@@ -18,9 +18,9 @@ class Config:
 def get_trans_host(symbol, host):
     sp = symbol.split('@')
     if host is None:
-        return Config.api_host + f'/{sp[1]}/{sp[0]}'
+        return Config.api_host + '/{}/{}'.format(sp[1], sp[0])
     else:
-        return host + f'/{sp[1]}/{sp[0]}'
+        return host + '/{}/{}'.format(sp[1], sp[0])
 
 
 def gen_jwt(secret, uid):
@@ -48,7 +48,7 @@ class Account:
             user_config = yaml.load(user_config)
         except Exception as e:
             log.exception('failed to read auth config...', e)
-            raise Exception(f'failed to read auth config at {path}')
+            raise Exception('failed to read auth config at {}'.format(path))
         try:
             self.user_name = user_config['user']
             self.secret = open(os.path.expanduser(user_config['secret_path'])).read()
@@ -147,7 +147,7 @@ class Account:
         data = {'price': price,
                 'amount': amount,
                 'ref_key': ref_key}
-        res = await self.api_call('put', f'/orders/{ref_key}', data=data)
+        res = await self.api_call('put', '/orders/{}'.format(ref_key), data=data)
         log.debug(res)
         return res
 
