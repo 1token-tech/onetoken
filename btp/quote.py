@@ -50,6 +50,7 @@ class Quote:
     # await ws.send_json({'uri': 'subscribe-single-tick-verbose', 'contract': 'btc.usd:xtc.bitfinex'})
 
     def parse_tick(self, plant_data):
+        print(plant_data)
         try:
             data = json.loads(plant_data)
             # print(data)
@@ -58,8 +59,8 @@ class Quote:
                 self.last_tick_dict[tick.contract] = tick
                 if tick.contract in self.tick_queue:
                     self.tick_queue[tick.contract].put_nowait(tick)
-        except:
-            log.warning('parse error')
+        except Exception as e:
+            log.warning('parse error', e)
 
     async def subscribe_tick(self, contract, on_update=None):
         if self.ws:

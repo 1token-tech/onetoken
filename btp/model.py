@@ -79,10 +79,10 @@ class Ticker:
 
     @staticmethod
     def init_with_dict(dct):
-        return Ticker(dct['tm'], dct['price'], dct['volume'], dct['bids'], dct['asks'])
+        return Ticker(dct['time'], dct['price'], dct['volume'], dct['bids'], dct['asks'])
 
     def to_dict(self):
-        dct = {'tm': self.tm.isoformat(), 'price': self.price, 'volume': self.volume, 'asks': self.asks,
+        dct = {'time': self.time.isoformat(), 'price': self.price, 'volume': self.volume, 'asks': self.asks,
                'bids': self.bids}
         if self.exchange_time:
             dct['exchange_time'] = self.exchange_time.isoformat()
@@ -94,11 +94,11 @@ class Ticker:
     def from_dct(dct):
         # con = ContractApi.get_by_symbol(dct['symbol'])
         con = dct['symbol']
-        return Ticker(tm=dateutil.parser.parse(dct['tm']), price=dct['price'], bids=dct['bids'], asks=dct['asks'],
+        return Ticker(time=dateutil.parser.parse(dct['time']), price=dct['price'], bids=dct['bids'], asks=dct['asks'],
                       contract=con, volume=dct['volume'])
 
     def to_mongo_dict(self):
-        dct = {'tm': self.tm, 'price': self.price, 'volume': self.volume, 'asks': self.asks, 'bids': self.bids}
+        dct = {'time': self.time, 'price': self.price, 'volume': self.volume, 'asks': self.asks, 'bids': self.bids}
         if self.contract:
             dct['contract'] = self.contract
         return dct
@@ -106,7 +106,7 @@ class Ticker:
     def to_short_list(self):
         b = ','.join(['{},{}'.format(x['price'], x['volume']) for x in self.bids])
         a = ','.join(['{},{}'.format(x['price'], x['volume']) for x in self.asks])
-        lst = [self.contract, self.tm.timestamp(), self.price, self.volume, b, a]
+        lst = [self.contract, self.time.timestamp(), self.price, self.volume, b, a]
         return lst
 
     @staticmethod
@@ -119,8 +119,8 @@ class Ticker:
         bids = [{'price': float(p), 'volume': float(v)} for p, v in zip(bids.split(',')[::2], bids.split(',')[1::2])]
         asks = [{'price': float(p), 'volume': float(v)} for p, v in zip(asks.split(',')[::2], asks.split(',')[1::2])]
 
-        tm = arrow.Arrow.fromtimestamp(lst[1]).datetime
-        return Ticker(contract=lst[0], tm=tm, price=lst[2], volume=lst[3], bids=bids, asks=asks)
+        time = arrow.Arrow.fromtimestamp(lst[1]).datetime
+        return Ticker(contract=lst[0], time=time, price=lst[2], volume=lst[3], bids=bids, asks=asks)
 
     def to_ws_str(self):
         lst = self.to_short_list()
@@ -129,9 +129,9 @@ class Ticker:
     @classmethod
     def from_dict(cls, dict_or_str):
         if isinstance(dict_or_str, str):
-            return cls.from_dict_v2(json.loads(dict_or_str))
+            return cls.from_dict(json.loads(dict_or_str))
         d = dict_or_str
-        t = Ticker(tm=arrow.get(d['time']),
+        t = Ticker(time=arrow.get(d['time']),
                    # contract=ContractApi.get_by_symbol(d['contract']),
                    contract=d['contract'],
                    volume=d['volume'],
