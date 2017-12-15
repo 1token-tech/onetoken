@@ -1,7 +1,7 @@
 import asyncio
 
 import btp
-from btp import Quote, log
+from btp import log
 
 
 def on_update(tk):
@@ -11,31 +11,24 @@ def on_update(tk):
 
 async def sub_func():
     contract = 'btc.usd:xtc.bitfinex'
-    quote = Quote()
-    await quote.init()
-    await quote.subscribe_tick(contract, on_update)
+    await btp.quote.subscribe_tick(contract, on_update)
 
     while True:
         await asyncio.sleep(2)
-        # tk = quote.get_last_tick(contract)
-        # print(tk)
 
 
 async def get_last():
     contract = 'btc.usd:xtc.bitfinex'
-    quote = Quote()
-    await quote.init()
-    await quote.subscribe_tick(contract)
 
     while True:
         await asyncio.sleep(2)
-        tk = quote.get_last_tick(contract)
+        tk = await btp.quote.get_last_tick(contract)
         print(tk)
         log.info(tk)
 
 
 async def main():
-    await sub_func()
+    await get_last()
 
 
 if __name__ == '__main__':

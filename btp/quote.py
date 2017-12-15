@@ -5,30 +5,30 @@ import json
 from .logger import log
 from .model import Ticker
 
+HOST = 'http://alihk-debug.qbtrade.org:3019/ws'
+
 
 class Quote:
-    def __init__(self, host=None):
+    def __init__(self):
         self.sess = None
         self.ws = None
         self.last_tick_dict = {}
         self.tick_queue = {}
-        self.host = 'http://alihk-debug.qbtrade.org:3019/ws' if not host else host
-
-    def error(self, e, msg):
-        if self.sess:
-            self.sess.close()
+        self.running = False
 
     async def init(self):
-        log.debug(f'Connecting to {self.host}')
+        log.debug(f'Connecting to {HOST}')
 
         try:
             self.sess = aiohttp.ClientSession()
-            self.ws = await self.sess.ws_connect(self.host, autoping=False)
+            self.ws = await self.sess.ws_connect(HOST, autoping=False)
         except Exception as e:
-            self.error(e, 'try connect to WebSocket failed...')
+            log.warning('try connect to WebSocket failed...', e)
+            self.sess.close()
+            raise e
         else:
             log.debug('Connected to WS')
-
+            self.running = True
             asyncio.ensure_future(self.on_msg())
 
     async def on_msg(self):
@@ -45,7 +45,10 @@ class Quote:
                     log.warning('error', msg)
                     break
             except Exception as e:
-                log.warning('ws was disconnected...', e)
+                log.warning('msg error...', e)
+
+        self.running = False
+        log.info('ws was disconnected...')
 
     # await ws.send_json({'uri': 'subscribe-single-tick-verbose', 'contract': 'btc.usd:xtc.bitfinex'})
 
@@ -84,5 +87,31 @@ class Quote:
                 else:
                     on_update(tk)
 
-    def get_last_tick(self, contract):
+    async def get_last_tick(self, contract):
+        if contract not in self.tick_queue:
+            await self.subscribe_tick(contract)
         return self.last_tick_dict.get(contract, None)
+
+
+_client_pool = {}
+_lock = asyncio.Lock()
+
+
+async def get_client(key='defalut'):
+    if key in _client_pool and _client_pool[key].running:
+        return _client_pool[key]
+    async with _lock:
+        c = Quote()
+        await c.init()
+        _client_pool[key] = c
+        return c
+
+
+async def get_last_tick(contract):
+    c = await get_client()
+    return await c.get_last_tick(contract)
+
+
+async def subscribe_tick(contract, on_update):
+    c = await get_client()
+    return await c.subscribe_tick(contract, on_update)
