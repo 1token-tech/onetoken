@@ -3,7 +3,6 @@ async util
 """
 import asyncio
 import json
-import logging
 from datetime import datetime
 
 import aiohttp
@@ -16,29 +15,6 @@ def dumper(obj):
     if isinstance(obj, datetime):
         return obj.isoformat()
     return obj
-
-
-def make_key(args, kwargs) -> str:
-    k = f'{args}{kwargs}'
-    return k
-
-
-async def http(func, url, timeout=5, method='json', accept_4xx=True, *args, **kwargs):
-    resp = await asyncio.wait_for(func(url, *args, **kwargs), timeout)
-    txt = await resp.text()
-    if not accept_4xx and resp.status != 200:
-        raise ValueError('status {}'.format(resp.status), txt)
-    # assert isinstance(resp, )
-    if method == 'json':
-        try:
-            return json.loads(txt)
-        except:
-            raise ValueError('NOT_JSON', txt)
-    elif method == 'text':
-        return txt
-    else:
-        logging.warning('method {} not recognized'.format(method))
-        assert False
 
 
 async def http_go(func, url, timeout=15, method='json', accept_4xx=False, *args, **kwargs):

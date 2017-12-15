@@ -1,5 +1,3 @@
-from .model import DealedTrans, Order, OrderPool, Ticker, Zhubi
-
 from .logger import log, log_level
 
 from .account import Account

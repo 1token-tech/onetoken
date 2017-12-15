@@ -2,8 +2,8 @@ import asyncio
 import aiohttp
 import json
 
-from btp import Ticker
 from .logger import log
+from .model import Ticker
 
 
 class Quote:
@@ -54,7 +54,7 @@ class Quote:
             data = json.loads(plant_data)
             # print(data)
             if 'uri' in data and data['uri'] == 'single-tick-verbose':
-                tick = Ticker.from_dict_v2(data['data'])
+                tick = Ticker.from_dict(data['data'])
                 self.last_tick_dict[tick.contract] = tick
                 if tick.contract in self.tick_queue:
                     self.tick_queue[tick.contract].put_nowait(tick)
@@ -86,6 +86,3 @@ class Quote:
 
     def get_last_tick(self, contract):
         return self.last_tick_dict.get(contract, None)
-
-# if __name__ == '__main__':
-#     asyncio.get_event_loop().run_until_complete(main())
