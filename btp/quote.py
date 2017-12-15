@@ -5,7 +5,7 @@ import json
 from .logger import log
 from .model import Ticker
 
-HOST = 'http://alihk-debug.qbtrade.org:3019/ws'
+HOST = 'ws://alihk-debug.qbtrade.org:3019/ws'
 
 
 class Quote:
