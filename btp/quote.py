@@ -98,9 +98,11 @@ _lock = asyncio.Lock()
 
 
 async def get_client(key='defalut'):
+    # TODO  这里加了running真的是可以的么
     if key in _client_pool and _client_pool[key].running:
         return _client_pool[key]
     async with _lock:
+        # TODO  有bug
         c = Quote()
         await c.init()
         _client_pool[key] = c
