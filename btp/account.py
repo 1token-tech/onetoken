@@ -12,13 +12,13 @@ from . import util
 
 
 class Config:
-    api_host = 'http://api.qbtrade.org'
+    api_host = 'http://alihk-debug.qbtrade.org:3019'
 
 
 def get_trans_host(symbol, host):
     sp = symbol.split('@')
     if host is None:
-        return Config.api_host + f'/trans/{sp[1]}/{sp[0]}'
+        return Config.api_host + f'/{sp[1]}/{sp[0]}'
     else:
         return host + f'/{sp[1]}/{sp[0]}'
 
