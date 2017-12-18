@@ -26,7 +26,7 @@ def check_auth_file():
 async def main():
     check_auth_file()
 
-    acc = Account('leo@xtc.mock')
+    acc = Account('leo@mock')
 
     # 获取账号 info
     info, err = await acc.get_info()

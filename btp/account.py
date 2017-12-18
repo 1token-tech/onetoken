@@ -12,7 +12,7 @@ from . import util
 
 
 class Config:
-    api_host = 'http://alihk-debug.qbtrade.org:3019'
+    api_host = 'http://alihk-debug.qbtrade.org:3019/trade'
 
 
 def get_trans_host(symbol, host):
@@ -153,7 +153,6 @@ class Account:
 
     async def place_order(self, con, price, bs, amount, ref_key=None, tags=None, options=None):
         """
-        # call post api.qbtrade.org/trans/{exchange}/{acc}/orders
         just pass request, and handle order update --> fire callback and ref_key
         :param options:
         :param con:
