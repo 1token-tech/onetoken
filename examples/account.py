@@ -1,10 +1,31 @@
 import asyncio
-
+import os
 import btp
+import yaml
 from btp import Account, util, log
 
 
+def check_auth_file():
+    path = os.path.expanduser('~/.qb/auth_config.yml')
+    if not os.path.isfile(path):
+        log.warn('auth config file is missing, attempt to create')
+        username = input('Please enter your name: ')
+        private_key_path = input('Please enter your private key path:')
+        t_path = os.path.expanduser(private_key_path)
+        while not os.path.isfile(t_path):
+            log.warn('private key not existed...')
+            private_key_path = input('Please enter your private key path:')
+            t_path = os.path.expanduser(private_key_path)
+
+        content = yaml.dump({'user': username, 'secret_path': private_key_path}, default_flow_style=False)
+        with open(path, "w+") as f:
+            f.write(content)
+            f.close()
+
+
 async def main():
+    check_auth_file()
+
     acc = Account('leo@xtc.huobip')
 
     # 获取账号 info
@@ -38,7 +59,9 @@ async def main():
     else:
         log.info(p_list)
 
+
 if __name__ == '__main__':
     import logging
+
     btp.log_level(logging.INFO)
     asyncio.get_event_loop().run_until_complete(main())
