@@ -1,3 +1,4 @@
+from .model import Ticker
 from .logger import log, log_level
 
 from .account import Account
