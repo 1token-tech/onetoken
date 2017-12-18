@@ -67,7 +67,7 @@ class Quote:
     async def subscribe_tick(self, contract, on_update=None):
         if self.ws:
             try:
-                await self.ws.send_json({'uri': 'subscribe-single-tick-verbose', 'contract': contract})
+                await self.ws.send_json({'uri': 'subscribe-single-tick-verbose', 'args': {'contract': contract}})
             except Exception as e:
                 log.warning('subscribe {} failed...'.format(contract), e)
             else:
