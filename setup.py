@@ -9,7 +9,10 @@ setup(name='btp',
       install_requires=[
           'requests',
           'pandas',
-          'arrow'
+          'arrow',
+          'PyJWT',
+          'PyYAML',
+          'aiohttp',
       ],
       zip_safe=False,
       )
