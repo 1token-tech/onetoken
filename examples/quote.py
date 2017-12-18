@@ -3,8 +3,9 @@ import asyncio
 import btp
 
 
-def on_update(tk):
+def on_update(tk: btp.Ticker):
     print(tk)
+    print(tk.to_dict())
 
 
 async def sub_func():
