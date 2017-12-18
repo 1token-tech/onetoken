@@ -203,7 +203,7 @@ class Account:
         headers = {'jwt': gen_jwt(self.secret, self.user_name)}
 
         url = self.host + endpoint
-        res, err = await autil.http_go(func, url=url, data=data, params=params, headers=headers, timeout=timeout)
+        res, err = await autil.http_go(func, url=url, json=data, params=params, headers=headers, timeout=timeout)
         if err:
             return None, err
 
