@@ -35,6 +35,12 @@ async def main():
     else:
         log.info(info)
 
+    # 根据 pos symbol 获取账号 amount
+    # 现货类似 btc, bch
+    # 期货类似 btc.usd.q
+    amount = acc.get_total_amount('btc')
+    log.info(amount)
+
     # 下单
     ref_key = util.rand_ref_key()  # ref_key 为预设下单 id，方便策略后期跟踪
     order, err = await acc.place_order(con='bch.btc:xtc.huobip', price=0.00001, bs='b', amount=10, ref_key=ref_key)

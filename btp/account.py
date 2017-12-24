@@ -111,14 +111,14 @@ class Account:
         self.last_info = y
         return y, None
 
-    def get_total_amount(self, con):
+    def get_total_amount(self, pos_symbol):
         if self.last_info is None:
             log.warning('no info')
         else:
-            if con.symbol in self.last_info['position_dict']:
-                return float(self.last_info['position_dict'][con.symbol]['total_amount'])
+            if pos_symbol in self.last_info['position_dict']:
+                return float(self.last_info['position_dict'][pos_symbol]['total_amount'])
             else:
-                log.warning('con {} not in position'.format(con.symbol))
+                log.warning('symbol {} not in position'.format(pos_symbol))
                 return 0.0
 
     async def place_and_cancel(self, con, price, bs, amount, sleep, options=None):
