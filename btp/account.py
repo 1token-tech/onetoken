@@ -135,6 +135,15 @@ class Account:
     async def get_health(self):
         return await self.api_call('get', '/health')
 
+    async def get_order_info(self, ref_key):
+        """
+        :param ref_key:
+        :return:
+        """
+        res = await self.api_call('get', '/orders/{}'.format(ref_key))
+        log.debug(res)
+        return res
+
     async def amend_order(self, ref_key, price, amount):
         """
         :param price:

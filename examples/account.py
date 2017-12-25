@@ -51,7 +51,14 @@ async def main():
 
     await asyncio.sleep(3)
 
-    # 获取当前开放的 order
+    # 获取指定 order 的 info
+    o_info, err = await acc.get_order_info(ref_key)
+    if err:
+        log.warning('get order info failed...', err)
+    else:
+        log.info(o_info)
+
+    # 获取当前开放的 orders
     p_list, err = await acc.get_pending_list()
     if err:
         log.warning('Get pending list failed...', err)
