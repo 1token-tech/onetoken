@@ -26,7 +26,7 @@ def check_auth_file():
 async def main():
     check_auth_file()
 
-    acc = Account('leo@mock')
+    acc = Account('tyz@huobip')
 
     # 获取账号 info
     info, err = await acc.get_info()
@@ -42,8 +42,8 @@ async def main():
     log.info(amount)
 
     # 下单
-    ref_key = util.rand_ref_key()  # ref_key 为预设下单 id，方便策略后期跟踪
-    order, err = await acc.place_order(con='bch.btc:xtc.huobip', price=0.00001, bs='b', amount=1, ref_key=ref_key)
+    oid = util.rand_ref_key()  # ref_key 为预设下单 id，方便策略后期跟踪
+    order, err = await acc.place_order(con='btc.usdt:huobip', price=0.01, bs='b', amount=1, client_oid=oid)
     if err:
         log.warning('Place order failed...', err)
     else:
@@ -52,9 +52,9 @@ async def main():
     await asyncio.sleep(3)
 
     # 获取指定 order 的 info
-    o_info, err = await acc.get_order_info(ref_key)
+    o_info, err = await acc.get_order_use_client_oid(oid)
     if err:
-        log.warning('get order info failed...', err)
+        log.warning('Get order info failed...', err)
     else:
         log.info(o_info)
 
@@ -66,7 +66,7 @@ async def main():
         log.info(p_list)
 
     # 撤单
-    res, err = await acc.cancel_use_ref_key(ref_key=ref_key)
+    res, err = await acc.cancel_use_client_oid(oid)
     if err:
         log.warning('cancel order failed...', err)
     else:

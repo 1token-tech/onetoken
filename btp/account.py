@@ -83,21 +83,22 @@ class Account:
         t = await self.api_call('get', '/orders')
         return t
 
-    async def cancel_use_ref_key(self, ref_key):
-        log.debug('cancel use ref_key', ref_key)
+    async def cancel_use_client_oid(self, oid):
+        log.debug('Cancel use client oid', oid)
 
-        data = {'ref_key': ref_key}
-        t = await self.api_call('delete', '/orders/' + ref_key, data=data)
+        data = {'client_oid': oid}
+        t = await self.api_call('delete', '/orders', params=data)
         return t
 
-    async def cancel_use_entrust_no(self, entrust_no):
-        log.debug('cancel use entrust_no', entrust_no)
-        t = await self.api_call('delete', '/orders_entrust_no/' + entrust_no)
+    async def cancel_use_exchange_oid(self, oid):
+        log.debug('Cancel use exchange oid', oid)
+        data = {'exchange_oid': oid}
+        t = await self.api_call('delete', '/orders', params=data)
         return t
 
     async def cancel_all(self):
-        log.debug('cancel all')
-        t = await self.api_call('delete', '/orders')
+        log.debug('Cancel all')
+        t = await self.api_call('delete', '/orders/all')
         return t
 
     async def get_info(self, timeout=15):
@@ -124,43 +125,68 @@ class Account:
     async def place_and_cancel(self, con, price, bs, amount, sleep, options=None):
         k = util.rand_ref_key()
         res1, err1 = await self.place_order(con, price, bs, amount,
-                                            ref_key=k,
+                                            client_oid=k,
                                             options=options)
         await asyncio.sleep(sleep)
-        res2, err2 = await self.cancel_use_ref_key(k)
+        res2, err2 = await self.cancel_use_client_oid(k)
         if err1 or err2:
             return (res1, res2), (err1, err2)
         return [res1, res2], None
 
-    async def get_health(self):
-        return await self.api_call('get', '/health')
+    async def get_status(self):
+        return await self.api_call('get', '/status')
 
-    async def get_order_info(self, ref_key):
+    async def get_order_use_client_oid(self, client_oid):
         """
-        :param ref_key:
+        :param client_oid:
         :return:
         """
-        res = await self.api_call('get', '/orders/{}'.format(ref_key))
+        res = await self.api_call('get', '/orders', params={'client_oid': client_oid})
         log.debug(res)
         return res
 
-    async def amend_order(self, ref_key, price, amount):
+    async def get_order_use_exchange_oid(self, exchange_oid):
+        """
+        :param exchange_oid:
+        :return:
+        """
+        res = await self.api_call('get', '/orders', params={'exchange_oid': exchange_oid})
+        log.debug(res)
+        return res
+
+    async def amend_order_use_client_oid(self, client_oid, price, amount):
         """
         :param price:
         :param amount:
-        :param ref_key:
+        :param client_oid:
         :return:
         """
-        log.debug('amend order', ref_key, price, amount)
+        log.debug('Amend order use client oid', client_oid, price, amount)
 
         data = {'price': price,
-                'amount': amount,
-                'ref_key': ref_key}
-        res = await self.api_call('put', '/orders/{}'.format(ref_key), data=data)
+                'amount': amount}
+        params = {'client_oid': client_oid}
+        res = await self.api_call('patch', '/orders', data=data, params=params)
         log.debug(res)
         return res
 
-    async def place_order(self, con, price, bs, amount, ref_key=None, tags=None, options=None):
+    async def amend_order_use_exchange_oid(self, exchange_oid, price, amount):
+        """
+        :param price:
+        :param amount:
+        :param exchange_oid:
+        :return:
+        """
+        log.debug('Amend order use exchange oid', exchange_oid, price, amount)
+
+        data = {'price': price,
+                'amount': amount}
+        params = {'exchange_oid': exchange_oid}
+        res = await self.api_call('patch', '/orders', data=data, params=params)
+        log.debug(res)
+        return res
+
+    async def place_order(self, con, price, bs, amount, client_oid=None, tags=None, options=None):
         """
         just pass request, and handle order update --> fire callback and ref_key
         :param options:
@@ -168,21 +194,21 @@ class Account:
         :param price:
         :param bs:
         :param amount:
-        :param ref_key:
+        :param client_oid:
         :param tags: a key value dict
         :return:
         """
-        log.debug('place order', con=con, price=price, bs=bs, amount=amount, ref_key=ref_key)
+        log.debug('Place order', con=con, price=price, bs=bs, amount=amount, client_oid=client_oid)
 
-        if ref_key is None:
-            ref_key = util.rand_ref_key()
+        if client_oid is None:
+            client_oid = util.rand_ref_key()
 
         data = {'contract': con,
                 'price': price,
                 'bs': bs,
                 'amount': amount}
-        if ref_key:
-            data['ref_key'] = ref_key
+        if client_oid:
+            data['client_oid'] = client_oid
         if tags:
             data['tags'] = ','.join(['{}:{}'.format(k, v) for k, v in tags.items()])
         if options:
@@ -201,12 +227,12 @@ class Account:
             func = self.session.get
         elif method == 'post':
             func = self.session.post
-        elif method == 'put':
-            func = self.session.put
+        elif method == 'patch':
+            func = self.session.patch
         elif method == 'delete':
             func = self.session.delete
         else:
-            raise Exception('invalid http method:{}'.format(method))
+            raise Exception('Invalid http method:{}'.format(method))
 
         headers = {'jwt': gen_jwt(self.secret, self.user_name)}
 
@@ -214,5 +240,4 @@ class Account:
         res, err = await autil.http_go(func, url=url, json=data, params=params, headers=headers, timeout=timeout)
         if err:
             return None, err
-
         return res, None
