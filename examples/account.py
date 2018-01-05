@@ -24,9 +24,10 @@ def check_auth_file():
 
 
 async def main():
-    check_auth_file()
-
-    acc = Account('tyz@huobip')
+    # check_auth_file()
+    api_key = ''
+    api_secret = ''
+    acc = Account('tyz@huobip', api_key=api_key, api_secret=api_secret)
 
     # 获取账号 info
     info, err = await acc.get_info()

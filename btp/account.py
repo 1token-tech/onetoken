@@ -1,10 +1,12 @@
 import asyncio
 import json
-import os
+import urllib
+import hmac
 
 import aiohttp
 import jwt
-import yaml
+import time
+import hashlib
 
 from . import autil
 from . import log
@@ -32,32 +34,46 @@ def gen_jwt(secret, uid):
     return c.decode('ascii')
 
 
+def gen_nonce():
+    return str(int(time.time() * 1000000))
+
+
+def gen_sign(secret, verb, url, nonce, data):
+    """Generate a request signature compatible with BitMEX."""
+    # Parse the url so we can remove the base and extract just the path.
+    if isinstance(data, dict):
+        data = json.dumps(data)
+    # print('url', url)
+    parsed_url = urllib.parse.urlparse(url)
+    path = parsed_url.path
+    if parsed_url.query:
+        path = path + '?' + parsed_url.query
+    # path = url
+    # print('pth', path)
+
+    if isinstance(data, (bytes, bytearray)):
+        data = data.decode('utf8')
+
+    # print "Computing HMAC: %s" % verb + path + str(nonce) + data
+    message = verb + path + str(nonce) + data
+    # print(message)
+
+    signature = hmac.new(bytes(secret, 'utf8'), bytes(message, 'utf8'), digestmod=hashlib.sha256).hexdigest()
+    return signature
+
+
 class Account:
-    def __init__(self, symbol: str, loop=None, host=None):
+    def __init__(self, symbol: str, api_key, api_secret, loop=None, host=None):
         """
 
         :param symbol:
         :param loop:
         :param host:
         """
-        path = os.path.expanduser('~/.qb/auth_config.yml')
-        if not os.path.isfile(path):
-            log.warning('~/.qb/auth_config.yml not exist')
-        try:
-            user_config = open(path).read()
-            user_config = yaml.load(user_config)
-        except Exception as e:
-            log.exception('failed to read auth config...', e)
-            raise Exception('failed to read auth config at {}'.format(path))
-        try:
-            self.user_name = user_config['user']
-            self.secret = open(os.path.expanduser(user_config['secret_path'])).read()
-        except Exception as e:
-            log.exception('failed to get user id or secret...', e)
-            assert False
 
         self.symbol = symbol
-
+        self.api_key = api_key
+        self.api_secret = api_secret
         log.debug('async account init {}'.format(symbol))
         self.session = aiohttp.ClientSession(loop=loop)
         self.host = get_trans_host(symbol, host)
@@ -222,21 +238,31 @@ class Account:
         return not self.closed
 
     async def api_call(self, method, endpoint, params=None, data=None, timeout=15):
-        method = method.lower()
-        if method == 'get':
+        method = method.upper()
+        if method == 'GET':
             func = self.session.get
-        elif method == 'post':
+        elif method == 'POST':
             func = self.session.post
-        elif method == 'patch':
+        elif method == 'PATCH':
             func = self.session.patch
-        elif method == 'delete':
+        elif method == 'DELETE':
             func = self.session.delete
         else:
             raise Exception('Invalid http method:{}'.format(method))
 
-        headers = {'jwt': gen_jwt(self.secret, self.user_name)}
+        nonce = gen_nonce()
+        # headers = {'jwt': gen_jwt(self.secret, self.user_name)}
 
         url = self.host + endpoint
+        if data is None:
+            data_str = ''
+        else:
+            data_str = json.dumps(data)
+        # print(self.api_secret, method, url, nonce, data)
+        sign = gen_sign(self.api_secret, method, url, nonce, data_str)
+        headers = {'Api-Nonce': str(nonce), 'Api-Key': self.api_key, 'Api-Signature': sign,
+                   'Content-Type': 'application/json'}
+
         res, err = await autil.http_go(func, url=url, json=data, params=params, headers=headers, timeout=timeout)
         if err:
             return None, err
