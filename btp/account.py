@@ -41,21 +41,19 @@ def gen_nonce():
 def gen_sign(secret, verb, url, nonce, data):
     """Generate a request signature compatible with BitMEX."""
     # Parse the url so we can remove the base and extract just the path.
-    if isinstance(data, dict):
-        data = json.dumps(data)
+
+    if data is None:
+        data_str = ''
+    else:
+        assert isinstance(data, dict)
+        data_str = json.dumps(data, sort_keys=True)
+
     # print('url', url)
     parsed_url = urllib.parse.urlparse(url)
     path = parsed_url.path
-    if parsed_url.query:
-        path = path + '?' + parsed_url.query
-    # path = url
-    # print('pth', path)
-
-    if isinstance(data, (bytes, bytearray)):
-        data = data.decode('utf8')
 
     # print "Computing HMAC: %s" % verb + path + str(nonce) + data
-    message = verb + path + str(nonce) + data
+    message = verb + path + str(nonce) + data_str
     # print(message)
 
     signature = hmac.new(bytes(secret, 'utf8'), bytes(message, 'utf8'), digestmod=hashlib.sha256).hexdigest()
@@ -254,12 +252,9 @@ class Account:
         # headers = {'jwt': gen_jwt(self.secret, self.user_name)}
 
         url = self.host + endpoint
-        if data is None:
-            data_str = ''
-        else:
-            data_str = json.dumps(data)
+
         # print(self.api_secret, method, url, nonce, data)
-        sign = gen_sign(self.api_secret, method, url, nonce, data_str)
+        sign = gen_sign(self.api_secret, method, url, nonce, data)
         headers = {'Api-Nonce': str(nonce), 'Api-Key': self.api_key, 'Api-Signature': sign,
                    'Content-Type': 'application/json'}
 
