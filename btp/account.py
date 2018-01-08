@@ -137,7 +137,7 @@ class Account:
                 return 0.0
 
     async def place_and_cancel(self, con, price, bs, amount, sleep, options=None):
-        k = util.rand_ref_key()
+        k = util.rand_client_oid()
         res1, err1 = await self.place_order(con, price, bs, amount,
                                             client_oid=k,
                                             options=options)
@@ -215,7 +215,7 @@ class Account:
         log.debug('Place order', con=con, price=price, bs=bs, amount=amount, client_oid=client_oid)
 
         if client_oid is None:
-            client_oid = util.rand_ref_key()
+            client_oid = util.rand_client_oid()
 
         data = {'contract': con,
                 'price': price,

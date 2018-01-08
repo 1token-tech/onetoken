@@ -1,32 +1,28 @@
 import asyncio
-import os
+
 import btp
-import yaml
 from btp import Account, util, log
+import json
+import os
 
 
-def check_auth_file():
-    path = os.path.expanduser('~/.qb/auth_config.yml')
-    if not os.path.isfile(path):
-        log.warn('auth config file is missing, attempt to create')
-        username = input('Please enter your name: ')
-        private_key_path = input('Please enter your private key path:')
-        t_path = os.path.expanduser(private_key_path)
-        while not os.path.isfile(t_path):
-            log.warn('private key not existed...')
-            private_key_path = input('Please enter your private key path:')
-            t_path = os.path.expanduser(private_key_path)
-
-        content = yaml.dump({'user': username, 'secret_path': private_key_path}, default_flow_style=False)
-        with open(path, "w+") as f:
-            f.write(content)
-            f.close()
+def load_api_key_secret():
+    path = os.path.expanduser('~/.1token/config.js')
+    if os.path.isfile(path):
+        try:
+            js = json.loads(open(path).read())
+            return js['api_key'], js['api_secret']
+        except:
+            log.exception('failed load api key/secret')
+    return None, None
 
 
 async def main():
     # check_auth_file()
-    api_key = ''
-    api_secret = ''
+    api_key, api_secret = load_api_key_secret()
+    if api_key is None or api_secret is None:
+        api_key = input('api_key: ')
+        api_secret = input('api_secret: ')
     acc = Account('tyz@huobip', api_key=api_key, api_secret=api_secret)
 
     # 获取账号 info
@@ -43,8 +39,8 @@ async def main():
     log.info(amount)
 
     # 下单
-    oid = util.rand_ref_key()  # ref_key 为预设下单 id，方便策略后期跟踪
-    order, err = await acc.place_order(con='btc.usdt:huobip', price=0.01, bs='b', amount=1, client_oid=oid)
+    coid = util.rand_client_oid()  # client oid 为预设下单 id，方便策略后期跟踪
+    order, err = await acc.place_order(con='btc.usdt:huobip', price=0.01, bs='b', amount=1, client_oid=coid)
     if err:
         log.warning('Place order failed...', err)
     else:
@@ -53,7 +49,7 @@ async def main():
     await asyncio.sleep(3)
 
     # 获取指定 order 的 info
-    o_info, err = await acc.get_order_use_client_oid(oid)
+    o_info, err = await acc.get_order_use_client_oid(coid)
     if err:
         log.warning('Get order info failed...', err)
     else:
@@ -67,7 +63,7 @@ async def main():
         log.info(p_list)
 
     # 撤单
-    res, err = await acc.cancel_use_client_oid(oid)
+    res, err = await acc.cancel_use_client_oid(coid)
     if err:
         log.warning('cancel order failed...', err)
     else:
