@@ -1,9 +1,9 @@
 ![](https://img.shields.io/badge/PYTHON-3.5%2B-green.svg)
 
 
-Btp Websocket Api
+Btp SDK
 ====
-BTP is a application to fetch tick and play with orders.
+BTP is a application to fetch tick and play with orders. BTP is a friendly python wrapper for ws API and restful API which will be introduce [here](#direct-api),  users can use API di.rectly as they like
 
 Users can:
 
@@ -11,23 +11,41 @@ Users can:
 2. Place, amend, cancel orders(via Account).
 3. parse tick data (into|from) various form(short list, mongo dict, ws dict etc.)
 
-Supported Exchanges
---
-BitMEX(Websocket)
+### Supported Exchanges
+
+* bitmex
+* okusd
+* okcom
+* bithumb
+* huobip
+* bitfinex
+* bitfinexm
+* bitflyer
+* wallet
+* bitstar
+* okex
+* bittrex
+* poloniex
+* superhedge
+* gate
+* exx
+* coinegg
+* mock
+* subacc
+* btp
 
 Currently the support of other exchanges is still under development.
 
 
-Get Started
---
-```bash
-git clone https://github.com/qbtrade/btp
-pip install .
-```
-Then use btc with `import btc` in python script.
+### Get Started
 
-Example
---
+```bash
+pip install btp
+```
+Then use btc with `import btp` in python script.
+
+### Example
+
 Try Quote and Account class, the code is in './example'
 
 `$ cd /path-you-clone-this-repo-to/`
@@ -47,8 +65,8 @@ To try Account, prepare your api_key and api_secret, then:
 api_key and api_secret will be required in the console.
 
 
-Tick
---
+### Tick
+
 
 `time, price, volume, bids, asks, contract, source, exchange_time, amount`
 
@@ -57,6 +75,8 @@ some property function:
 `last, bid1, ask1, weighted_middle`
 
 parse to or from other forms:
+
+
 
 ```python
 init_with_dict(dct)
@@ -70,8 +90,8 @@ to_ws_str()
 ```
 
 
-Quote
---
+### Quote
+
 To subscribe contract tick.
 
 
@@ -90,8 +110,8 @@ To subscribe contract tick.
     
     to get the last tick of specific contract.
 
-Account
---
+### Account
+
 To perform account actions.
 
 * `def __init__(self, symbol: str, api_key, api_secret, loop=None, host=None)`
@@ -198,10 +218,11 @@ To perform account actions.
 
 
 
-
-Websocket Detail
+Direct API
 ===
 
+Websocket API
+--
 ### General
 
 Connect your websocket client to `ws://alihk-debug.qbtrade.org:3019/ws`
@@ -239,3 +260,10 @@ Subscribe ticker
 } 
 ```
 
+RESTful API
+--
+
+Restful host is `http://alihk-debug.qbtrade.org:3019`
+
+Just watch [todo](wait to solve)
+    
