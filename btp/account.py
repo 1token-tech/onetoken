@@ -14,15 +14,12 @@ from . import util
 
 
 class Config:
-    api_host = 'http://alihk-debug.qbtrade.org:3019/trade'
+    api_host = 'https://1token.trade/api/v1/trade'
 
 
-def get_trans_host(symbol, host):
+def get_trans_host(symbol):
     sp = symbol.split('@')
-    if host is None:
-        return Config.api_host + '/{}/{}'.format(sp[1], sp[0])
-    else:
-        return host + '/{}/{}'.format(sp[1], sp[0])
+    return '/{}/{}'.format(sp[1], sp[0])
 
 
 def gen_jwt(secret, uid):
@@ -48,7 +45,6 @@ def gen_sign(secret, verb, url, nonce, data):
         assert isinstance(data, dict)
         data_str = json.dumps(data, sort_keys=True)
 
-    # print('url', url)
     parsed_url = urllib.parse.urlparse(url)
     path = parsed_url.path
 
@@ -61,7 +57,7 @@ def gen_sign(secret, verb, url, nonce, data):
 
 
 class Account:
-    def __init__(self, symbol: str, api_key, api_secret, loop=None, host=None):
+    def __init__(self, symbol: str, api_key, api_secret, loop=None):
         """
 
         :param symbol:
@@ -74,7 +70,8 @@ class Account:
         self.api_secret = api_secret
         log.debug('async account init {}'.format(symbol))
         self.session = aiohttp.ClientSession(loop=loop)
-        self.host = get_trans_host(symbol, host)
+        self.trans_path = get_trans_host(symbol)
+        self.host = Config.api_host + self.trans_path
         log.debug('host', self.host)
         self.last_info = None
         self.closed = False
@@ -254,10 +251,9 @@ class Account:
         url = self.host + endpoint
 
         # print(self.api_secret, method, url, nonce, data)
-        sign = gen_sign(self.api_secret, method, url, nonce, data)
+        sign = gen_sign(self.api_secret, method, self.trans_path + endpoint, nonce, data)
         headers = {'Api-Nonce': str(nonce), 'Api-Key': self.api_key, 'Api-Signature': sign,
                    'Content-Type': 'application/json'}
-
         res, err = await autil.http_go(func, url=url, json=data, params=params, headers=headers, timeout=timeout)
         if err:
             return None, err
