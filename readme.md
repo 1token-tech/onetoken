@@ -28,11 +28,23 @@ Then use btc with `import btc` in python script.
 
 Example
 --
-Try Quote and Account class
+Try Quote and Account class, the code is in './example'
 
-`$ cd /path-you-clone-this-repo-to/example`
+`$ cd /path-you-clone-this-repo-to/`
 
+if you don't want to install this package, set the `PYTHONPATH`
 
+`$ export PYTHONPATH=.`
+
+To try Quote:
+
+`$ python example/quote.py`
+
+To try Account, prepare your api_key and api_secret, then:
+
+`$ python example/account.py`
+
+api_key and api_secret will be required in the console.
 
 
 Tick
@@ -190,7 +202,7 @@ To perform account actions.
 Websocket Detail
 ===
 
-###General
+### General
 
 Connect your websocket client to `ws://alihk-debug.qbtrade.org:3019/ws`
 
@@ -204,7 +216,7 @@ A basic command is sent in the following format:
 The following commands are available without authentication:
 * `subscribe-single-tick-verbose` subscribe a real-time ticker info of a given contract 
 
-###Subscribe
+### Subscribe
 Subscribe ticker
 ```$xslt
 //request
@@ -214,7 +226,7 @@ Subscribe ticker
 }
 ```
 
-###Heartbeat
+### Heartbeat
 ```     
 //webSocket Client request
 {
