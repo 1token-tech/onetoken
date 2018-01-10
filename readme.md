@@ -14,25 +14,17 @@ Users can:
 ### Supported Exchanges
 
 * bitmex
-* okusd
-* okcom
-* bithumb
-* huobip
-* bitfinex
-* bitfinexm
-* bitflyer
-* wallet
-* bitstar
 * okex
+* bithumb
+* huobi pro
+* bitfinex
+* bitflyer
+* bitstar
 * bittrex
 * poloniex
-* superhedge
 * gate
 * exx
 * coinegg
-* mock
-* subacc
-* btp
 
 Currently the support of other exchanges is still under development.
 
