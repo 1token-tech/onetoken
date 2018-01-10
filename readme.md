@@ -116,7 +116,7 @@ To perform account actions.
     
     `loop`:
     
-    `host`: default to `http://alihk-debug.qbtrade.org:3019/trade`
+    `host`: default to `https://1token.trade/api/v1/trade`
     
     initialize an account for specific symbol with api_key and api_secret
 
@@ -217,7 +217,7 @@ Websocket API
 --
 ### General
 
-Connect your websocket client to `ws://alihk-debug.qbtrade.org:3019/ws`
+Connect your websocket client to `ws://1token.trade/api/v1/trade/ws`
 
 A basic command is sent in the following format:
 ```$xslt
@@ -255,7 +255,7 @@ Subscribe ticker
 RESTful API
 --
 
-Restful host is `http://alihk-debug.qbtrade.org:3019`
+Restful host is `https://1token.trade/api/v1/trade`
 
 Just watch [todo](wait to solve)
     
