@@ -9,7 +9,6 @@ Users can:
 
 1. Streaming contract tick(via Quote).
 2. Place, amend, cancel orders(via Account).
-3. parse tick data (into|from) various form(short list, mongo dict, ws dict etc.)
 
 ### Supported Exchanges
 
@@ -32,15 +31,19 @@ Currently the support of other exchanges is still under development.
 ### Get Started
 
 ```bash
-pip install btp
+git clone https://github.com/qbtrade/ots
 ```
-Then use btc with `import btp` in python script.
+OR 
+```bash
+pip install ots -U
+```
+Then use ots with `import ots` in python script.
 
 ### Example
 
 Try Quote and Account class, the code is in './example'
 
-`$ cd /path-you-clone-this-repo-to/`
+`$ cd ots/`
 
 if you don't want to install this package, set the `PYTHONPATH`
 
@@ -217,7 +220,7 @@ Websocket API
 --
 ### General
 
-Connect your websocket client to `ws://1token.trade/api/v1/trade/ws`
+Connect your websocket client to `wss://1token.trade/api/v1/quote/ws`
 
 A basic command is sent in the following format:
 ```$xslt
