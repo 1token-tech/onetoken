@@ -1,9 +1,9 @@
 ![](https://img.shields.io/badge/PYTHON-3.6%2B-green.svg)
 
 
-Btp SDK
+OTS SDK
 ====
-BTP is a application to fetch tick and play with orders. BTP is a friendly python wrapper for ws API and restful API which will be introduce [here](#direct-api),  users can use API di.rectly as they like
+OTS is a application to fetch tick and play with orders. OTS is a friendly python wrapper for ws API and restful API which will be introduce [here](#direct-api),  users can use API di.rectly as they like
 
 Users can:
 
