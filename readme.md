@@ -1,4 +1,4 @@
-![](https://img.shields.io/badge/PYTHON-3.5%2B-green.svg)
+![](https://img.shields.io/badge/PYTHON-3.6%2B-green.svg)
 
 
 Btp SDK
