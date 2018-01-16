@@ -17,7 +17,7 @@ Users can:
 * bithumb
 * huobi pro
 * bitfinex
-* bitflyer
+* ~~bitflyer~~
 * bitstar
 * bittrex
 * poloniex
