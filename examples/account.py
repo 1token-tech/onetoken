@@ -1,7 +1,7 @@
 import asyncio
 
-import btp
-from btp import Account, util, log
+import ots
+from ots import Account, util, log
 import json
 import os
 
@@ -73,5 +73,5 @@ async def main():
 if __name__ == '__main__':
     import logging
 
-    btp.log_level(logging.INFO)
+    ots.log_level(logging.INFO)
     asyncio.get_event_loop().run_until_complete(main())

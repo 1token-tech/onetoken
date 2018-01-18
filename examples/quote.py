@@ -1,16 +1,16 @@
 import asyncio
 
-import btp
+import ots
 
 
-def on_update(tk: btp.Ticker):
+def on_update(tk: ots.Ticker):
     print(tk)
     print(tk.to_dict())
 
 
 async def sub_func():
     contract = 'ltc.btc:xtc.okex'
-    await btp.quote.subscribe_tick(contract, on_update)
+    await ots.quote.subscribe_tick(contract, on_update)
 
     while True:
         await asyncio.sleep(2)
@@ -21,7 +21,7 @@ async def get_last():
 
     while True:
         await asyncio.sleep(2)
-        tk = await btp.quote.get_last_tick(contract)
+        tk = await ots.quote.get_last_tick(contract)
         print(tk)
 
 
@@ -32,5 +32,5 @@ async def main():
 if __name__ == '__main__':
     import logging
 
-    btp.log_level(logging.INFO)
+    ots.log_level(logging.INFO)
     asyncio.get_event_loop().run_until_complete(main())
