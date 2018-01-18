@@ -1,7 +1,7 @@
 import sys
 import logging
 
-log = logging.getLogger('btp')
+log = logging.getLogger('ots')
 
 
 def set_log():
