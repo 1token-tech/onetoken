@@ -27,16 +27,18 @@ Users can:
 
 Currently the support of other exchanges is still under development.
 
+### Requirement
+
+**python 3.6**
 
 ### Get Started
 
 ```bash
 git clone https://github.com/qbtrade/ots
+cd ots
+pip install .
 ```
-OR 
-```bash
-pip install ots -U
-```
+
 Then use ots with `import ots` in python script.
 
 ### Example
