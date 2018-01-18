@@ -5,7 +5,7 @@ import json
 from .logger import log
 from .model import Ticker
 
-HOST = 'ws://alihk-debug.qbtrade.org:3019/ws'
+HOST = 'wss://1token.trade/api/v1/quote/ws'
 
 
 class Quote:
@@ -22,6 +22,7 @@ class Quote:
         try:
             self.sess = aiohttp.ClientSession()
             self.ws = await self.sess.ws_connect(HOST, autoping=False)
+            await self.ws.send_json({'uri': 'auth', 'sample-rate': 0})
         except Exception as e:
             log.warning('try connect to WebSocket failed...', e)
             self.sess.close()
@@ -67,7 +68,7 @@ class Quote:
     async def subscribe_tick(self, contract, on_update=None):
         if self.ws:
             try:
-                await self.ws.send_json({'uri': 'subscribe-single-tick-verbose', 'args': {'contract': contract}})
+                await self.ws.send_json({'uri': 'subscribe-single-tick-verbose', 'contract': contract})
             except Exception as e:
                 log.warning('subscribe {} failed...'.format(contract), e)
             else:
