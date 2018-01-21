@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 
-setup(name='btp',
+setup(name='ots',
       author='QbTrade',
-      url='https://github.com/qbtrade/btp',
+      url='https://github.com/qbtrade/ots',
       author_email='markx914@gmail.com',
       packages=find_packages(),
       version='0.1',
