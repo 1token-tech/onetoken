@@ -1,29 +1,31 @@
 import asyncio
+import os
+
+import yaml
 
 import ots
 from ots import Account, util, log
-import json
-import os
 
 
 def load_api_key_secret():
-    path = os.path.expanduser('~/.1token/config.js')
+    path = os.path.expanduser('~/.1token/config.yml')
     if os.path.isfile(path):
         try:
-            js = json.loads(open(path).read())
-            return js['api_key'], js['api_secret']
+            js = yaml.load(open(path).read())
+            return js['api_key'], js['api_secret'], js['account']
         except:
             log.exception('failed load api key/secret')
-    return None, None
+    return None, None, None
 
 
 async def main():
     # check_auth_file()
-    api_key, api_secret = load_api_key_secret()
+    api_key, api_secret, account = load_api_key_secret()
     if api_key is None or api_secret is None:
         api_key = input('api_key: ')
         api_secret = input('api_secret: ')
-    acc = Account('tyz@huobip', api_key=api_key, api_secret=api_secret)
+        account = input('account: ')
+    acc = Account(account, api_key=api_key, api_secret=api_secret)
 
     # 获取账号 info
     info, err = await acc.get_info()
