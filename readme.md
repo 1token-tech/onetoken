@@ -38,6 +38,11 @@ git clone https://github.com/qbtrade/ots
 cd ots
 pip install .
 ```
+OR 
+```bash
+pip install onetoken-trade -U
+```
+Then use ots with `import ots` in python script.
 
 Then use ots with `import ots` in python script.
 
