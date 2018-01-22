@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-setup(name='onetoken-trade-system',
+setup(name='onetoken-trade',
       author='QbTrade',
       url='https://github.com/qbtrade/ots',
       author_email='markx914@gmail.com',
