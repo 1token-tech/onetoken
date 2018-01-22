@@ -22,10 +22,6 @@ def get_trans_host(symbol):
     return '/{}/{}'.format(sp[1], sp[0])
 
 
-def get_symbols(symbol):
-    return symbol.split('@')
-
-
 def gen_jwt(secret, uid):
     payload = {
         'user': uid,
@@ -74,8 +70,8 @@ class Account:
         self.api_secret = api_secret
         log.debug('async account init {}'.format(symbol))
         self.session = aiohttp.ClientSession(loop=loop)
-        self.acc_symbol, self.exchange_symbol = get_symbols(symbol)
-        self.host = Config.api_host + get_trans_host(symbol)
+        self.trans_path = get_trans_host(symbol)
+        self.host = Config.api_host + self.trans_path
         log.debug('host', self.host)
         self.last_info = None
         self.closed = False
@@ -254,7 +250,8 @@ class Account:
 
         url = self.host + endpoint
 
-        sign = gen_sign(self.api_secret, method, f'/{self.acc_symbol}' + endpoint, nonce, data)
+        # print(self.api_secret, method, url, nonce, data)
+        sign = gen_sign(self.api_secret, method, self.trans_path + endpoint, nonce, data)
         headers = {'Api-Nonce': str(nonce), 'Api-Key': self.api_key, 'Api-Signature': sign,
                    'Content-Type': 'application/json'}
         res, err = await autil.http_go(func, url=url, json=data, params=params, headers=headers, timeout=timeout)
