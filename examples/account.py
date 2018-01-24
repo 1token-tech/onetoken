@@ -42,7 +42,7 @@ async def main():
 
     # 下单
     coid = util.rand_client_oid()  # client oid 为预设下单 id，方便策略后期跟踪
-    order, err = await acc.place_order(con='btc.usdt:huobip', price=0.01, bs='b', amount=1, client_oid=coid)
+    order, err = await acc.place_order(con='binance:btc.usdt', price=0.01, bs='b', amount=1, client_oid=coid)
     if err:
         log.warning('Place order failed...', err)
     else:
