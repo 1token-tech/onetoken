@@ -17,7 +17,6 @@ async def sub_func():
 
 
 async def get_last():
-    # contract = 'btc.usd:xtc.bitfinex'
     contract = 'bitfinex/btc.usd'
 
     while True:
