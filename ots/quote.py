@@ -59,9 +59,9 @@ class Quote:
             # print(data)
             if 'uri' in data and data['uri'] == 'single-tick-verbose':
                 tick = Ticker.from_dict(data['data'])
-                self.last_tick_dict[tick.contract] = tick
-                if tick.contract in self.tick_queue:
-                    self.tick_queue[tick.contract].put_nowait(tick)
+                self.last_tick_dict[tick.simple_contract] = tick
+                if tick.simple_contract in self.tick_queue:
+                    self.tick_queue[tick.simple_contract].put_nowait(tick)
         except Exception as e:
             log.warning('parse error', e)
 

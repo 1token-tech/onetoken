@@ -9,7 +9,7 @@ def on_update(tk: ots.Ticker):
 
 
 async def sub_func():
-    contract = 'ltc.btc:xtc.okex'
+    contract = 'okex/ltc.btc'
     await ots.quote.subscribe_tick(contract, on_update)
 
     while True:
@@ -17,7 +17,8 @@ async def sub_func():
 
 
 async def get_last():
-    contract = 'btc.usd:xtc.bitfinex'
+    # contract = 'btc.usd:xtc.bitfinex'
+    contract = 'bitfinex/btc.usd'
 
     while True:
         await asyncio.sleep(2)

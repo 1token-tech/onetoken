@@ -40,6 +40,12 @@ class Ticker:
     def last(self):
         return self.price
 
+    @property
+    def simple_contract(self):
+        name, exg = self.contract.split(':')
+        simple_exg = exg.replace('xtc.', '')
+        return f'{simple_exg}/{name}'
+
     @last.setter
     def last(self, value):
         self.price = value
@@ -69,7 +75,7 @@ class Ticker:
             return self.asks
 
     def __str__(self):
-        return '<{} {}.{:03d} {}/{} {} {}>'.format(self.contract,
+        return '<{} {}.{:03d} {}/{} {} {}>'.format(self.simple_contract,
                                                    self.time.strftime('%H:%M:%S'),
                                                    self.time.microsecond // 1000,
                                                    self.bid1,
@@ -87,7 +93,7 @@ class Ticker:
         if self.exchange_time:
             dct['exchange_time'] = self.exchange_time.isoformat()
         if self.contract:
-            dct['symbol'] = self.contract
+            dct['symbol'] = self.simple_contract
         return dct
 
     @staticmethod
