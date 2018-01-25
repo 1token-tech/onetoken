@@ -18,13 +18,13 @@ class Config:
 
 
 def get_trans_host(symbol):
-    sp = symbol.split('@')
-    return '/{}/{}'.format(sp[1], sp[0])
+    name, exg = get_name_exchange(symbol)
+    return '/{}/{}'.format(exg, name)
 
 
 def get_name_exchange(symbol):
-    sp = symbol.split('@')
-    return sp[0], sp[1]
+    sp = symbol.split('/', 1)
+    return sp[1], sp[0]
 
 
 def gen_jwt(secret, uid):
