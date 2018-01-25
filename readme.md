@@ -14,10 +14,10 @@ Users can:
 
 * bitmex
 * okex
+* binance
 * bithumb
-* huobi pro
+* huobi.pro
 * bitfinex
-* ~~bitflyer~~
 * bitstar
 * bittrex
 * poloniex
