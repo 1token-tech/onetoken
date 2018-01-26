@@ -44,7 +44,7 @@ class Ticker:
     def simple_contract(self):
         name, exg = self.contract.split(':')
         simple_exg = exg.replace('xtc.', '')
-        return f'{simple_exg}/{name}'
+        return '{}/{}'.format(simple_exg, name)
 
     @last.setter
     def last(self, value):

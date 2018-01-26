@@ -257,7 +257,7 @@ class Account:
         url = self.host + endpoint
 
         # print(self.api_secret, method, url, nonce, data)
-        sign = gen_sign(self.api_secret, method, f'/{self.exchange}/{self.name}{endpoint}', nonce, data)
+        sign = gen_sign(self.api_secret, method, '/{}/{}{}'.format(self.exchange, self.name, endpoint), nonce, data)
         headers = {'Api-Nonce': str(nonce), 'Api-Key': self.api_key, 'Api-Signature': sign,
                    'Content-Type': 'application/json'}
         res, err = await autil.http_go(func, url=url, json=data, params=params, headers=headers, timeout=timeout)
