@@ -44,8 +44,6 @@ pip install onetoken-trade -U
 ```
 Then use ots with `import ots` in python script.
 
-Then use ots with `import ots` in python script.
-
 ### Example
 
 Try Quote and Account class, the code is in './example'
