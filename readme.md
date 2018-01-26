@@ -273,7 +273,7 @@ Naming Rules
 
 
 | | rule | example | explaination |
-|:---:|:---:|:---:|:---:|
-|contract| {exchange}/{tpa}.{tpb} | okex/btc.usdt | tpa/tpb means "trading pair a/b"; use latter in the trading pair to buy and sell the former in exchange; the example means it uses usdt to sell and buy btc in okex
+|:---:|:---:|:---:|:---|
+|contract| {exchange}/{tpa}.{tpb} | okex/btc.usdt | tpa/tpb means "trading pair a/b"; <br> use latter in the trading pair to buy and sell the former in exchange; <br>the example means it uses usdt to sell and buy btc in okex
 |account|{exchange}/{specific_id} | okex/demo1| putting the exchange in account makes it more readable and recognizable
 
