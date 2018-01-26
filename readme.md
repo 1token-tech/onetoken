@@ -3,7 +3,7 @@
 
 OTS SDK
 ====
-OTS is a application to fetch tick and play with orders. OTS is a friendly python wrapper for ws API and restful API which will be introduce [here](#direct-api),  users can use API di.rectly as they like
+OTS is a application to fetch tick and play with orders. OTS is a friendly python wrapper for ws API and restful API which will be introduce [here](#direct-api),  users can use API directly as they like
 
 Users can:
 
@@ -267,5 +267,13 @@ Restful host is `https://1token.trade/api/v1/trade`
 
 API Explorer(https://1token.trade/r/swagger)
 
-Just watch [todo](wait to solve)
-    
+
+Naming Rules
+===
+
+
+| | rule | example | explaination |
+|:---:|:---:|:---:|:---:|
+|contract| {exchange}/{tpa}.{tpb} | okex/btc.usdt | tpa/tpb means "trading pair a/b"; use latter in the trading pair to buy and sell the former in exchange; the example means it uses usdt to sell and buy btc in okex
+|account|{exchange}/{specific_id} | okex/demo1| putting the exchange in account makes it more readable and recognizable
+
