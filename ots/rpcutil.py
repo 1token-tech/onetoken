@@ -31,8 +31,8 @@ class HTTPError(ServiceError):
 
 
 class Code:
-    REF_KEY_NOT_FOUND = None
-    ENTRUST_NO_NOT_FOUND = None
+    CLIENT_OID = None
+    EXCHANGE_OID = None
     CLIENT_CANCEL = None
     CONTRACT_NOT_EXIST = None
     NOT_200 = None
