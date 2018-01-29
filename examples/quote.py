@@ -3,7 +3,7 @@ import asyncio
 import ots
 
 
-def on_update(tk: ots.Ticker):
+def on_update(tk: ots.Tick):
     print(tk)
     print(tk.to_dict())
 
@@ -17,7 +17,7 @@ async def sub_func():
 
 
 async def get_last():
-    contract = 'bitfinex/btc.usd'
+    contract = 'binance/btc.usdt'
 
     while True:
         await asyncio.sleep(2)
@@ -26,7 +26,8 @@ async def get_last():
 
 
 async def main():
-    await sub_func()
+    # await sub_func()
+    await get_last()
 
 
 if __name__ == '__main__':

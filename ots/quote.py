@@ -91,15 +91,6 @@ class Quote:
                 else:
                     on_update(tk)
 
-    # async def get_last_tick(self, contract):
-    #     while not self.running:
-    #         await asyncio.sleep(1)
-    #     await self.subscribe_tick(contract)
-    #     while contract not in self.last_tick_dict:
-    #         log.warning(f'tick not ready {contract}')
-    #         await asyncio.sleep(1)
-    #     return self.last_tick_dict[contract]
-
 
 _client_pool = {}
 
@@ -115,8 +106,10 @@ async def get_client(key='defalut'):
 
 
 async def get_last_tick(contract):
-    c = await get_client()
-    return await c.get_last_tick(contract)
+    async with aiohttp.ClientSession() as sess:
+        from . import autil
+        res, err = await autil.http_go(sess.get, f'https://1token.trade/api/v1/quote/single-tick/{contract}')
+        return res, err
 
 
 async def subscribe_tick(contract, on_update):
