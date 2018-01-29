@@ -61,6 +61,23 @@ def gen_sign(secret, verb, url, nonce, data):
     return signature
 
 
+class Info:
+    def __init__(self, data):
+        assert isinstance(data, dict)
+        # if 'position' not in y:
+        #     log.warning('failed', self.symbol, str(y))
+        #     return None, Exception('ACC_GET_INFO_FAILED')
+        self.data = data
+        # ['position_dict']
+        self.position_dict = {item['contract']: item for item in data.get('position', [])}
+
+    def get_total_amount(self, pos_symbol):
+        if pos_symbol in self.position_dict['position_dict']:
+            return float(self.position_dict['position_dict'][pos_symbol]['total_amount'])
+        else:
+            return 0.0
+
+
 class Account:
     def __init__(self, symbol: str, api_key, api_secret, loop=None):
         """
@@ -79,7 +96,7 @@ class Account:
         self.name, self.exchange = get_name_exchange(symbol)
         self.host = Config.api_host + self.trans_path
         log.debug('host', self.host)
-        self.last_info = None
+        # self.last_info = None
         self.closed = False
 
     def close(self):
@@ -122,22 +139,9 @@ class Account:
         y, err = await self.api_call('get', '/info', timeout=timeout)
         if err:
             return None, err
-        if 'position' not in y:
-            log.warning('failed', self.symbol, str(y))
-            return None, Exception('ACC_GET_INFO_FAILED')
-        y['position_dict'] = {item['contract']: item for item in y['position']}
-        self.last_info = y
-        return y, None
-
-    def get_total_amount(self, pos_symbol):
-        if self.last_info is None:
-            log.warning('no info')
-        else:
-            if pos_symbol in self.last_info['position_dict']:
-                return float(self.last_info['position_dict'][pos_symbol]['total_amount'])
-            else:
-                log.warning('symbol {} not in position'.format(pos_symbol))
-                return 0.0
+        if not isinstance(y, dict):
+            return None, ValueError(f'{y} not dict')
+        return Info(y), None
 
     async def place_and_cancel(self, con, price, bs, amount, sleep, options=None):
         k = util.rand_client_oid()
