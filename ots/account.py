@@ -71,9 +71,13 @@ class Info:
         # ['position_dict']
         self.position_dict = {item['contract']: item for item in data.get('position', [])}
 
+    @property
+    def balance(self):
+        return self.data['balance']
+
     def get_total_amount(self, pos_symbol):
-        if pos_symbol in self.position_dict['position_dict']:
-            return float(self.position_dict['position_dict'][pos_symbol]['total_amount'])
+        if pos_symbol in self.position_dict:
+            return float(self.position_dict[pos_symbol]['total_amount'])
         else:
             return 0.0
 

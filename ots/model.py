@@ -5,7 +5,7 @@ import dateutil
 import dateutil.parser
 
 
-class Ticker:
+class Tick:
     def __init__(self, time, price, volume=0, bids=None, asks=None, contract=None,
                  source=None,
                  exchange_time=None,
@@ -85,7 +85,7 @@ class Ticker:
 
     @staticmethod
     def init_with_dict(dct):
-        return Ticker(dct['time'], dct['price'], dct['volume'], dct['bids'], dct['asks'])
+        return Tick(dct['time'], dct['price'], dct['volume'], dct['bids'], dct['asks'])
 
     def to_dict(self):
         dct = {'time': self.time.isoformat(), 'price': self.price, 'volume': self.volume, 'asks': self.asks,
@@ -100,8 +100,8 @@ class Ticker:
     def from_dct(dct):
         # con = ContractApi.get_by_symbol(dct['symbol'])
         con = dct['symbol']
-        return Ticker(time=dateutil.parser.parse(dct['time']), price=dct['price'], bids=dct['bids'], asks=dct['asks'],
-                      contract=con, volume=dct['volume'])
+        return Tick(time=dateutil.parser.parse(dct['time']), price=dct['price'], bids=dct['bids'], asks=dct['asks'],
+                    contract=con, volume=dct['volume'])
 
     def to_mongo_dict(self):
         dct = {'time': self.time, 'price': self.price, 'volume': self.volume, 'asks': self.asks, 'bids': self.bids}
@@ -126,7 +126,7 @@ class Ticker:
         asks = [{'price': float(p), 'volume': float(v)} for p, v in zip(asks.split(',')[::2], asks.split(',')[1::2])]
 
         time = arrow.Arrow.fromtimestamp(lst[1]).datetime
-        return Ticker(contract=lst[0], time=time, price=lst[2], volume=lst[3], bids=bids, asks=asks)
+        return Tick(contract=lst[0], time=time, price=lst[2], volume=lst[3], bids=bids, asks=asks)
 
     def to_ws_str(self):
         lst = self.to_short_list()
@@ -137,15 +137,15 @@ class Ticker:
         if isinstance(dict_or_str, str):
             return cls.from_dict(json.loads(dict_or_str))
         d = dict_or_str
-        t = Ticker(time=arrow.get(d['time']),
-                   # contract=ContractApi.get_by_symbol(d['contract']),
-                   contract=d['contract'],
-                   volume=d['volume'],
-                   asks=d['asks'],
-                   bids=d['bids'],
-                   price=d['last'],
-                   source=d.get('source', None),
-                   )
+        t = Tick(time=arrow.get(d['time']),
+                 # contract=ContractApi.get_by_symbol(d['contract']),
+                 contract=d['contract'],
+                 volume=d['volume'],
+                 asks=d['asks'],
+                 bids=d['bids'],
+                 price=d['last'],
+                 source=d.get('source', None),
+                 )
         return t
 
     def bs1(self, bs):

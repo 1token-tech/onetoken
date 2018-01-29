@@ -3,7 +3,7 @@ import aiohttp
 import json
 
 from .logger import log
-from .model import Ticker
+from .model import Tick
 
 HOST = 'wss://1token.trade/api/v1/quote/ws'
 
@@ -58,7 +58,7 @@ class Quote:
             data = json.loads(plant_data)
             # print(data)
             if 'uri' in data and data['uri'] == 'single-tick-verbose':
-                tick = Ticker.from_dict(data['data'])
+                tick = Tick.from_dict(data['data'])
                 self.last_tick_dict[tick.simple_contract] = tick
                 if tick.simple_contract in self.tick_queue:
                     self.tick_queue[tick.simple_contract].put_nowait(tick)
@@ -66,6 +66,9 @@ class Quote:
             log.warning('parse error', e)
 
     async def subscribe_tick(self, contract, on_update=None):
+        log.info('subscribe tick', contract)
+        while not self.running:
+            await asyncio.sleep(1)
         if self.ws:
             try:
                 await self.ws.send_json({'uri': 'subscribe-single-tick-verbose', 'contract': contract})
@@ -88,25 +91,26 @@ class Quote:
                 else:
                     on_update(tk)
 
-    async def get_last_tick(self, contract):
-        if contract not in self.tick_queue:
-            await self.subscribe_tick(contract)
-        return self.last_tick_dict.get(contract, None)
+    # async def get_last_tick(self, contract):
+    #     while not self.running:
+    #         await asyncio.sleep(1)
+    #     await self.subscribe_tick(contract)
+    #     while contract not in self.last_tick_dict:
+    #         log.warning(f'tick not ready {contract}')
+    #         await asyncio.sleep(1)
+    #     return self.last_tick_dict[contract]
 
 
 _client_pool = {}
-_lock = asyncio.Lock()
 
 
 async def get_client(key='defalut'):
-    # TODO  这里加了running真的是可以的么
-    if key in _client_pool and _client_pool[key].running:
+    if key in _client_pool:
         return _client_pool[key]
-    async with _lock:
-        # TODO  有bug
+    else:
         c = Quote()
-        await c.init()
         _client_pool[key] = c
+        await c.init()
         return c
 
 

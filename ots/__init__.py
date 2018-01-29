@@ -1,7 +1,7 @@
-from .model import Ticker
+from .model import Tick
 from .logger import log, log_level
 
-from .account import Account
+from .account import Account, Info
 from . import quote
 from . import autil
 from . import util
