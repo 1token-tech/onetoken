@@ -59,9 +59,9 @@ class Quote:
             # print(data)
             if 'uri' in data and data['uri'] == 'single-tick-verbose':
                 tick = Tick.from_dict(data['data'])
-                self.last_tick_dict[tick.simple_contract] = tick
-                if tick.simple_contract in self.tick_queue:
-                    self.tick_queue[tick.simple_contract].put_nowait(tick)
+                self.last_tick_dict[tick.contract] = tick
+                if tick.contract in self.tick_queue:
+                    self.tick_queue[tick.contract].put_nowait(tick)
         except Exception as e:
             log.warning('parse error', e)
 
@@ -109,6 +109,9 @@ async def get_last_tick(contract):
     async with aiohttp.ClientSession() as sess:
         from . import autil
         res, err = await autil.http_go(sess.get, f'https://1token.trade/api/v1/quote/single-tick/{contract}')
+        if not err:
+            res = Tick.from_dict(res)
+
         return res, err
 
 
