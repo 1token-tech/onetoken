@@ -2,6 +2,7 @@ import asyncio
 import json
 import urllib
 import hmac
+from typing import Union, Tuple
 
 import aiohttp
 import jwt
@@ -139,7 +140,7 @@ class Account:
         t = await self.api_call('delete', '/orders/all')
         return t
 
-    async def get_info(self, timeout=15):
+    async def get_info(self, timeout=15) -> Tuple[Union[Info, None], Union[Exception, None]]:
         y, err = await self.api_call('get', '/info', timeout=timeout)
         if err:
             return None, err

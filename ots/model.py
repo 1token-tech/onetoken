@@ -77,6 +77,9 @@ class Tick:
                                                    self.last,
                                                    self.volume)
 
+    def __repr__(self):
+        return str(self)
+
     @staticmethod
     def init_with_dict(dct):
         return Tick(dct['time'], dct['price'], dct['volume'], dct['bids'], dct['asks'])
