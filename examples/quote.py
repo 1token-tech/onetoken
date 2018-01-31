@@ -21,8 +21,8 @@ async def get_last():
 
     while True:
         await asyncio.sleep(2)
-        tk = await ots.quote.get_last_tick(contract)
-        print(tk)
+        tk, err = await ots.quote.get_last_tick(contract)
+        print(tk, err)
 
 
 async def main():
