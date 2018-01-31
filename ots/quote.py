@@ -1,4 +1,6 @@
 import asyncio
+from collections import defaultdict
+
 import aiohttp
 import json
 
@@ -13,8 +15,10 @@ class Quote:
         self.sess = None
         self.ws = None
         self.last_tick_dict = {}
+        self.tick_queue_update = defaultdict(list)
         self.tick_queue = {}
         self.running = False
+        self.lock = asyncio.Lock()
 
     async def init(self):
         log.debug('Connecting to {}'.format(HOST))
@@ -69,27 +73,29 @@ class Quote:
         log.info('subscribe tick', contract)
         while not self.running:
             await asyncio.sleep(1)
-        if self.ws:
+        async with self.lock:
             try:
-                await self.ws.send_json({'uri': 'subscribe-single-tick-verbose', 'contract': contract})
+                if contract not in self.tick_queue:
+                    await self.ws.send_json({'uri': 'subscribe-single-tick-verbose', 'contract': contract})
+                    self.tick_queue[contract] = asyncio.Queue()
+                    if on_update:
+                        if not self.tick_queue_update[contract]:
+                            asyncio.ensure_future(self.handle_q(contract))
             except Exception as e:
                 log.warning('subscribe {} failed...'.format(contract), e)
             else:
-                self.tick_queue[contract] = asyncio.Queue()
                 if on_update:
-                    asyncio.ensure_future(self.handle_q(contract, on_update))
-        else:
-            log.warning('ws is not ready yet...')
+                    self.tick_queue_update[contract].append(on_update)
 
-    async def handle_q(self, contract, on_update):
+    async def handle_q(self, contract):
         while contract in self.tick_queue:
             q = self.tick_queue[contract]
             tk = await q.get()
-            if on_update:
-                if asyncio.iscoroutinefunction(on_update):
-                    await on_update(tk)
+            for callback in self.tick_queue_update[contract]:
+                if asyncio.iscoroutinefunction(callback):
+                    await callback(tk)
                 else:
-                    on_update(tk)
+                    callback(tk)
 
 
 _client_pool = {}
