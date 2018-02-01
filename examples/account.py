@@ -32,17 +32,17 @@ async def main():
     if err:
         log.warning('Get info failed...', err)
     else:
-        log.info(info)
+        log.info(info.data)
 
     # 根据 pos symbol 获取账号 amount
     # 现货类似 btc, bch
     # 期货类似 btc.usd.q
-    amount = acc.get_total_amount('btc')
+    amount = info.get_total_amount('btc')
     log.info(amount)
 
     # 下单
     coid = util.rand_client_oid()  # client oid 为预设下单 id，方便策略后期跟踪
-    order, err = await acc.place_order(con='binance/btc.usdt', price=0.01, bs='b', amount=1, client_oid=coid)
+    order, err = await acc.place_order(con='binance/bnb.eth', price=2, bs='s', amount=0.1, client_oid=coid)
     if err:
         log.warning('Place order failed...', err)
     else:
