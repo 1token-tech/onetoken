@@ -41,8 +41,9 @@ async def main():
     log.info(amount)
 
     # 下单
-    coid = util.rand_client_oid()  # client oid 为预设下单 id，方便策略后期跟踪
-    order, err = await acc.place_order(con='binance/bnb.eth', price=2, bs='s', amount=0.1, client_oid=coid)
+    contract_symbol = 'binance/bnb.eth'
+    coid = util.rand_client_oid(contract_symbol)  # client oid 为预设下单 id，方便策略后期跟踪
+    order, err = await acc.place_order(con=contract_symbol, price=2, bs='s', amount=0.1, client_oid=coid)
     if err:
         log.warning('Place order failed...', err)
     else:
