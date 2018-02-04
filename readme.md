@@ -1,9 +1,9 @@
 ![](https://img.shields.io/badge/PYTHON-3.6%2B-green.svg)
 
 
-OTS SDK
+OneToken SDK
 ====
-OTS is a application to fetch tick and play with orders. OTS is a friendly python wrapper for ws API and restful API which will be introduce [here](#direct-api),  users can use API directly as they like
+OneToken is a application to fetch tick and play with orders. OTS is a friendly python wrapper for ws API and restful API which will be introduce [here](#direct-api),  users can use API directly as they like
 
 Users can:
 
@@ -34,21 +34,21 @@ Currently the support of other exchanges is still under development.
 ### Get Started
 
 ```bash
-git clone https://github.com/qbtrade/ots
-cd ots
+git clone https://github.com/qbtrade/onetoken
+cd onetoken
 pip install .
 ```
 OR 
 ```bash
-pip install onetoken-trade -U
+pip install onetoken -U
 ```
-Then use ots with `import ots` in python script.
+Then use onetoken with `import onetoken` in python script.
 
 ### Example
 
 Try Quote and Account class, the code is in './example'
 
-`$ cd ots/`
+`$ cd onetoken/`
 
 if you don't want to install this package, set the `PYTHONPATH`
 
