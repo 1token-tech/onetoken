@@ -8,7 +8,6 @@ setup(name='onetoken',
       version='0.1.3',
       description='OneToken Trade System Python SDK',
       install_requires=[
-          'requests',
           'arrow',
           'PyJWT',
           'PyYAML',
