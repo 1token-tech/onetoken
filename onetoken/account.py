@@ -227,7 +227,7 @@ class Account:
         log.debug('Place order', con=con, price=price, bs=bs, amount=amount, client_oid=client_oid)
 
         if client_oid is None:
-            client_oid = util.rand_client_oid()
+            client_oid = util.rand_client_oid(con)
 
         data = {'contract': con,
                 'price': price,
