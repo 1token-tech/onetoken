@@ -3,8 +3,8 @@ import os
 
 import yaml
 
-import ots
-from ots import Account, util, log
+import onetoken as ot
+from onetoken import Account, util, log
 
 
 def load_api_key_secret():
@@ -76,5 +76,5 @@ async def main():
 if __name__ == '__main__':
     import logging
 
-    ots.log_level(logging.INFO)
+    ot.log_level(logging.INFO)
     asyncio.get_event_loop().run_until_complete(main())

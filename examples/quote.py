@@ -1,25 +1,26 @@
 import asyncio
 
-import ots
+import onetoken as ot
+from onetoken import Tick
 
 
-def on_update(tk: ots.Tick):
+def on_update(tk: Tick):
     print('tick come', tk)
 
 
-def on_update2(tk: ots.Tick):
+def on_update2(tk: Tick):
     print('tick come 2', tk)
 
 
 async def sub_func():
     contract = 'okex/ltc.btc'
-    await ots.quote.subscribe_tick(contract, on_update)
+    await ot.quote.subscribe_tick(contract, on_update)
 
     contract = 'okex/ltc.btc'
-    await ots.quote.subscribe_tick(contract, on_update2)
+    await ot.quote.subscribe_tick(contract, on_update2)
 
     contract = 'okex/eth.btc'
-    await ots.quote.subscribe_tick(contract, on_update2)
+    await ot.quote.subscribe_tick(contract, on_update2)
 
 
 async def get_last():
@@ -27,7 +28,7 @@ async def get_last():
 
     while True:
         await asyncio.sleep(2)
-        tk, err = await ots.quote.get_last_tick(contract)
+        tk, err = await ot.quote.get_last_tick(contract)
         print(tk, err)
 
 
@@ -39,6 +40,6 @@ async def main():
 if __name__ == '__main__':
     import logging
 
-    print('ots folder', ots)
-    ots.log_level(logging.INFO)
+    print('ots folder', ot)
+    ot.log_level(logging.INFO)
     asyncio.get_event_loop().run_until_complete(main())
