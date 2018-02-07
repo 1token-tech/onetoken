@@ -8,7 +8,7 @@ from onetoken import Account, util, log
 
 
 def load_api_key_secret():
-    path = os.path.expanduser('~/.1token/config.yml')
+    path = os.path.expanduser('~/.onetoken/config.yml')
     if os.path.isfile(path):
         try:
             js = yaml.load(open(path).read())
