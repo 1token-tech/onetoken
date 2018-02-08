@@ -149,7 +149,9 @@ class Account:
         return Info(y), None
 
     async def place_and_cancel(self, con, price, bs, amount, sleep, options=None):
-        k = util.rand_client_oid()
+
+        # k = util.rand_client_oid(con)
+        k = util.rand_client_oid(con)
         res1, err1 = await self.place_order(con, price, bs, amount,
                                             client_oid=k,
                                             options=options)
