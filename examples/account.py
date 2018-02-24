@@ -42,8 +42,8 @@ async def main():
     log.info(f'Amount: {amount} {currency}')
 
     # 下单
-    contract_symbol = 'binance/bnb.eth'
-    contract_symbol_2 = 'binance/btc.usdt'
+    contract_symbol = 'huobip/bnb.eth'
+    contract_symbol_2 = 'huobip/eth.usdt'
 
     coid = util.rand_client_oid(contract_symbol)  # client oid 为预设下单 id，方便策略后期跟踪
     order_1, err = await acc.place_order(con=contract_symbol, price=2, bs='s', amount=0.1, client_oid=coid)
