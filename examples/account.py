@@ -22,9 +22,16 @@ async def main():
     # check_auth_file()
     api_key, api_secret, account = load_api_key_secret()
     if api_key is None or api_secret is None:
-        api_key = input('api_key: ')
-        api_secret = input('api_secret: ')
-        account = input('account: ')
+        import json
+        try:
+            config = json.loads(open(os.path.expanduser('~/.onetoken/ot_huobip.yeefea.json')).read())
+            api_key = config['api_key']
+            api_secret = config['api_secret']
+            account = config['account']
+        except:
+            api_key = input('api_key: ')
+            api_secret = input('api_secret: ')
+            account = input('account: ')
     acc = Account(account, api_key=api_key, api_secret=api_secret)
 
     # 获取账号 info
@@ -41,19 +48,33 @@ async def main():
     amount = info.get_total_amount(currency)
     log.info(f'Amount: {amount} {currency}')
 
+    # 获取当前开放的 orders
+    p_list, err = await acc.get_pending_list()
+    if err:
+        log.warning('Get pending list failed...', err)
+    else:
+        log.info(f'Pending list: {p_list}')
+
+    # 获取指定 order 的 info
+    o_info_2, err = await acc.get_order_use_exchange_oid('huobip/qtum.usdt-1786556131')
+    if err:
+        log.warning('Get order info failed...', err)
+    else:
+        log.info(f'Order information by exchange_oid: {o_info_2}')
+
     # 下单
-    contract_symbol = 'huobip/bnb.eth'
-    contract_symbol_2 = 'huobip/eth.usdt'
+    contract_symbol = 'huobip/btc.usdt'
+    contract_symbol_2 = 'huobip/iost.usdt'
 
     coid = util.rand_client_oid(contract_symbol)  # client oid 为预设下单 id，方便策略后期跟踪
-    order_1, err = await acc.place_order(con=contract_symbol, price=2, bs='s', amount=0.1, client_oid=coid)
+    order_1, err = await acc.place_order(con=contract_symbol, price=20000, bs='s', amount=0.01)
     if err:
         log.warning('Place order failed...', err)
     else:
         log.info(f'New order: {order_1}')
     await asyncio.sleep(0.5)
 
-    order_2, err = await acc.place_order(con=contract_symbol_2, price=10000, bs='s', amount=0.5)
+    order_2, err = await acc.place_order(con=contract_symbol_2, price=10000, bs='s', amount=1.3)
     if err:
         log.warning('Place order failed...', err)
     else:
@@ -93,31 +114,57 @@ async def main():
         log.info(f'Canceled order: {res}')
 
     # add more orders
-    order_more, err = await acc.place_order(con=contract_symbol, price=2, bs='s', amount=0.1)
+    order_more, err = await acc.place_order(con=contract_symbol, price=20000, bs='s', amount=0.1)
     if err:
         log.warning('Place order failed...', err)
     else:
         log.info(f'New order: {order_more}')
-    order_more, err = await acc.place_order(con=contract_symbol_2, price=2, bs='b', amount=0.3)
+    order_more, err = await acc.place_order(con=contract_symbol_2, price=20000, bs='s', amount=1.2)
     if err:
         log.warning('Place order failed...', err)
     else:
         log.info(f'New order: {order_more}')
 
-    # 测试cancel_all
-    await acc.cancel_all()
+    # # 测试cancel_all 谨慎调用!
+    # await acc.cancel_all()
+    # p_list, err = await acc.get_pending_list()
+    # if err:
+    #     log.warning('Get pending list failed...', err)
+    # else:
+    #     log.info(f'Pending list: {p_list}')
+
+    # 测试place_and_cancel
+    res, err = await acc.place_and_cancel(con=contract_symbol, price=20000, bs='s', amount=0.01, sleep=2)
+    if err:
+        log.warning('cancel order failed...', err)
+    else:
+        log.info(f'Placed and canceled order: {res}')
+
+    # 获取当前开放的 orders
     p_list, err = await acc.get_pending_list()
     if err:
         log.warning('Get pending list failed...', err)
     else:
         log.info(f'Pending list: {p_list}')
 
-    # 测试place_and_cancel
-    res, err = await acc.place_and_cancel(con=contract_symbol, price=3, bs='s', amount=0.2, sleep=2)
+    withdraw_address = ''
+    res, err = await acc.post_withdraw(currency='iost', amount=1.3, address=withdraw_address, fee=None)
     if err:
-        log.warning('cancel order failed...', err)
+        log.warning('Post withdraw failed...', err)
     else:
-        log.info(f'Placed and canceled order: {res}')
+        log.info(f'New withdraw: {res}')
+
+    res, err = await acc.cancel_withdraw_use_client_wid(res['client_wid'])
+    if err:
+        log.warning('Cancel withdraw by client_wid failed...', err)
+    else:
+        log.info(f'Cancel withdraw by client_wid: {res}')
+
+    res, err = await acc.cancel_withdraw_use_exchange_wid(res['exchange_wid'])
+    if err:
+        log.warning('Cancel withdraw by exchange_wid failed...', err)
+    else:
+        log.info(f'Cancel withdraw by exchange_wid: {res}')
 
     # 未实现的方法
     # status = await acc.get_status()

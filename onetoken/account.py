@@ -88,10 +88,10 @@ class Account:
         """
 
         :param symbol:
+        :param api_key:
+        :param api_secret:
         :param loop:
-        :param host:
         """
-
         self.symbol = symbol
         self.api_key = api_key
         self.api_secret = api_secret
@@ -244,6 +244,43 @@ class Account:
         res = await self.api_call('post', '/orders', data=data)
         log.debug(res)
         return res
+
+    async def post_withdraw(self, currency, amount, address, fee=None, client_wid=None, options=None):
+        log.debug('Post withdraw', currency=currency, amount=amount, address=address, fee=fee, client_wid=client_wid)
+        if client_wid is None:
+            client_wid = util.rand_client_wid(self.exchange, currency)
+        data = {
+            'currency': currency,
+            'amount': amount,
+            'address': address
+        }
+        if fee is not None:
+            data['fee'] = fee
+        if client_wid:
+            data['client_oid'] = client_wid
+        if options:
+            data['options'] = json.dumps(options)
+        res = await self.api_call('post', '/withdraws', data=data)
+        log.debug(res)
+        return res
+
+    async def cancel_withdraw_use_exchange_wid(self, exchange_wid):
+        log.debug('Cancel withdraw use exchange_wid', exchange_wid)
+        data = {'exchange_wid': exchange_wid}
+        return await self.api_call('delete', '/withdraws', params=data)
+
+    async def cancel_withdraw_use_client_wid(self, client_wid):
+        log.debug('Cancel withdraw use client_wid', client_wid)
+        data = {'client_wid': client_wid}
+        return await self.api_call('delete', '/withdraws', params=data)
+
+    async def get_withdraw_use_exchange_wid(self, exchange_wid):
+        # TODO
+        pass
+
+    async def get_withdraw_use_client_wid(self, client_wid):
+        # TODO
+        pass
 
     @property
     def is_running(self):

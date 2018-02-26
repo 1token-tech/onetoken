@@ -20,3 +20,16 @@ def rand_client_oid(contract_symbol):
     rand = rand_id()
     oid = f'{contract_symbol}-{now}-{rand}'
     return oid
+
+
+def rand_client_wid(exchange, currency):
+    """
+    binance/xxx-yearmonthday-hourminuteseconds-random
+    :param exchange:
+    :param currency:
+    :return:
+    """
+    now = arrow.now().format('YYYYMMDD-HHmmss')
+    rand = rand_id()
+    cwid = f'{exchange}/{currency}-{now}-{rand}'
+    return cwid
