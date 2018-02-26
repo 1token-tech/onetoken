@@ -23,12 +23,15 @@ async def main():
     api_key, api_secret, account = load_api_key_secret()
     if api_key is None or api_secret is None:
         import json
+        file_path = '~/.onetoken/ot_huobip.tyz.json'
         try:
-            config = json.loads(open(os.path.expanduser('~/.onetoken/ot_huobip.yeefea.json')).read())
+            config = json.loads(open(os.path.expanduser(file_path)).read())
             api_key = config['api_key']
             api_secret = config['api_secret']
             account = config['account']
         except:
+            print('file not found: ', os.path.expanduser(file_path))
+            print('input manually:')
             api_key = input('api_key: ')
             api_secret = input('api_secret: ')
             account = input('account: ')
