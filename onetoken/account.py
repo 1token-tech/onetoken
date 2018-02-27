@@ -282,6 +282,14 @@ class Account:
         # TODO
         pass
 
+    async def get_account_ids(self):
+        """
+        huobip 特有方法
+        :return:
+        """
+        log.debug('Get huobip account ids')
+        return await self.api_call('get', '/account_ids')
+
     @property
     def is_running(self):
         return not self.closed
