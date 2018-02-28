@@ -43,6 +43,16 @@ async def main():
     else:
         log.info(f'Account info: {info.data}')
 
+    # wd, err = await acc.post_withdraw('eth', 0.05, '0x0FaC2592D3d26fC5534Ae9a41fD72F10bbDA51B4')
+    # if err:
+    #     log.warning('Get info failed...', err)
+    # else:
+    #     log.info(f'Post withdraw: {wd}')
+    wd, err = await acc.cancel_withdraw_use_exchange_wid('huobip/eth-1495938')
+    if err:
+        log.warning('Get info failed...', err)
+    else:
+        log.info(f'Post withdraw: {wd}')
     # # 根据 pos symbol 获取账号 amount
     # # 现货类似 btc, bch
     # # 期货类似 btc.usd.q

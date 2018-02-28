@@ -15,12 +15,13 @@ from . import util
 
 
 class Config:
-    api_host = 'https://1token.trade/api/v1/trade'
+    api_host = 'http://localhost:3000'
+
 
 
 def get_trans_host(symbol):
     name, exg = get_name_exchange(symbol)
-    return '/{}/{}'.format(exg, name)
+    return '/{}'.format( name)
 
 
 def get_name_exchange(symbol):
@@ -257,7 +258,7 @@ class Account:
         if fee is not None:
             data['fee'] = fee
         if client_wid:
-            data['client_oid'] = client_wid
+            data['client_wid'] = client_wid
         if options:
             data['options'] = json.dumps(options)
         res = await self.api_call('post', '/withdraws', data=data)
