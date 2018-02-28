@@ -48,11 +48,17 @@ async def main():
     #     log.warning('Get info failed...', err)
     # else:
     #     log.info(f'Post withdraw: {wd}')
-    wd, err = await acc.cancel_withdraw_use_exchange_wid('huobip/eth-1495938')
+    # wd, err = await acc.cancel_withdraw_use_exchange_wid('huobip/eth-1495938')
+    # if err:
+    #     log.warning('Get info failed...', err)
+    # else:
+    #     log.info(f'Post withdraw: {wd}')
+
+    wd, err = await acc.get_withdraw_use_exchange_wid('huobip/eth-1495938')
     if err:
         log.warning('Get info failed...', err)
     else:
-        log.info(f'Post withdraw: {wd}')
+        log.info(f'Get withdraw: {wd}')
     # # 根据 pos symbol 获取账号 amount
     # # 现货类似 btc, bch
     # # 期货类似 btc.usd.q

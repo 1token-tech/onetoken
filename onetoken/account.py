@@ -15,13 +15,12 @@ from . import util
 
 
 class Config:
-    api_host = 'http://localhost:3000'
-
+    api_host = 'https://1token.trade/api/v1/trade'
 
 
 def get_trans_host(symbol):
     name, exg = get_name_exchange(symbol)
-    return '/{}'.format( name)
+    return '/{}/{}'.format(exg, name)
 
 
 def get_name_exchange(symbol):
@@ -276,12 +275,14 @@ class Account:
         return await self.api_call('delete', '/withdraws', params=data)
 
     async def get_withdraw_use_exchange_wid(self, exchange_wid):
-        # TODO
-        pass
+        log.debug('Cancel withdraw use exchange_wid', exchange_wid)
+        data = {'exchange_wid': exchange_wid}
+        return await self.api_call('get', '/withdraws', params=data)
 
     async def get_withdraw_use_client_wid(self, client_wid):
-        # TODO
-        pass
+        log.debug('Cancel withdraw use client_wid', client_wid)
+        data = {'client_wid': client_wid}
+        return await self.api_call('get', '/withdraws', params=data)
 
     @property
     def is_running(self):
