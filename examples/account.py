@@ -19,13 +19,11 @@ def load_api_key_secret():
 
 
 async def main():
-    # check_auth_file()
     api_key, api_secret, account = load_api_key_secret()
     if api_key is None or api_secret is None:
-        import json
-        file_path = '~/.onetoken/ot_huobip.tyz.json'
+        file_path = '~/.onetoken/config.yml'
         try:
-            config = json.loads(open(os.path.expanduser(file_path)).read())
+            config = yaml.load(open(os.path.expanduser(file_path)).read())
             api_key = config['api_key']
             api_secret = config['api_secret']
             account = config['account']
@@ -36,6 +34,7 @@ async def main():
             api_secret = input('api_secret: ')
             account = input('account: ')
     acc = Account(account, api_key=api_key, api_secret=api_secret)
+    log.info('Initialized account {}'.format(account))
 
     # 获取账号 info
     info, err = await acc.get_info()
@@ -43,12 +42,6 @@ async def main():
         log.warning('Get info failed...', err)
     else:
         log.info(f'Account info: {info.data}')
-
-    ids, err = await acc.get_account_ids()
-    if err:
-        log.warn('Get account IDs failed...', err)
-    else:
-        log.info(f'Account IDs: {ids}')
 
     # # 根据 pos symbol 获取账号 amount
     # # 现货类似 btc, bch
