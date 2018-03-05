@@ -15,7 +15,7 @@ from . import util
 
 
 class Config:
-    api_host = 'https://1token.trade/api/v1/trade'
+    api_host = 'https://api.1token.trade/v1/trade'
 
 
 def get_trans_host(symbol):
