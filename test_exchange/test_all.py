@@ -28,7 +28,7 @@ class TestExchanges(unittest.TestCase):
         cls.loop = asyncio.get_event_loop()
         cls.exchange, cls.name = cls.account.split('/', 1)
         cls.order1 = {
-            'con': cls.exchange + '/qtum.usdt',
+            'con': cls.exchange + '/eth.usdt',
             'bs': 's',
             'price': 10000,
             'amount': 1.1
@@ -50,6 +50,7 @@ class TestExchanges(unittest.TestCase):
     def test_get_info(self):
         info, err = self.loop.run_until_complete(self.acc.get_info())
         log.info(f'account info: {info.data}')
+        log.info(f'err should be None: {err}')
         self.assertIsInstance(info, ot.Info)
         self.assertIsNone(err)
         position = info.data['position']
@@ -64,6 +65,7 @@ class TestExchanges(unittest.TestCase):
     def test_get_pending_list(self):
         pending_list, err = self.loop.run_until_complete(self.acc.get_pending_list())
         log.info(f'pending list: {pending_list}')
+        log.info(f'err should be None: {err}')
         self.assertIsNone(err)
         self.assertIsInstance(pending_list, list)
 
@@ -73,7 +75,7 @@ class TestExchanges(unittest.TestCase):
         self.get_order()
 
     def place_order(self):
-        log.info(f'test place order')
+        log.info(f'>>>start test place order')
         order1, err = self.loop.run_until_complete(self.acc.place_order(**self.order1))
         log.info(f'new order: {order1}')
         log.info(f'err should be None: {err}')
@@ -88,12 +90,14 @@ class TestExchanges(unittest.TestCase):
         log.info(f'err should be HTTPError: {err}')
         self.assertIsNone(order2)
         self.assertIsNotNone(err)
-        log.info(f'end test place order')
+        log.info(f'>>>end test place order')
         time.sleep(1)
 
     def get_order(self):
-        log.info(f'test get order')
+        log.info(f'>>>start test get order')
         order, err = self.loop.run_until_complete(self.acc.get_order_use_exchange_oid(self.exchange_oid))
+        log.info(f'order: {order}')
+        log.info(f'err should be None: {err}')
         self.assertIsNone(err)
         self.assertIsInstance(order, list)
         self.assertEqual(len(order), 1)
@@ -101,29 +105,34 @@ class TestExchanges(unittest.TestCase):
         self.assertEqual(order['exchange_oid'], self.exchange_oid)
         self.assertEqual(order['client_oid'], self.client_oid)
         order, err = self.loop.run_until_complete(self.acc.get_order_use_client_oid(self.client_oid))
+        log.info(f'order: {order}')
+        log.info(f'err should be None: {err}')
         self.assertIsNone(err)
         self.assertIsInstance(order, list)
         self.assertEqual(len(order), 1)
         order = order[0]
         self.assertEqual(order['exchange_oid'], self.exchange_oid)
         self.assertEqual(order['client_oid'], self.client_oid)
-        log.info(f'end test get order')
+        log.info(f'>>>end test get order')
         time.sleep(1)
 
     def cancel_order(self):
-        log.info(f'test cancel order')
+        log.info(f'>>>start test cancel order')
         order, err = self.loop.run_until_complete(self.acc.cancel_use_exchange_oid(self.exchange_oid))
+        log.info(f'order: {order}')
+        log.info(f'err should be None: {err}')
         self.assertIsNone(err)
         self.assertIsInstance(order, dict)
         self.assertEqual(order['exchange_oid'], self.exchange_oid)
-        log.info(f'end test cancel order')
+        log.info(f'>>>end test cancel order')
         time.sleep(1)
 
     @unittest.skip('skip')
     def test_cancel_all(self):
-        log.info(f'test cancel all')
+        log.info(f'>>>start test cancel all')
         res, err = self.loop.run_until_complete(self.acc.cancel_all())
         log.info(f'response: {res}')
+        log.info(f'err should be None: {err}')
         self.assertIsNone(err)
         self.assertIsInstance(res, dict)
         time.sleep(1)
@@ -135,25 +144,27 @@ class TestExchanges(unittest.TestCase):
         self.get_withdraw()
 
     def post_withdraw(self):
-        log.info(f'test post withdraw')
+        log.info(f'>>>start test post withdraw')
         res, err = self.loop.run_until_complete(self.acc.post_withdraw(**self.withdraw))
         log.info(f'response: {res}')
+        log.info(f'err should be None: {err}')
         self.assertIsNone(err)
         self.assertIsInstance(res, dict)
         self.assertRegex(res['exchange_wid'], self.exchange + '/' + self.withdraw['currency'] + r'-[\d]+')
         # self.assertRegex(res['client_wid'], self.exchange + '/' + self.withdraw['currency'] + r'-[\d]+-[\w]+')  # not implemented yet
         self.exchange_wid = res['exchange_wid']
-        log.info(f'end test post withdraw')
+        log.info(f'>>>end test post withdraw')
         time.sleep(1)
 
     def get_withdraw(self):
-        log.info(f'test get withdraw')
+        log.info(f'>>>start test get withdraw')
         res, err = self.loop.run_until_complete(self.acc.get_withdraw_use_exchange_wid(self.exchange_wid))
         log.info(f'response: {res}')
+        log.info(f'err should be None: {err}')
         self.assertIsNone(err)
         self.assertIsInstance(res, dict)
         self.assertEqual(res['exchange_wid'], self.exchange_wid)
-        log.info('end test get withdraw')
+        log.info('>>>end test get withdraw')
         time.sleep(1)
 
     @unittest.skip('not supported yet')
@@ -161,13 +172,14 @@ class TestExchanges(unittest.TestCase):
         time.sleep(1)
 
     def cancel_withdraw(self):
-        log.info('test cancel withdraw')
+        log.info('>>>start test cancel withdraw')
         res, err = self.loop.run_until_complete(self.acc.cancel_withdraw_use_exchange_wid(self.exchange_wid))
-        log.info(f'response: {res}, err: {err}')
+        log.info(f'response: {res}')
+        log.info(f'err should be None: {err}')
         self.assertIsNone(err)
         self.assertIsInstance(res, dict)
         self.assertEqual(res['exchange_wid'], self.exchange_wid)
-        log.info('test cancel withdraw')
+        log.info('>>>end test cancel withdraw')
         time.sleep(1)
 
 
