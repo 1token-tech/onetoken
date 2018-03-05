@@ -4,7 +4,7 @@ Btp Websocket Api doc
 
 General
 --
-Connect your websocket client to `ws://alihk-debug.qbtrade.org:3019/ws`
+Connect your websocket client to `wss://api.qbtrade.org/quote/ws`
 
 A basic command is sent in the following format:
 ```$xslt
