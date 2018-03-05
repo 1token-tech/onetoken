@@ -81,11 +81,11 @@ class TestExchanges(unittest.TestCase):
         self.assertIsInstance(order1, dict)
         self.exchange_oid = order1.get('exchange_oid', '')
         self.client_oid = order1.get('client_oid', '')
-        self.assertRegex(self.exchange_oid, r'[a-z]+/[a-z]+\.[a-z]+-[\d]+')
-        self.assertRegex(self.client_oid, r'[a-z]+/[a-z]+\.[a-z]+-[\d]+-[\d]+-[\w]+')
+        self.assertRegex(self.exchange_oid, self.exchange + r'/[a-z]+\.[a-z]+-[\d]+')
+        self.assertRegex(self.client_oid, self.exchange + r'/[a-z]+\.[a-z]+-[\d]+-[\d]+-[\w]+')
         order2, err = self.loop.run_until_complete(self.acc.place_order(**self.order2))
         log.info(f'new order should be None: {order2}')
-        log.info(f'err should HTTPError: {err}')
+        log.info(f'err should be HTTPError: {err}')
         self.assertIsNone(order2)
         self.assertIsNotNone(err)
         log.info(f'end test place order')
@@ -141,6 +141,7 @@ class TestExchanges(unittest.TestCase):
         self.assertIsNone(err)
         self.assertIsInstance(res, dict)
         self.assertRegex(res['exchange_wid'], self.exchange + '/' + self.withdraw['currency'] + r'-[\d]+')
+        # self.assertRegex(res['client_wid'], self.exchange + '/' + self.withdraw['currency'] + r'-[\d]+-[\w]+')  # not implemented yet
         self.exchange_wid = res['exchange_wid']
         log.info(f'end test post withdraw')
         time.sleep(1)
@@ -151,13 +152,13 @@ class TestExchanges(unittest.TestCase):
         log.info(f'response: {res}')
         self.assertIsNone(err)
         self.assertIsInstance(res, dict)
-        self.assertRegex(res['exchange_wid'], self.exchange + '/' + self.withdraw['currency'] + r'-[\d]+')
+        self.assertEqual(res['exchange_wid'], self.exchange_wid)
         log.info('end test get withdraw')
         time.sleep(1)
 
     @unittest.skip('not supported yet')
     def get_withdraw_list(self):
-        pass
+        time.sleep(1)
 
     def cancel_withdraw(self):
         log.info('test cancel withdraw')
@@ -165,7 +166,7 @@ class TestExchanges(unittest.TestCase):
         log.info(f'response: {res}, err: {err}')
         self.assertIsNone(err)
         self.assertIsInstance(res, dict)
-        self.assertRegex(res['exchange_wid'], self.exchange + '/' + self.withdraw['currency'] + r'-[\d]+')
+        self.assertEqual(res['exchange_wid'], self.exchange_wid)
         log.info('test cancel withdraw')
         time.sleep(1)
 
