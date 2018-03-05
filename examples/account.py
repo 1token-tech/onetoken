@@ -34,6 +34,7 @@ async def main():
             api_secret = input('api_secret: ')
             account = input('account: ')
     acc = Account(account, api_key=api_key, api_secret=api_secret)
+    await asyncio.sleep(5)
     log.info('Initialized account {}'.format(account))
 
     # 获取账号 info
@@ -43,30 +44,14 @@ async def main():
     else:
         log.info(f'Account info: {info.data}')
 
-    # wd, err = await acc.post_withdraw('eth', 0.05, '0x0FaC2592D3d26fC5534Ae9a41fD72F10bbDA51B4')
-    # if err:
-    #     log.warning('Get info failed...', err)
-    # else:
-    #     log.info(f'Post withdraw: {wd}')
-    # wd, err = await acc.cancel_withdraw_use_exchange_wid('huobip/eth-1495938')
-    # if err:
-    #     log.warning('Get info failed...', err)
-    # else:
-    #     log.info(f'Post withdraw: {wd}')
+    # 根据 pos symbol 获取账号 amount
+    # 现货类似 btc, bch
+    # 期货类似 btc.usd.q
+    currency = 'btc'
+    amount = info.get_total_amount(currency)
+    log.info(f'Amount: {amount} {currency}')
 
-    wd, err = await acc.get_withdraw_use_exchange_wid('huobip/eth-1495938')
-    if err:
-        log.warning('Get info failed...', err)
-    else:
-        log.info(f'Get withdraw: {wd}')
-    # # 根据 pos symbol 获取账号 amount
-    # # 现货类似 btc, bch
-    # # 期货类似 btc.usd.q
-    # currency = 'btc'
-    # amount = info.get_total_amount(currency)
-    # log.info(f'Amount: {amount} {currency}')
-    #
-    # # 获取当前开放的 orders
+    # 获取当前开放的 orders
     # p_list, err = await acc.get_pending_list()
     # if err:
     #     log.warning('Get pending list failed...', err)
@@ -79,6 +64,8 @@ async def main():
     #     log.warning('Get order info failed...', err)
     # else:
     #     log.info(f'Order information by exchange_oid: {o_info_2}')
+    #
+    # await asyncio.sleep(5)
     #
     # # 下单
     # contract_symbol = 'huobip/btc.usdt'
@@ -142,7 +129,7 @@ async def main():
     #     log.warning('Place order failed...', err)
     # else:
     #     log.info(f'New order: {order_more}')
-    #
+
     # # # 测试cancel_all 谨慎调用!
     # # await acc.cancel_all()
     # # p_list, err = await acc.get_pending_list()
@@ -184,6 +171,24 @@ async def main():
     # else:
     #     log.info(f'Cancel withdraw by exchange_wid: {res}')
 
+    # 提币测试,谨慎调用!
+    # wd, err = await acc.post_withdraw('eth', 0.05, '0x0FaC2592D3d26fC5534Ae9a41fD72F10bbDA51B4')
+    # if err:
+    #     log.warning('Get info failed...', err)
+    # else:
+    #     log.info(f'Post withdraw: {wd}')
+    #
+    res, err = await acc.cancel_withdraw_use_exchange_wid('huobip/eth-1495937')
+    if err:
+        log.warning('Get info failed...', err)
+    else:
+        log.info(f'Cancel withdraw: {res}')
+
+    res, err = await acc.get_withdraw_use_exchange_wid('huobip/eth-1495937')
+    if err:
+        log.warning('Get info failed...', err)
+    else:
+        log.info(f'Get withdraw: {res}')
     # 未实现的方法
     # status = await acc.get_status()
     # await acc.amend_order_use_client_oid()
