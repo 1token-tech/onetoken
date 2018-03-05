@@ -7,7 +7,7 @@ import json
 from .logger import log
 from .model import Tick
 
-HOST = 'wss://1token.trade/api/v1/quote/ws'
+HOST = 'wss://api.1token.trade/v1/quote/ws'
 
 
 class Quote:
@@ -114,7 +114,7 @@ async def get_client(key='defalut'):
 async def get_last_tick(contract):
     async with aiohttp.ClientSession() as sess:
         from . import autil
-        res, err = await autil.http_go(sess.get, f'https://1token.trade/api/v1/quote/single-tick/{contract}')
+        res, err = await autil.http_go(sess.get, f'https://api.1token.trade/v1/quote/single-tick/{contract}')
         if not err:
             res = Tick.from_dict(res)
 
