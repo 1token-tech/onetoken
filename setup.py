@@ -11,7 +11,7 @@ setup(name='onetoken',
           'arrow',
           'PyJWT',
           'PyYAML',
-          'aiohttp',
+          'aiohttp==2.3.10',
       ],
       zip_safe=False,
       )
