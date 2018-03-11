@@ -4,7 +4,7 @@ import os
 import yaml
 
 import onetoken as ot
-from onetoken import Account, util, log
+from onetoken import Account, log
 
 
 def load_api_key_secret():
