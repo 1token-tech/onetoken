@@ -97,20 +97,17 @@ class Account:
         self.api_secret = api_secret
         log.debug('async account init {}'.format(symbol))
         self.session = None
-        asyncio.get_event_loop().run_until_complete(self.init_client_session(loop))
         self.trans_path = get_trans_host(symbol)
+        self.session = aiohttp.ClientSession(loop=loop)
         self.name, self.exchange = get_name_exchange(symbol)
         self.host = Config.api_host + self.trans_path
         log.debug('host', self.host)
         # self.last_info = None
         self.closed = False
 
-    async def init_client_session(self, loop):
-        self.session = aiohttp.ClientSession(loop=loop)
-
     def close(self):
         if self.session and not self.session.closed:
-            asyncio.get_event_loop().run_until_complete(self.session.close())
+            self.session.close()
         self.closed = True
 
     def __del__(self):
