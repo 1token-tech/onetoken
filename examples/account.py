@@ -52,11 +52,11 @@ async def main():
     log.info(f'Amount: {amount} {currency}')
 
     # 获取当前开放的 orders
-    # p_list, err = await acc.get_pending_list()
-    # if err:
-    #     log.warning('Get pending list failed...', err)
-    # else:
-    #     log.info(f'Pending list: {p_list}')
+    p_list, err = await acc.get_order_list()
+    if err:
+        log.warning('Get pending list failed...', err)
+    else:
+        log.info(f'Pending list: {p_list}')
     #
     # # 获取指定 order 的 info
     # o_info_2, err = await acc.get_order_use_exchange_oid('huobip/qtum.usdt-1786556131')
@@ -100,7 +100,7 @@ async def main():
     #     log.info(f'Order information by exchange_oid: {o_info_2}')
     #
     # # 获取当前开放的 orders
-    # p_list, err = await acc.get_pending_list()
+    # p_list, err = await acc.get_order_list()
     # if err:
     #     log.warning('Get pending list failed...', err)
     # else:
@@ -132,7 +132,7 @@ async def main():
 
     # # # 测试cancel_all 谨慎调用!
     # # await acc.cancel_all()
-    # # p_list, err = await acc.get_pending_list()
+    # # p_list, err = await acc.get_order_list()
     # # if err:
     # #     log.warning('Get pending list failed...', err)
     # # else:
@@ -146,7 +146,7 @@ async def main():
     #     log.info(f'Placed and canceled order: {res}')
     #
     # # 获取当前开放的 orders
-    # p_list, err = await acc.get_pending_list()
+    # p_list, err = await acc.get_order_list()
     # if err:
     #     log.warning('Get pending list failed...', err)
     # else:

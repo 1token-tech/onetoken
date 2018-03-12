@@ -119,7 +119,7 @@ class Account:
     def __repr__(self):
         return '<{}:{}>'.format(self.__class__.__name__, self.symbol)
 
-    async def get_pending_list(self):
+    async def get_order_list(self):
         t = await self.api_call('get', '/orders')
         return t
 
