@@ -4,6 +4,8 @@ import onetoken as ot
 from onetoken import Account, log
 from .util import load_api_key_secret, input_api_key_secret
 import time
+import pprint
+from otlib import OTSOrder
 
 
 class TestExchanges(unittest.TestCase):
@@ -35,7 +37,7 @@ class TestExchanges(unittest.TestCase):
             'con': cls.exchange + '/iost.usdt',
             'bs': 's',
             'price': 10000,
-            'amount': 1.1
+            'amount': 0.0001
         }
         print('initializing account {}'.format(cls.account))
         time.sleep(3)
@@ -47,9 +49,10 @@ class TestExchanges(unittest.TestCase):
     # @unittest.skip('get info')
     def test_get_info(self):
         info, err = self.loop.run_until_complete(self.acc.get_info())
-        print(f'account info: {info.data}')
-        print(f'err should be None: {err}')
-
+        print('>>>account info:')
+        pprint.pprint(info.data)
+        print('>>>err should be None:')
+        print(str(err))
         self.assertIsInstance(info, ot.Info)
         self.assertIsNone(err)
 
@@ -62,12 +65,16 @@ class TestExchanges(unittest.TestCase):
             c = pos['contract']
             if c == 'btc':
                 has_btc = True
+                print('>>>btc is in position:')
+                print(c)
             if c in real_currency:
                 has_real_currency = True
+                print('>>>legal currency or usdt is in position:')
+                print(c)
         self.assertTrue(has_real_currency, 'real currency or usdt is not included')
         self.assertTrue(has_btc, 'btc is not included')
 
-        # balance = cash + market_value(w.o. futures)
+        # balance = cash + market_value (w.o. futures)
         self.assertEqual(info.data['balance'], info.data['cash'] + info.data['market_value'],
                          'balance != cash + market_value')
 
@@ -79,14 +86,54 @@ class TestExchanges(unittest.TestCase):
                 self.assertEqual(pos['market_value'], 0.0, 'usdt market_value != 0.0')
                 # self.assertAlmostEqual(pos['value_cny'], pos['total_amount'] * qb.Currency.USDCNY * usdt_price,
                 #                        delta=1e-8, msg='usdt value_cny is not correct')
+            elif pos['type'] == 'future':  # 期货
+                self.assertEqual(pos['available'], pos['available_long'] - pos['available_short'],
+                                 'future available != available_long - available_short')
 
-    @unittest.skip('get order list')
-    def test_get_order_list(self):
-        pending_list, err = self.loop.run_until_complete(self.acc.get_order_list())
-        print(f'pending list: {pending_list}')
+    # @unittest.skip('get pending list')
+    def test_get_pending_list(self):
+        pending_list, err = self.loop.run_until_complete(self.acc.get_pending_list())
+        print(f'>>>pending list')
+        pprint.pprint(pending_list)
         print(f'err should be None: {err}')
         self.assertIsNone(err)
         self.assertIsInstance(pending_list, list)
+
+    @unittest.skip('get order list')
+    def test_get_order_list(self):
+        order_list, err = self.loop.run_until_complete(self.acc.get_order_list('btc.usdt', OTSOrder.END))
+        print('>>> order list')
+        print('>>> status end')
+        pprint.pprint(order_list)
+        print(f'err should be None: {err}')
+        self.assertIsNone(err)
+        self.assertIsInstance(order_list, list)
+        for o in order_list:
+            self.assertIn(o['status'], OTSOrder.END_STATUSES, f'{o} status does not match')
+
+        order_list, err = self.loop.run_until_complete(self.acc.get_order_list('btc.usdt', OTSOrder.ACTIVATING))
+        print('>>> order list')
+        print('>>> status active')
+        pprint.pprint(order_list)
+        print(f'err should be None: {err}')
+        self.assertIsNone(err)
+        self.assertIsInstance(order_list, list)
+        for o in order_list:
+            self.assertIn(o['status'], OTSOrder.ACTIVATING_STATUS, f'{o} status does not match')
+
+        active = OTSOrder.ACTIVATING_STATUS[:-1]
+        closed = OTSOrder.END_STATUSES[:-1]
+        for status in active + closed:
+            order_list, err = self.loop.run_until_complete(self.acc.get_order_list('btc.usdt', status))
+            print('>>> order list')
+            print('>>> status ' + status)
+            pprint.pprint(order_list)
+            print(f'err should be None: {err}')
+            self.assertIsNone(err)
+            self.assertIsInstance(order_list, list)
+
+            for o in order_list:
+                self.assertEqual(o['status'], status, f'{o} status does not match')
 
     @unittest.skip('order')
     def test_order(self):
@@ -168,17 +215,17 @@ class TestExchanges(unittest.TestCase):
         print(f'>>>end test cancel order')
         time.sleep(1)
 
-    # @unittest.skip('cancel all')
+    @unittest.skip('cancel all')
     def test_cancel_all(self):
         print(f'>>>start test cancel all')
         res, err = self.loop.run_until_complete(self.acc.cancel_all())
         print(f'response: {res}')
         print(f'err should be None: {err}')
         self.assertIsNone(err)
-        self.assertIsInstance(res, dict)
+        self.assertIsInstance(res, list)
         time.sleep(1)
 
-    @unittest.skip('skip')
+    @unittest.skip('withdraw')
     def test_withdraw(self):
         self.post_withdraw()
         self.cancel_withdraw()
