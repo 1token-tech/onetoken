@@ -125,7 +125,7 @@ class Account:
     async def get_order_list(self, contract_name=None, state=None):
         data = {}
         if contract_name:
-            data['contrac_name'] = contract_name
+            data['contract_name'] = contract_name
         if state:
             data['state'] = state
         t = await self.api_call('get', '/orders', params=data)
