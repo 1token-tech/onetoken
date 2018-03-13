@@ -4,8 +4,6 @@ import onetoken as ot
 from onetoken import Account, log
 from .util import load_api_key_secret, input_api_key_secret
 import time
-import qbtrade as qb
-import otlib
 
 
 class TestExchanges(unittest.TestCase):
@@ -30,8 +28,8 @@ class TestExchanges(unittest.TestCase):
         cls.order1 = {
             'con': cls.exchange + '/eth.usdt',
             'bs': 's',
-            'price': 10000,
-            'amount': 1.1
+            'price': 100000,
+            'amount': 0.05
         }
         cls.order2 = {
             'con': cls.exchange + '/iost.usdt',
@@ -46,7 +44,7 @@ class TestExchanges(unittest.TestCase):
     def tearDownClass(cls):
         cls.acc.close()
 
-    # @unittest.skip('skip usdt bug')
+    # @unittest.skip('get info')
     def test_get_info(self):
         info, err = self.loop.run_until_complete(self.acc.get_info())
         print(f'account info: {info.data}')
@@ -55,23 +53,19 @@ class TestExchanges(unittest.TestCase):
         self.assertIsInstance(info, ot.Info)
         self.assertIsNone(err)
 
-        position = info.data['position']
-        #  AccountInfo至少包含法币、btc、usdt
-        real_currency = ['cny', 'jpy', 'usd', 'krw']
+        #  AccountInfo至少包含法币(usdt)和btc
+        real_currency = {'usdt', 'cny', 'jpy', 'usd', 'krw'}
         has_real_currency = False
         has_btc = False
-        has_usdt = False
+        position = info.data['position']
         for pos in position:
             c = pos['contract']
             if c == 'btc':
                 has_btc = True
-            if c == 'usdt':
-                has_usdt = True
             if c in real_currency:
                 has_real_currency = True
-        # self.assertTrue(has_real_currency, 'real currency is not included')
+        self.assertTrue(has_real_currency, 'real currency or usdt is not included')
         self.assertTrue(has_btc, 'btc is not included')
-        self.assertTrue(has_usdt, 'usdt is not included')
 
         # balance = cash + market_value(w.o. futures)
         self.assertEqual(info.data['balance'], info.data['cash'] + info.data['market_value'],
@@ -86,6 +80,7 @@ class TestExchanges(unittest.TestCase):
                 # self.assertAlmostEqual(pos['value_cny'], pos['total_amount'] * qb.Currency.USDCNY * usdt_price,
                 #                        delta=1e-8, msg='usdt value_cny is not correct')
 
+    @unittest.skip('get order list')
     def test_get_order_list(self):
         pending_list, err = self.loop.run_until_complete(self.acc.get_order_list())
         print(f'pending list: {pending_list}')
@@ -93,6 +88,7 @@ class TestExchanges(unittest.TestCase):
         self.assertIsNone(err)
         self.assertIsInstance(pending_list, list)
 
+    @unittest.skip('order')
     def test_order(self):
         self.place_order()
         self.cancel_order()
@@ -114,6 +110,16 @@ class TestExchanges(unittest.TestCase):
         print(f'err should be HTTPError: {err}')
         self.assertIsNone(order2)
         self.assertIsNotNone(err)
+        order_list, err = self.loop.run_until_complete(self.acc.get_order_list())
+        self.assertIsNone(err)
+        self.assertIsNotNone(order_list)
+
+        exg_oid_in_pending_list = False
+        for o in order_list:
+            if o['exchange_oid'] == self.exchange_oid:
+                exg_oid_in_pending_list = True
+        self.assertTrue(exg_oid_in_pending_list, 'exchange_oid not in pending list')
+
         print(f'>>>end test place order')
         time.sleep(1)
 
@@ -148,10 +154,21 @@ class TestExchanges(unittest.TestCase):
         self.assertIsNone(err)
         self.assertIsInstance(order, dict)
         self.assertEqual(order['exchange_oid'], self.exchange_oid)
+
+        order_list, err = self.loop.run_until_complete(self.acc.get_order_list())
+        self.assertIsNone(err)
+        self.assertIsNotNone(order_list)
+
+        exg_oid_in_pending_list = False
+        for o in order_list:
+            if o['exchange_oid'] == self.exchange_oid:
+                exg_oid_in_pending_list = True
+        self.assertFalse(exg_oid_in_pending_list, 'exchange_oid still in pending list')
+
         print(f'>>>end test cancel order')
         time.sleep(1)
 
-    @unittest.skip('skip')
+    # @unittest.skip('cancel all')
     def test_cancel_all(self):
         print(f'>>>start test cancel all')
         res, err = self.loop.run_until_complete(self.acc.cancel_all())
