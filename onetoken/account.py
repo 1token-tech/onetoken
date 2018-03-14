@@ -254,9 +254,9 @@ class Account:
         log.debug(res)
         return res
 
-    async def get_dealed_trans(self, con=None):
+    async def get_dealt_trans(self, con=None):
         """
-        get recent dealed transactions
+        get recent dealt transactions
         :param con:
         :return:
         """
