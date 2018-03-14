@@ -254,6 +254,20 @@ class Account:
         log.debug(res)
         return res
 
+    async def get_dealed_trans(self, con=None):
+        """
+        get recent dealed transactions
+        :param con:
+        :return:
+        """
+        log.debug('Get deald trans', con=con)
+        data = {}
+        if con is not None:
+            data['contract'] = con
+        res = await self.api_call('get', '/trans', params=data)
+        log.debug(res)
+        return res
+
     async def post_withdraw(self, currency, amount, address, fee=None, client_wid=None, options=None):
         log.debug('Post withdraw', currency=currency, amount=amount, address=address, fee=fee, client_wid=client_wid)
         if client_wid is None:
