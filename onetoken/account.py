@@ -260,7 +260,7 @@ class Account:
         :param con:
         :return:
         """
-        log.debug('Get deald trans', con=con)
+        log.debug('Get dealt trans', con=con)
         data = {}
         if con is not None:
             data['contract'] = con
