@@ -93,13 +93,14 @@ class TestExchanges(unittest.TestCase):
     # @unittest.skip('get pending list')
     def test_get_pending_list(self):
         pending_list, err = self.loop.run_until_complete(self.acc.get_pending_list())
-        print(f'>>>pending list')
+        print('>>>pending list')
         pprint.pprint(pending_list)
-        print(f'err should be None: {err}')
+        print('>>>err should be None')
+        print(str(err))
         self.assertIsNone(err)
         self.assertIsInstance(pending_list, list)
 
-    @unittest.skip('get order list')
+    # @unittest.skip('get order list')
     def test_get_order_list(self):
         order_list, err = self.loop.run_until_complete(self.acc.get_order_list('btc.usdt', OTSOrder.END))
         print('>>> order list')
