@@ -154,6 +154,46 @@ To perform account actions.
     
     return (info, err)
     
+    info has the following format:
+    
+    ```$xslt
+    {
+        'balance': 589943.9724,  // float, cash + market value
+        'cash': 6198.5392,  // float
+        'market_value: 583745.4332,  // float, total market value
+        'market_value_detail: {
+            eos: 583745.4332,
+            usdt: 0
+        },
+        'position': [
+            {
+                'contract': 'eos.usdt',  // str, '<coin>.<base>' 
+                'market_value': 583745.4332,  // float, market value of the contract
+                'amount_coin': 20071.4762,  //  float, total amount of coins
+                'available_coin': 18971.4762, //  float, available amount of coins
+                'frozen_coin': 1100.0,  // float, frozen amount of coins
+                'pl_coin': 0,  // float, pl_coin = profit and lose (or interest) of coins 
+                'loan_coin': 0,  // float, loan of coins
+                market_value_detail: {
+                    'eos': 583745.4332,
+                    'usdt': 0
+                },
+                'value_cny': 0,  //  float, CNY value of the contract (if available)
+                'type': 'margin',  // str, position type 
+                'mv_coin': 583745.4332,  // float, market value of coins
+                'amount_base': 979.0929,  //  float, total amount of the base currency  
+                'mv_base': 0,  // float, market value of the base currency, 0 for USDT
+                'available_base': 7029.3753,  // float, amount of the available base currency
+                'frozen_base': 4511.19,  // float, frozen amount of the base currency
+                'pl_base': -73.4164,  // float, pl_base = profit and lose (or interest) of the base currency
+                'loan_base': -10448.056,  //  float, loan of the base currency 
+                'value_cny_base': 6198.5392  // CNY value of the base currency (if available)
+            },
+            ...
+        ]
+    }
+    ```
+    
 * `def get_total_amount(self, pos_symbol)`
 
     `pos_symbol`: str, symbol
