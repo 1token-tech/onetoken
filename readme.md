@@ -120,7 +120,7 @@ To perform account actions.
     
     `api_key`: str, 1token api_key, generated in 1token
     
-    `api_secret`: str, 1token api_secret, generate in 1toekn
+    `api_secret`: str, 1token api_secret, generate in 1token
     
     `loop`:
     
