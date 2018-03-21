@@ -118,9 +118,9 @@ To perform account actions.
     
     `symbol`: str, symbol
     
-    `api_key`: str, api_key
+    `api_key`: str, 1token api_key, generated in 1token
     
-    `api_secret`: str, api_secret
+    `api_secret`: str, 1token api_secret, generate in 1toekn
     
     `loop`:
     
