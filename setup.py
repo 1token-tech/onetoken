@@ -5,7 +5,7 @@ setup(name='onetoken',
       url='https://github.com/qbtrade/onetoken',
       author_email='markx914@gmail.com',
       packages=find_packages(),
-      version='0.1.6',
+      version='0.1.7',
       description='OneToken Trade System Python SDK',
       install_requires=[
           'arrow',
