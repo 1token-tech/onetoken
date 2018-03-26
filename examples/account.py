@@ -1,9 +1,10 @@
 import asyncio
+import logging
+import aiohttp
 import os
 
-import yaml
-
 import onetoken as ot
+import yaml
 from onetoken import Account, log
 
 
@@ -198,7 +199,8 @@ async def main():
 
 
 if __name__ == '__main__':
-    import logging
-
     ot.log_level(logging.INFO)
+    print('ots folder', ot)
+    print('ots version', ot.__version__)
+    print('aiohttp version', aiohttp.__version__)
     asyncio.get_event_loop().run_until_complete(main())

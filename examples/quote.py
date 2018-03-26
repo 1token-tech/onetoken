@@ -1,5 +1,7 @@
 import asyncio
 
+import logging
+import aiohttp
 import onetoken as ot
 from onetoken import Tick
 
@@ -40,8 +42,8 @@ async def main():
 
 
 if __name__ == '__main__':
-    import logging
-
     print('ots folder', ot)
+    print('ots version', ot.__version__)
+    print('aiohttp version', aiohttp.__version__)
     ot.log_level(logging.INFO)
     asyncio.get_event_loop().run_until_complete(main())
