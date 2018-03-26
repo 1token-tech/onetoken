@@ -1,15 +1,17 @@
 import unittest
 import asyncio
 import onetoken as ot
-from onetoken import Account, log
+from onetoken import Account
 from .util import load_api_key_secret, input_api_key_secret
 import time
 import pprint
 from otlib import OTSOrder
 
+CONFIG_FILE_PATH = '~/.onetoken/config.yml'
+
 
 class TestExchanges(unittest.TestCase):
-    CONFIG_FILE_PATH = '~/.onetoken/config.yml'
+    REAL_CURRENCY = {'cny', 'usd', 'jpy', 'krw', 'aud', 'sgd', 'usdt'}
     api_key = None
     api_secret = None
     acc = None
@@ -21,7 +23,7 @@ class TestExchanges(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.api_key, cls.api_secret, cls.account = load_api_key_secret(cls.CONFIG_FILE_PATH)
+        cls.api_key, cls.api_secret, cls.account = load_api_key_secret(CONFIG_FILE_PATH)
         if cls.api_key is None or cls.api_secret is None:
             cls.api_key, cls.api_secret, cls.account = input_api_key_secret()
         cls.acc = Account(cls.account, api_key=cls.api_key, api_secret=cls.api_secret)
@@ -57,7 +59,7 @@ class TestExchanges(unittest.TestCase):
         self.assertIsNone(err)
 
         #  AccountInfo至少包含法币(usdt)和btc
-        real_currency = {'usdt', 'cny', 'jpy', 'usd', 'krw'}
+        # real_currency = {'usdt', 'cny', 'jpy', 'usd', 'krw'}
         has_real_currency = False
         has_btc = False
         position = info.data['position']
@@ -67,7 +69,7 @@ class TestExchanges(unittest.TestCase):
                 has_btc = True
                 print('>>>btc is in position:')
                 print(c)
-            if c in real_currency:
+            if c in self.REAL_CURRENCY:
                 has_real_currency = True
                 print('>>>legal currency or usdt is in position:')
                 print(c)
@@ -81,16 +83,17 @@ class TestExchanges(unittest.TestCase):
         for pos in position:
             self.assertEqual(pos['total_amount'], pos['available'] + pos['frozen'],
                              'position total_amount != available + frozen')
-            if pos['contract'] == 'usdt':
+            if pos['contract'] in self.REAL_CURRENCY:
                 # usdt_price = self.loop.run_until_complete(otlib.autil.get_price('index/usdt.usd'))
-                self.assertEqual(pos['market_value'], 0.0, 'usdt market_value != 0.0')
+                self.assertEqual(pos['market_value'], 0.0, 'real currency market_value != 0.0')
+                self.assertTrue('value_cny' in pos)
                 # self.assertAlmostEqual(pos['value_cny'], pos['total_amount'] * qb.Currency.USDCNY * usdt_price,
                 #                        delta=1e-8, msg='usdt value_cny is not correct')
             elif pos['type'] == 'future':  # 期货
                 self.assertEqual(pos['available'], pos['available_long'] - pos['available_short'],
                                  'future available != available_long - available_short')
 
-    # @unittest.skip('get pending list')
+    @unittest.skip('get pending list')
     def test_get_pending_list(self):
         pending_list, err = self.loop.run_until_complete(self.acc.get_pending_list())
         print('>>>pending list')
