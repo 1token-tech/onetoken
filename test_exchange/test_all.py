@@ -103,7 +103,16 @@ class TestExchanges(unittest.TestCase):
         self.assertIsNone(err)
         self.assertIsInstance(pending_list, list)
 
-    # @unittest.skip('get order list')
+    def test_get_trans_list(self):
+        trans_list, err = self.loop.run_until_complete(self.acc.get_dealt_trans('okex/ltc.usdt'))
+        print('>>>dealt trans list')
+        pprint.pprint(trans_list)
+        print('>>>err should be None')
+        print(str(err))
+        self.assertIsNone(err)
+        self.assertIsInstance(trans_list, list)
+
+    @unittest.skip('get order list')
     def test_get_order_list(self):
         order_list, err = self.loop.run_until_complete(self.acc.get_order_list('btc.usdt', OTSOrder.END))
         print('>>> order list')
