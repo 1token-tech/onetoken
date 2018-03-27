@@ -89,12 +89,28 @@ from_dict()
 to_ws_str()
 ```
 
+### Contract
+
+ `name, exchange, symbol, min_change, min_amount, unit_amount`
+ - `min_change`: price precision, minimum change of entrust price
+ - `min_amount`: minimum amount of an entrust
+ - `unit_amount`: entrust amount precision, minimum change of entrust amount
+
+To get supported contracts by exchange, use:
+
+```$xslt
+quote.get_contracts(exchange)
+```
+
+To get a certain contract, use:
+```$xslt
+quote.get_contract(symbol)
+```
+`symbol`: exchange/name, for example: `binance/btc.usdt`
 
 ### Quote
 
 To subscribe contract tick.
-
-
    
 * `async def subscribe_tick(self, contract, on_update=None)`
     
@@ -109,7 +125,7 @@ To subscribe contract tick.
     `contract`: str, contract name. e.g. `ltc.btc:xtc.okex`
     
     to get the last tick of specific contract.
-
+                
 ### Account
 
 To perform account actions.
