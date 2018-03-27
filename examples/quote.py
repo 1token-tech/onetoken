@@ -35,6 +35,11 @@ async def get_last():
 
 
 async def main():
+    cons, err = await ot.quote.get_contracts('binance')
+    print(cons, err)
+    con, err = await ot.quote.get_contract('binance/btc.usdt')
+    print(con, err)
+
     await subscribe_from_ws()
     await get_last()
     while True:

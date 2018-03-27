@@ -150,3 +150,53 @@ class Tick:
             return self.bid1
         else:
             return self.ask1
+
+
+class Contract:
+
+    def __init__(self, exchange: str, name: str, min_change=0.001, alias="", category='XTC', first_day=None,
+                 last_day=None, exec_price=None, currency=None, uid=None,
+                 min_amount=1, unit_amount=1, **kwargs):
+        assert isinstance(min_change, float) or isinstance(min_change, int)
+        self.name = name
+        self.exchange = exchange
+        self.category = category
+        self.min_change = min_change
+        self.alias = alias
+        self.exec_price = exec_price
+        self.first_day = first_day  # the listing date of the contract
+        self.last_day = last_day  # the last date that this contract could be executed
+        self.currency = currency
+        self.min_amount = min_amount
+        self.unit_amount = unit_amount
+        self.uid = uid  # the id use in database
+
+    def __hash__(self):
+        return hash(self.symbol)
+
+    def __eq__(self, other):
+        return self.symbol == other.symbol
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    @property
+    def symbol(self):
+        return self.exchange + '/' + self.name
+
+    def __str__(self):
+            return '<Con:{}/{}>'.format(self.exchange, self.name)
+
+    def __repr__(self):
+        return '<{}:{}>'.format(self.__class__.__name__, self.symbol)
+
+    @classmethod
+    def from_dict(cls, data):
+        if 'exchange' in data:
+            exchange = data['exchange']
+        else:
+            sym = data['symbol']
+            exchange = sym.split('/')[0]
+        return cls(exchange, data['name'], data['min_change'], data['alias'], data['category'],
+                   data['first_day'], data['last_day'], data['exec_price'], data['currency'],
+                   data['id'], data['min_amount'], data['unit_amount'])

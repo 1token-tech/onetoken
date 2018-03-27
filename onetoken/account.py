@@ -82,6 +82,8 @@ class Info:
         else:
             return 0.0
 
+    def __repr__(self):
+        return json.dumps(self.data)
 
 class Account:
     def __init__(self, symbol: str, api_key, api_secret, loop=None):
