@@ -34,21 +34,17 @@ Currently the support of other exchanges is still under development.
 ### Get Started
 
 ```bash
-git clone https://github.com/qbtrade/onetoken
-cd onetoken
-pip install .
-```
-OR 
-```bash
 pip install onetoken -U
 ```
-Then use onetoken with `import onetoken` in python script.
+Then use onetoken with `import onetoken as ot` in python script.
 
 ### Example
 
 Try Quote and Account class, the code is in './example'
-
-`$ cd onetoken/`
+```
+git clone https://github.com/qbtrade/onetoken
+cd onetoken/example
+```
 
 if you don't want to install this package, set the `PYTHONPATH`
 
@@ -56,11 +52,11 @@ if you don't want to install this package, set the `PYTHONPATH`
 
 To try Quote:
 
-`$ python example/quote.py`
+`$ python quote.py`
 
 To try Account, prepare your api_key and api_secret, then:
 
-`$ python example/account.py`
+`$ python account.py`
 
 api_key and api_secret will be required in the console.
 
@@ -82,7 +78,6 @@ parse to or from other forms:
 init_with_dict(dct)
 to_dict()
 from_dct(dct)
-to_mongo_dict()
 to_short_list()
 from_short_list()
 from_dict()
