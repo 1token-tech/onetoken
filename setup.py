@@ -16,6 +16,7 @@ setup(name='onetoken',
       description='OneToken Trade System Python SDK',
       install_requires=[
           'arrow',
+          'docopt',
           'PyJWT',
           'PyYAML',
           'aiohttp==2.3.10',
