@@ -124,10 +124,10 @@ class Account:
     async def get_pending_list(self):
         return await self.get_order_list()
 
-    async def get_order_list(self, contract_name=None, state=None):
+    async def get_order_list(self, contract=None, state=None):
         data = {}
-        if contract_name:
-            data['contract_name'] = contract_name
+        if contract:
+            data['contract'] = contract
         if state:
             data['state'] = state
         t = await self.api_call('get', '/orders', params=data)
