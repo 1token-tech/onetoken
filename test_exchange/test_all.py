@@ -2,7 +2,7 @@ import unittest
 import asyncio
 import onetoken as ot
 from onetoken import Account
-from .util import load_api_key_secret, input_api_key_secret
+from test_exchange.util import load_api_key_secret, input_api_key_secret
 import time
 import pprint
 from otlib import OTSOrder
@@ -30,17 +30,20 @@ class TestExchanges(unittest.TestCase):
         cls.loop = asyncio.get_event_loop()
         cls.exchange, cls.name = cls.account.split('/', 1)
         cls.order1 = {
-            'con': cls.exchange + '/eth.usdt',
+            'con': cls.exchange + '/btc.jpy',
             'bs': 's',
-            'price': 100000,
-            'amount': 0.05
+            'price': 1000000,
+            'amount': 0.001
         }
         cls.order2 = {
-            'con': cls.exchange + '/iost.usdt',
-            'bs': 's',
-            'price': 10000,
-            'amount': 0.0001
+            'con': cls.exchange + '/btc.jjj',
+            'bs': 'b',
+            'price': 1000,
+            'amount': 0.001
         }
+        cls.get_trans_contract = cls.exchange + '/iost.usdt'
+        cls.get_order_list_contract = cls.exchange + '/btc.jpy'
+
         print('initializing account {}'.format(cls.account))
         time.sleep(3)
 
@@ -93,7 +96,7 @@ class TestExchanges(unittest.TestCase):
                 self.assertEqual(pos['available'], pos['available_long'] - pos['available_short'],
                                  'future available != available_long - available_short')
 
-    @unittest.skip('get pending list')
+    # @unittest.skip('get pending list')
     def test_get_pending_list(self):
         pending_list, err = self.loop.run_until_complete(self.acc.get_pending_list())
         print('>>>pending list')
@@ -103,8 +106,9 @@ class TestExchanges(unittest.TestCase):
         self.assertIsNone(err)
         self.assertIsInstance(pending_list, list)
 
+    # @unittest.skip('get trans list')
     def test_get_trans_list(self):
-        trans_list, err = self.loop.run_until_complete(self.acc.get_dealt_trans('okex/ltc.usdt'))
+        trans_list, err = self.loop.run_until_complete(self.acc.get_dealt_trans(self.get_trans_contract))
         print('>>>dealt trans list')
         pprint.pprint(trans_list)
         print('>>>err should be None')
@@ -112,9 +116,10 @@ class TestExchanges(unittest.TestCase):
         self.assertIsNone(err)
         self.assertIsInstance(trans_list, list)
 
-    @unittest.skip('get order list')
+    # @unittest.skip('get order list')
     def test_get_order_list(self):
-        order_list, err = self.loop.run_until_complete(self.acc.get_order_list('btc.usdt', OTSOrder.END))
+        order_list, err = self.loop.run_until_complete(
+            self.acc.get_order_list(self.get_order_list_contract, OTSOrder.END))
         print('>>> order list')
         print('>>> status end')
         pprint.pprint(order_list)
@@ -124,7 +129,7 @@ class TestExchanges(unittest.TestCase):
         for o in order_list:
             self.assertIn(o['status'], OTSOrder.END_STATUSES, f'{o} status does not match')
 
-        order_list, err = self.loop.run_until_complete(self.acc.get_order_list('btc.usdt', OTSOrder.ACTIVATING))
+        order_list, err = self.loop.run_until_complete(self.acc.get_order_list(self.get_order_list_contract, OTSOrder.ACTIVATING))
         print('>>> order list')
         print('>>> status active')
         pprint.pprint(order_list)
@@ -137,7 +142,7 @@ class TestExchanges(unittest.TestCase):
         active = OTSOrder.ACTIVATING_STATUS[:-1]
         closed = OTSOrder.END_STATUSES[:-1]
         for status in active + closed:
-            order_list, err = self.loop.run_until_complete(self.acc.get_order_list('btc.usdt', status))
+            order_list, err = self.loop.run_until_complete(self.acc.get_order_list(self.get_order_list_contract, status))
             print('>>> order list')
             print('>>> status ' + status)
             pprint.pprint(order_list)
@@ -148,7 +153,7 @@ class TestExchanges(unittest.TestCase):
             for o in order_list:
                 self.assertEqual(o['status'], status, f'{o} status does not match')
 
-    @unittest.skip('order')
+    # @unittest.skip('order')
     def test_order(self):
         self.place_order()
         self.cancel_order()
@@ -173,6 +178,7 @@ class TestExchanges(unittest.TestCase):
         order_list, err = self.loop.run_until_complete(self.acc.get_order_list())
         self.assertIsNone(err)
         self.assertIsNotNone(order_list)
+        time.sleep(3)
 
         exg_oid_in_pending_list = False
         for o in order_list:
@@ -186,7 +192,7 @@ class TestExchanges(unittest.TestCase):
     def get_order(self):
         print(f'>>>start test get order')
         order, err = self.loop.run_until_complete(self.acc.get_order_use_exchange_oid(self.exchange_oid))
-        print(f'order: {order}')
+        print(f'get order by exg_oid: {order}')
         print(f'err should be None: {err}')
         self.assertIsNone(err)
         self.assertIsInstance(order, list)
@@ -195,7 +201,7 @@ class TestExchanges(unittest.TestCase):
         self.assertEqual(order['exchange_oid'], self.exchange_oid)
         self.assertEqual(order['client_oid'], self.client_oid)
         order, err = self.loop.run_until_complete(self.acc.get_order_use_client_oid(self.client_oid))
-        print(f'order: {order}')
+        print(f'get_order by client_oid: {order}')
         print(f'err should be None: {err}')
         self.assertIsNone(err)
         self.assertIsInstance(order, list)
@@ -214,6 +220,8 @@ class TestExchanges(unittest.TestCase):
         self.assertIsNone(err)
         self.assertIsInstance(order, dict)
         self.assertEqual(order['exchange_oid'], self.exchange_oid)
+
+        time.sleep(3)
 
         order_list, err = self.loop.run_until_complete(self.acc.get_order_list())
         self.assertIsNone(err)
@@ -235,56 +243,57 @@ class TestExchanges(unittest.TestCase):
         print(f'response: {res}')
         print(f'err should be None: {err}')
         self.assertIsNone(err)
-        self.assertIsInstance(res, list)
-        time.sleep(1)
-
-    @unittest.skip('withdraw')
-    def test_withdraw(self):
-        self.post_withdraw()
-        self.cancel_withdraw()
-        self.get_withdraw()
-
-    @unittest.skip('not supported yet')
-    def post_withdraw(self):
-        print(f'>>>start test post withdraw')
-        res, err = self.loop.run_until_complete(self.acc.post_withdraw(**self.withdraw))
-        print(f'response: {res}')
-        print(f'err should be None: {err}')
-        self.assertIsNone(err)
         self.assertIsInstance(res, dict)
-        self.assertRegex(res['exchange_wid'], self.exchange + '/' + self.withdraw['currency'] + r'-[\d]+')
-        # self.assertRegex(res['client_wid'], self.exchange + '/' + self.withdraw['currency'] + r'-[\d]+-[\d]+-[\w]+')  # not implemented yet
-        self.exchange_wid = res['exchange_wid']
-        print(f'>>>end test post withdraw')
+        self.assertEqual(res['status'], 'success')
         time.sleep(1)
 
-    @unittest.skip('not supported yet')
-    def get_withdraw(self):
-        print(f'>>>start test get withdraw')
-        res, err = self.loop.run_until_complete(self.acc.get_withdraw_use_exchange_wid(self.exchange_wid))
-        print(f'response: {res}')
-        print(f'err should be None: {err}')
-        self.assertIsNone(err)
-        self.assertIsInstance(res, dict)
-        self.assertEqual(res['exchange_wid'], self.exchange_wid)
-        print('>>>end test get withdraw')
-        time.sleep(1)
-
-    @unittest.skip('not supported yet')
-    def get_withdraw_list(self):
-        time.sleep(1)
-
-    @unittest.skip('not supported yet')
-    def cancel_withdraw(self):
-        print('>>>start test cancel withdraw')
-        res, err = self.loop.run_until_complete(self.acc.cancel_withdraw_use_exchange_wid(self.exchange_wid))
-        print(f'response: {res}')
-        print(f'err should be None: {err}')
-        self.assertIsNone(err)
-        self.assertIsInstance(res, dict)
-        self.assertEqual(res['exchange_wid'], self.exchange_wid)
-        print('>>>end test cancel withdraw')
-        time.sleep(1)
+    # @unittest.skip('withdraw')
+    # def test_withdraw(self):
+    #     self.post_withdraw()
+    #     self.cancel_withdraw()
+    #     self.get_withdraw()
+    #
+    # @unittest.skip('not supported yet')
+    # def post_withdraw(self):
+    #     print(f'>>>start test post withdraw')
+    #     res, err = self.loop.run_until_complete(self.acc.post_withdraw(**self.withdraw))
+    #     print(f'response: {res}')
+    #     print(f'err should be None: {err}')
+    #     self.assertIsNone(err)
+    #     self.assertIsInstance(res, dict)
+    #     self.assertRegex(res['exchange_wid'], self.exchange + '/' + self.withdraw['currency'] + r'-[\d]+')
+    #     # self.assertRegex(res['client_wid'], self.exchange + '/' + self.withdraw['currency'] + r'-[\d]+-[\d]+-[\w]+')  # not implemented yet
+    #     self.exchange_wid = res['exchange_wid']
+    #     print(f'>>>end test post withdraw')
+    #     time.sleep(1)
+    #
+    # @unittest.skip('not supported yet')
+    # def get_withdraw(self):
+    #     print(f'>>>start test get withdraw')
+    #     res, err = self.loop.run_until_complete(self.acc.get_withdraw_use_exchange_wid(self.exchange_wid))
+    #     print(f'response: {res}')
+    #     print(f'err should be None: {err}')
+    #     self.assertIsNone(err)
+    #     self.assertIsInstance(res, dict)
+    #     self.assertEqual(res['exchange_wid'], self.exchange_wid)
+    #     print('>>>end test get withdraw')
+    #     time.sleep(1)
+    #
+    # @unittest.skip('not supported yet')
+    # def get_withdraw_list(self):
+    #     time.sleep(1)
+    #
+    # @unittest.skip('not supported yet')
+    # def cancel_withdraw(self):
+    #     print('>>>start test cancel withdraw')
+    #     res, err = self.loop.run_until_complete(self.acc.cancel_withdraw_use_exchange_wid(self.exchange_wid))
+    #     print(f'response: {res}')
+    #     print(f'err should be None: {err}')
+    #     self.assertIsNone(err)
+    #     self.assertIsInstance(res, dict)
+    #     self.assertEqual(res['exchange_wid'], self.exchange_wid)
+    #     print('>>>end test cancel withdraw')
+    #     time.sleep(1)
 
 
 if __name__ == '__main__':
