@@ -22,28 +22,44 @@ class TestExchanges(unittest.TestCase):
     }
 
     @classmethod
+    def bfx(cls):
+        cls.account = 'bitfinex/tyz'
+        cls.exchange, cls.name = cls.account.split('/', 1)
+        cls.order1 = {
+            'con': cls.exchange + '/btc.usd',
+            'bs': 'b',
+            'price': 123,
+            'amount': 0.01
+        }
+        cls.order2 = {
+            'con': cls.exchange + '/btc.usd',
+            'bs': 'b',
+            'price': 123,
+            'amount': 0.000001
+        }
+        print(cls.order1, cls.order2)
+
+    @classmethod
     def setUpClass(cls):
         cls.api_key, cls.api_secret, cls.account = load_api_key_secret(CONFIG_FILE_PATH)
-        if cls.api_key is None or cls.api_secret is None:
-            cls.api_key, cls.api_secret, cls.account = input_api_key_secret()
+        cls.bfx()
+        # if cls.api_key is None or cls.api_secret is None:
+        #     cls.api_key, cls.api_secret, cls.account = input_api_key_secret()
         cls.acc = Account(cls.account, api_key=cls.api_key, api_secret=cls.api_secret)
         cls.loop = asyncio.get_event_loop()
         cls.exchange, cls.name = cls.account.split('/', 1)
         cls.order1 = {
-            'con': cls.exchange + '/btc.jpy',
+            'con': cls.exchange + '/eth.usdt',
             'bs': 's',
-            'price': 1000000,
-            'amount': 0.001
+            'price': 100000,
+            'amount': 0.05
         }
         cls.order2 = {
-            'con': cls.exchange + '/btc.jjj',
-            'bs': 'b',
-            'price': 1000,
-            'amount': 0.001
+            'con': cls.exchange + '/iost.usdt',
+            'bs': 's',
+            'price': 10000,
+            'amount': 0.0001
         }
-        cls.get_trans_contract = cls.exchange + '/iost.usdt'
-        cls.get_order_list_contract = cls.exchange + '/btc.jpy'
-
         print('initializing account {}'.format(cls.account))
         time.sleep(3)
 
@@ -106,7 +122,6 @@ class TestExchanges(unittest.TestCase):
         self.assertIsNone(err)
         self.assertIsInstance(pending_list, list)
 
-    # @unittest.skip('get trans list')
     def test_get_trans_list(self):
         trans_list, err = self.loop.run_until_complete(self.acc.get_dealt_trans(self.get_trans_contract))
         print('>>>dealt trans list')
@@ -116,7 +131,7 @@ class TestExchanges(unittest.TestCase):
         self.assertIsNone(err)
         self.assertIsInstance(trans_list, list)
 
-    # @unittest.skip('get order list')
+    @unittest.skip('get order list')
     def test_get_order_list(self):
         order_list, err = self.loop.run_until_complete(
             self.acc.get_order_list(self.get_order_list_contract, OTSOrder.END))
@@ -171,14 +186,19 @@ class TestExchanges(unittest.TestCase):
         self.assertRegex(self.exchange_oid, self.exchange + r'/[a-z]+\.[a-z]+-[\d]+')
         self.assertRegex(self.client_oid, self.exchange + r'/[a-z]+\.[a-z]+-[\d]+-[\d]+-[\w]+')
         order2, err = self.loop.run_until_complete(self.acc.place_order(**self.order2))
-        print(f'new order should be None: {order2}')
-        print(f'err should be HTTPError: {err}')
+        print(f'new order2 should be None: {order2}')
+        print(f'err2 should be HTTPError: {err}')
         self.assertIsNone(order2)
         self.assertIsNotNone(err)
+
+        async def wait():
+            await asyncio.sleep(3)
+
+        self.loop.run_until_complete(wait())
         order_list, err = self.loop.run_until_complete(self.acc.get_order_list())
+        print('get order list', order_list)
         self.assertIsNone(err)
         self.assertIsNotNone(order_list)
-        time.sleep(3)
 
         exg_oid_in_pending_list = False
         for o in order_list:
