@@ -166,6 +166,8 @@ class Account:
         res1, err1 = await self.place_order(con, price, bs, amount,
                                             client_oid=k,
                                             options=options)
+        if err1:
+            return (res1, None), (err1, None)
         await asyncio.sleep(sleep)
         res2, err2 = await self.cancel_use_client_oid(k)
         if err1 or err2:
