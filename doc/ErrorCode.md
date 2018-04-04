@@ -24,6 +24,8 @@ Error Code
 * wait-for-initializing  `等待账户后台初始化`
 * upstream-error  `上层ot服务不可用`
 * no-available-proxy  `无可用 proxy-ip 出口`
+* proxy-ip-banned  `proxy-ip 已经被暂时禁用`
+* proxy-connect-fail  `连接 proxy 失败`
     
 ## 3rd Exchange Error
 
