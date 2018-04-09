@@ -152,48 +152,6 @@ async def main():
     #     log.warning('Get pending list failed...', err)
     # else:
     #     log.info(f'Pending list: {p_list}')
-    #
-    # withdraw_address = ''
-    # res, err = await acc.post_withdraw(currency='iost', amount=1.3, address=withdraw_address, fee=None)
-    # if err:
-    #     log.warning('Post withdraw failed...', err)
-    # else:
-    #     log.info(f'New withdraw: {res}')
-    #
-    # res, err = await acc.cancel_withdraw_use_client_wid(res['client_wid'])
-    # if err:
-    #     log.warning('Cancel withdraw by client_wid failed...', err)
-    # else:
-    #     log.info(f'Cancel withdraw by client_wid: {res}')
-    #
-    # res, err = await acc.cancel_withdraw_use_exchange_wid(res['exchange_wid'])
-    # if err:
-    #     log.warning('Cancel withdraw by exchange_wid failed...', err)
-    # else:
-    #     log.info(f'Cancel withdraw by exchange_wid: {res}')
-
-    # 提币测试,谨慎调用!
-    # wd, err = await acc.post_withdraw('eth', 0.05, '0x0FaC2592D3d26fC5534Ae9a41fD72F10bbDA51B4')
-    # if err:
-    #     log.warning('Get info failed...', err)
-    # else:
-    #     log.info(f'Post withdraw: {wd}')
-    #
-    res, err = await acc.cancel_withdraw_use_exchange_wid('huobip/eth-1495937')
-    if err:
-        log.warning('Get info failed...', err)
-    else:
-        log.info(f'Cancel withdraw: {res}')
-
-    res, err = await acc.get_withdraw_use_exchange_wid('huobip/eth-1495937')
-    if err:
-        log.warning('Get info failed...', err)
-    else:
-        log.info(f'Get withdraw: {res}')
-    # 未实现的方法
-    # status = await acc.get_status()
-    # await acc.amend_order_use_client_oid()
-    # await acc.amend_order_use_exchange_oid()
 
     acc.close()
 
