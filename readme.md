@@ -11,58 +11,93 @@ OneToken is a application to fetch tick and play with orders. OTS is a friendly 
 2. 下单、撤单(通过Account)
 
 ### 支持交易所
-| 交易所                                  | 交易种类 | 交易所代码        | 文档                                                                                         | 国家           |
-|-----------------------------------------|----------|-------------------|:--------------------------------------------------------------------------------------------:|----------------|
-|[币安](https://www.binance.com )         | 币币交易 | binance           | [API](https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md) | 日本           |
-|[Bitfinex](https://www.bitfinex.com)     | 币币交易 | bitfinex          | [API](https://bitfinex.readme.io/v1/docs)                                                    | 英属维尔京群岛 |
-|[Bitflyer](https://bitflyer.jp)          | 币币交易 | bitflyer          | [API](https://bitflyer.jp/API)                                                               | 日本           |
-|[Bitflyer](https://bitflyer.jp)          | 合约交易 | bitflyex          | [API](https://bitflyer.jp/API)                                                               | 日本           |
-|[Bithumb](https://www.bithumb.com)       | 币币交易 | bithumb           | [API](https://www.bithumb.com/u1/US127)                                                      | 韩国           |
-|[Bitmex](https://www.bitmex.com)         | 币币交易 | bitmex            | [API](https://www.bitmex.com/app/apiOverview)                                               | 塞舌尔         |
-|[Bittrex](https://bittrex.com)           | 币币交易 | bittrex           | [API](https://bittrex.com/Home/Api)                                                         | 美国           |
-|[火币Pro](https://www.huobipro.com/)     | 币币交易 | huobip            | [API](https://github.com/huobiapi/API_Docs/wiki/REST_api_reference)                         | 中国           |
-|[火币杠杆交易](https://www.huobipro.com/)| 杠杆交易 | huobim            | [API](https://github.com/huobiapi/API_Docs/wiki/REST_api_reference)                         | 中国           |
-|[火币Hadax](https://www.hadax.com/)      | 合约交易 | hadax            | [API](https://github.com/huobiapi/API_Docs/wiki/REST_api_reference)                          | 中国           |
-|[Poloniex](https://poloniex.com/)        | 币币交易 | poloniex          | [API](https://github.com/huobiapi/API_Docs/wiki/REST_api_reference)                          | 美国           |
 <table>
-    <thead>
-        <tr>
-            <th>交易所</th>
-            <th>交易种类</th>
-            <th>交易所代码</th>
-            <th>国家</th>
-            <th>详细说明</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td rowspan=3><a href="https://www.huobipro.com">火币</td>
-            <td>L2 Name A</td>
-            <td>L3 Name A</td>
-            <td>L2 Name A</td>
-            <td>L3 Name A</td>
-        </tr>
-        <tr>
-            <td>L3 Name B</td>
-            <td>L3 Name B</td>
-            <td>L2 Name A</td>
-            <td>L3 Name A</td>
-        </tr>
-        <tr>
-            <td>L2 Name B</td>
-            <td>L3 Name C</td>
-            <td>L2 Name A</td>
-            <td>L3 Name A</td>
-        </tr>
-        <tr>
-            <td>L3 Name D</td>
-            <td>L2 Name A</td>
-            <td>L3 Name A</td>
-            <td>L2 Name A</td>
-            <td>L3 Name A</td>
-        </tr>
-    </tbody>
+<thead>
+<tr>
+<th>交易所</th>
+<th>交易种类</th>
+<th>交易所代码</th>
+<th>详细说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.binance.com/">Binance</a>(日本)</td>
+<td>币币交易</td>
+<td>binance</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://www.bitfinex.com/">Bitfinex</a>(英属维尔京群岛)</td>
+<td>币币交易</td>
+<td>bitfinex</td>
+<td></td>
+</tr>
+<tr>
+<td rowspan="2"><a href="https://bitflyer.jp/">Bitflyer</a>(日本)</td>
+<td>币币交易</td>
+<td>bitflyer</td>
+<td></td>
+</tr>
+<tr>
+<td>合约交易</td>
+<td>bitflyex</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://www.bithumb.com/">Bithumb</a>(韩国)</td>
+<td>币币交易</td>
+<td>bithumb</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://www.bitmex.com/">Bitmex</a>(塞舌尔)</td>
+<td>币币交易</td>
+<td>bitfinex</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://bittrex.com/">Bittrex</a>(美国)</td>
+<td>币币交易</td>
+<td>bittrex</td>
+<td></td>
+</tr>
+<tr>
+<td rowspan="3"><a href="https://www.huobipro.com/">火币</a>(中国)</td>
+<td>币币交易</td>
+<td>huobip</td>
+<td></td>
+</tr>
+<tr>
+<td>杠杆交易</td>
+<td>huobim</td>
+<td></td>
+</tr>
+<tr>
+<td>合约交易</td>
+<td>hadax</td>
+<td></td>
+</tr>
+<tr>
+<td rowspan="2"><a href="https://www.okex.com/">OKEX</a>(中国、美国)</td>
+<td>币币交易</td>
+<td>okex</td>
+<td></td>
+</tr>
+<tr>
+<td>合约交易</td>
+<td>okef</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://www.huobipro.com/">Poloniex</a>(美国)</td>
+<td>币币交易</td>
+<td>poloniex</td>
+<td></td>
+</tr>
+</tbody>
 </table>
+
 目前只支持以上交易所，其他交易所会陆续上线。
 
 
