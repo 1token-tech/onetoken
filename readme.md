@@ -72,8 +72,8 @@ import onetoken as ot
 |:---:|:---:|:---:|:---|
 |account|{exchange}/{specific_id} | okex/demo1| <交易所>/<用户名>
 |contract| {exchange}/{tpa}.{tpb} | okex/btc.usdt | <交易所>/<交易对>，用点（.）分隔两个币种
-|client_oid|{exchange}/{tpa}.{tpb}-{specific_id} | 用于追踪订单信息，{specific_id}由用户指定或者由OneToken随机生成
-|exchange_oid|{exchange}/{tpa}.{tpb}-{specific_id} | 用于追踪订单信息，{specific_id}由交易所生成 
+|client_oid|{exchange}/{tpa}.{tpb}-{specific_id} | okex/btc.usdt-xxx |用于追踪订单信息，{specific_id}由用户指定或者由OneToken随机生成
+|exchange_oid|{exchange}/{tpa}.{tpb}-{specific_id} | okex/btc.usdt-xxx |用于追踪订单信息，{specific_id}由交易所生成 
 
 
 ### Account支持的操作
