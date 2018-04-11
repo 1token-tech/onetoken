@@ -11,29 +11,25 @@ Users can:
 2. Place, amend, cancel orders(via Account).
 
 ### Supported Exchanges
-|                                                                                                                           | id                 | name                                                      | ver | doc                                                                                          | countries                               |
-|---------------------------------------------------------------------------------------------------------------------------|--------------------|-----------------------------------------------------------|:---:|:--------------------------------------------------------------------------------------------:|-----------------------------------------|
-|![_1broker](https://user-images.githubusercontent.com/1294454/27766021-420bd9fc-5ecb-11e7-8ed6-56d0081efed2.jpg)           | _1broker           | [1Broker](https://1broker.com)                            | 2   | [API](https://1broker.com/?c=en/content/api-documentation)                                   | US                                      |
-|![_1btcxe](https://user-images.githubusercontent.com/1294454/27766049-2b294408-5ecc-11e7-85cc-adaff013dc1a.jpg)            | _1btcxe            | [1BTCXE](https://1btcxe.com)                              | *   | [API](https://1btcxe.com/api-docs.php)                                                       | Panama                                  |
+| 交易所                                 | 交易所代码        | 文档                                                                                         | 国家           |
+|----------------------------------------|-------------------|:--------------------------------------------------------------------------------------------:|----------------|
+|[币安](https://www.binance.com )        | binance           | [API](https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md) | 日本           |
+|[Bitfinex](https://www.bitfinex.com)    | bitfinex          | [API](https://bitfinex.readme.io/v1/docs)                                                    | 英属维尔京群岛 |
+|[Bitflyer](https://bitflyer.jp)         | bitflyer          | [API](https://bitflyer.jp/API)                                                               | 日本           |
+|[Bitflyer合约交易](https://bitflyer.jp) | bitflyex          | [API](https://bitflyer.jp/API)                                                               | 日本           |
+|[Bithumb](https://www.bithumb.com)      | bithumb           | [API](https://www.bithumb.com/u1/US127)                                                      | 韩国           |
+|[Bitmex](https://www.bitmex.com)         | bitmex            | [API](https://www.bitmex.com/app/apiOverview)                                               | 塞舌尔         |
+|[Bittrex](https://bittrex.com)           | bittrex           | [API](https://bittrex.com/Home/Api)                                                         | 美国           |
+|[火币Pro](https://www.huobipro.com/)     | huobip            | [API](https://github.com/huobiapi/API_Docs/wiki/REST_api_reference)                         | 中国           |
+|[火币杠杆交易](https://www.huobipro.com/)| huobim            | [API](https://github.com/huobiapi/API_Docs/wiki/REST_api_reference)                         | 中国           |
+|[火币Hadax](https://www.hadax.com/)      | hadax            | [API](https://github.com/huobiapi/API_Docs/wiki/REST_api_reference)                          | 中国           |
+|[Poloniex](https://poloniex.com/)       | poloniex          | [API](https://github.com/huobiapi/API_Docs/wiki/REST_api_reference)                          | 美国           |
 
-* bitmex
-* okex
-* binance
-* bithumb
-* huobi.pro
-* bitfinex
-* bitstar
-* bittrex
-* poloniex
-* gate
-* exx
-* coinegg
+目前只支持以上交易所,其他交易所会陆续上线。
 
-Currently the support of other exchanges is still under development.
+### 系统需求
 
-### Requirement
-
-**python 3.6**
+- python 3.6
 
 ### Get Started
 
