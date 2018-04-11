@@ -28,8 +28,8 @@ OneToken is a application to fetch tick and play with orders. OTS is a friendly 
 目前只支持以上交易所，其他交易所会陆续上线。
 
 
-### 系统需求
-- python 3.6
+### 系统需求P
+- ython 3.6
 
 
 ### 开始使用
@@ -42,9 +42,8 @@ $ git clone https://github.com/qbtrade/onetoken
 $ pip install onetoken -U
 ```
 
-如果不想安装，可以用以下代码设置`PYTHONPATH`环境变量
+如果不想安装，可以用以下代码设置`PYTHONPATH`环境变量，在onetoken上层目录中输入：
 ```
-$ cd onetoken
 $ export PYTHONPATH=$PYTHONPATH:.
 ```
 
