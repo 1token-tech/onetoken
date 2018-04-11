@@ -5,12 +5,12 @@ OneToken SDK
 ====
 OneToken is a application to fetch tick and play with orders. OTS is a friendly python wrapper for ws API and restful API which will be introduce [here](#direct-api),  users can use API directly as they like
 
-Users can:
+功能：
 
-1. Streaming contract tick(via Quote).
-2. Place, amend, cancel orders(via Account).
+1. 获取行情tick(通过Quote)
+2. 下单、撤单(通过Account)
 
-### Supported Exchanges
+### 支持交易所
 | 交易所                                 | 交易所代码        | 文档                                                                                         | 国家           |
 |----------------------------------------|-------------------|:--------------------------------------------------------------------------------------------:|----------------|
 |[币安](https://www.binance.com )        | binance           | [API](https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md) | 日本           |
@@ -25,30 +25,33 @@ Users can:
 |[火币Hadax](https://www.hadax.com/)      | hadax            | [API](https://github.com/huobiapi/API_Docs/wiki/REST_api_reference)                          | 中国           |
 |[Poloniex](https://poloniex.com/)       | poloniex          | [API](https://github.com/huobiapi/API_Docs/wiki/REST_api_reference)                          | 美国           |
 
-目前只支持以上交易所,其他交易所会陆续上线。
+目前只支持以上交易所，其他交易所会陆续上线。
 
 ### 系统需求
-
 - python 3.6
 
-### Get Started
-
+### 开始使用
+获取OneToken SDK
+```
+$ git clone https://github.com/qbtrade/onetoken
+```
+安装
 ```bash
-pip install onetoken -U
-```
-Then use onetoken with `import onetoken as ot` in python script.
-
-### Example
-
-Try Quote and Account class, the code is in './example'
-```
-git clone https://github.com/qbtrade/onetoken
-cd onetoken/example
+$ pip install onetoken -U
 ```
 
-if you don't want to install this package, set the `PYTHONPATH`
+如果不想安装，可以用以下代码设置`PYTHONPATH`环境变量
+```
+$ cd onetoken
+$ export PYTHONPATH=$PYTHONPATH:.
+```
 
-`$ export PYTHONPATH=.`
+然后在Python程序中导入onetoken模块
+```
+import onetoken as ot
+```
+
+### 示例
 
 To try Quote:
 
@@ -121,28 +124,27 @@ To subscribe contract tick.
     
     to get the last tick of specific contract.
                 
-### Account
-
-To perform account actions.
+### Account支持的操作
 
 * `def __init__(self, symbol: str, api_key, api_secret, loop=None, host=None)`
     
-    `symbol`: str, symbol
+    `symbol`: str，账户标识，格式为<交易所代码>/<用户名>，例如binance/xxx
     
-    `api_key`: str, 1token api_key, generated in 1token
+    `api_key`: str, 1token api_key
     
-    `api_secret`: str, 1token api_secret, generate in 1token
+    `api_secret`: str, 1token api_secret
     
     `loop`:
     
-    `host`: default to `https://1token.trade/api/v1/trade`
+    `host`: 默认为[https://1token.trade/api/v1/trade](https://1token.trade/api/v1/trade)
     
-    initialize an account for specific symbol with api_key and api_secret
+    用OneToken分配的api_key和api_secret初始化账户
 
-* `async def get_pending_list(self)`
+* `async def get_order_list(self, contract, state)`
     
-    get the list of orders on pending status
-    
+    `contract`: str, 合约标识，格式为<交易所代码>/<交易对>，例如binance/btc.usdt
+    `state`: str， 订单状态，支持activating、end等11种订单状态，下图描述了每个订单的生命周期
+    |![gatecoin](https://github.com/qbtrade/onetoken/doc/OTS_Order_Status.png)
 * `async def cancel_use_client_oid(self, oid)`
 
     `oid`: str, client_oid
@@ -319,10 +321,8 @@ Restful host is `https://1token.trade/api/v1/trade`
 API Explorer(https://1token.trade/r/swagger)
 
 
-Naming Rules
+命名规则
 ===
-
-
 | | rule | example | explaination |
 |:---:|:---:|:---:|:---|
 |contract| {exchange}/{tpa}.{tpb} | okex/btc.usdt | tpa/tpb means "trading pair a/b"; use latter in the trading pair to buy and sell the former in exchange; the example means it uses usdt to sell and buy btc in okex
