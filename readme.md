@@ -143,17 +143,17 @@ To perform account actions.
     
     get the list of orders on pending status
     
-* `async def cancel_use_client_oid(self, oid)`
+* `async def cancel_use_client_oid(self, oid, *oids)`
 
     `oid`: str, client_oid
     
-    cancel orders with `oid`
+    cancel orders with `oid`. Support multi oids, use `account.cancel_use_client_oid(oid1, oid2, ...)`
     
-* `async def cancel_use_exchange_oid(self, oid)`    
+* `async def cancel_use_exchange_oid(self, oid, *oids)`    
 
     `oid`: str, exchange_oid
     
-    cancel orders with `oid`
+    cancel orders with `oid`. Support multi oids, use `account.cancel_use_exchange_oid(oid1, oid2, ...)`
     
 * `async def cancel_all(self)`
     
@@ -231,11 +231,15 @@ To perform account actions.
 
     get status
     
-* `async def get_order_use_client_oid(self, client_oid)`
-    `async def get_order_use_exchange_oid(self, exchange_oid)`
+* `async def get_order_use_client_oid(self, oid, *oids)`
+    `async def get_order_use_exchange_oid(self, oid, *oids)`
     
-    get order with client_oid or exchange_oid
+    get order with client_oid or exchange_oid, support multi oids
     
+    eg. `account.get_order_use_exchange_oid(oid1, oid2, oid3)`
+    
+    always return a list of orders
+        
 * `async def amend_order_use_client_oid(self, client_oid, price, amount)`    
     `async def amend_order_use_exchange_oid(self, exchange_oid, price, amount)`
     
