@@ -11,46 +11,68 @@ OneToken is a application to fetch tick and play with orders. OTS is a friendly 
 2. 下单、撤单(通过Account)
 
 ### 支持交易所
-| 交易所                                 | 交易所代码        | 文档                                                                                         | 国家           |
-|----------------------------------------|-------------------|:--------------------------------------------------------------------------------------------:|----------------|
-|[币安](https://www.binance.com )        | binance           | [API](https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md) | 日本           |
-|[Bitfinex](https://www.bitfinex.com)    | bitfinex          | [API](https://bitfinex.readme.io/v1/docs)                                                    | 英属维尔京群岛 |
-|[Bitflyer](https://bitflyer.jp)         | bitflyer          | [API](https://bitflyer.jp/API)                                                               | 日本           |
-|[Bitflyer合约交易](https://bitflyer.jp) | bitflyex          | [API](https://bitflyer.jp/API)                                                               | 日本           |
-|[Bithumb](https://www.bithumb.com)      | bithumb           | [API](https://www.bithumb.com/u1/US127)                                                      | 韩国           |
-|[Bitmex](https://www.bitmex.com)         | bitmex            | [API](https://www.bitmex.com/app/apiOverview)                                               | 塞舌尔         |
-|[Bittrex](https://bittrex.com)           | bittrex           | [API](https://bittrex.com/Home/Api)                                                         | 美国           |
-|[火币Pro](https://www.huobipro.com/)     | huobip            | [API](https://github.com/huobiapi/API_Docs/wiki/REST_api_reference)                         | 中国           |
-|[火币杠杆交易](https://www.huobipro.com/)| huobim            | [API](https://github.com/huobiapi/API_Docs/wiki/REST_api_reference)                         | 中国           |
-|[火币Hadax](https://www.hadax.com/)      | hadax            | [API](https://github.com/huobiapi/API_Docs/wiki/REST_api_reference)                          | 中国           |
-|[Poloniex](https://poloniex.com/)       | poloniex          | [API](https://github.com/huobiapi/API_Docs/wiki/REST_api_reference)                          | 美国           |
-
+| 交易所                                  | 交易种类 | 交易所代码        | 文档                                                                                         | 国家           |
+|-----------------------------------------|----------|-------------------|:--------------------------------------------------------------------------------------------:|----------------|
+|[币安](https://www.binance.com )         | 币币交易 | binance           | [API](https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md) | 日本           |
+|[Bitfinex](https://www.bitfinex.com)     | 币币交易 | bitfinex          | [API](https://bitfinex.readme.io/v1/docs)                                                    | 英属维尔京群岛 |
+|[Bitflyer](https://bitflyer.jp)          | 币币交易 | bitflyer          | [API](https://bitflyer.jp/API)                                                               | 日本           |
+|[Bitflyer](https://bitflyer.jp)          | 合约交易 | bitflyex          | [API](https://bitflyer.jp/API)                                                               | 日本           |
+|[Bithumb](https://www.bithumb.com)       | 币币交易 | bithumb           | [API](https://www.bithumb.com/u1/US127)                                                      | 韩国           |
+|[Bitmex](https://www.bitmex.com)         | 币币交易 | bitmex            | [API](https://www.bitmex.com/app/apiOverview)                                               | 塞舌尔         |
+|[Bittrex](https://bittrex.com)           | 币币交易 | bittrex           | [API](https://bittrex.com/Home/Api)                                                         | 美国           |
+|[火币Pro](https://www.huobipro.com/)     | 币币交易 | huobip            | [API](https://github.com/huobiapi/API_Docs/wiki/REST_api_reference)                         | 中国           |
+|[火币杠杆交易](https://www.huobipro.com/)| 杠杆交易 | huobim            | [API](https://github.com/huobiapi/API_Docs/wiki/REST_api_reference)                         | 中国           |
+|[火币Hadax](https://www.hadax.com/)      | 合约交易 | hadax            | [API](https://github.com/huobiapi/API_Docs/wiki/REST_api_reference)                          | 中国           |
+|[Poloniex](https://poloniex.com/)        | 币币交易 | poloniex          | [API](https://github.com/huobiapi/API_Docs/wiki/REST_api_reference)                          | 美国           |
+<table>
+    <thead>
+        <tr>
+            <th>交易所</th>
+            <th>交易种类</th>
+            <th>交易所代码</th>
+            <th>国家</th>
+            <th>详细说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td rowspan=3>[火币Pro](https://www.huobipro.com/)</td>
+            <td>L2 Name A</td>
+            <td>L3 Name A</td>
+        </tr>
+        <tr>
+            <td>L3 Name B</td>
+            <td>L3 Name B</td>
+        </tr>
+        <tr>
+            <td>L2 Name B</td>
+            <td>L3 Name C</td>
+        </tr>
+        <tr>
+            <td>L3 Name D</td>
+        </tr>
+    </tbody>
+</table>
 目前只支持以上交易所，其他交易所会陆续上线。
 
 
-### 系统需求P
-- ython 3.6
+### 安装
 
-
-### 开始使用
-获取OneToken SDK
-```
-$ git clone https://github.com/qbtrade/onetoken
-```
-安装
-```bash
-$ pip install onetoken -U
-```
-
-如果不想安装，可以用以下代码设置`PYTHONPATH`环境变量，在onetoken上层目录中输入：
-```
-$ export PYTHONPATH=$PYTHONPATH:.
-```
-
-然后在Python程序中导入onetoken模块
-```
-import onetoken as ot
-```
+* Python
+    
+    * 系统需求：Python 3.6
+    
+    * 安装onetoken
+    
+        ```bash
+        $ pip install onetoken -U
+        ```
+    
+    * 在Python程序中导入onetoken模块
+    
+        ```
+        import onetoken as ot
+        ```
 
 
 ### 示例
@@ -72,7 +94,7 @@ import onetoken as ot
 |:---:|:---:|:---:|:---|
 |account|{exchange}/{specific_id} | okex/demo1| <交易所>/<用户名>
 |contract| {exchange}/{tpa}.{tpb} | okex/btc.usdt | <交易所>/<交易对>，用点（.）分隔两个币种
-|client_oid|{exchange}/{tpa}.{tpb}-{specific_id} | okex/btc.usdt-xxx |用于追踪订单信息，{specific_id}由用户指定或者由OneToken随机生成
+|client_oid|任意非空字符串 | okex/btc.usdt-xxx |用于追踪订单信息，{specific_id}由用户指定或者由OneToken随机生成
 |exchange_oid|{exchange}/{tpa}.{tpb}-{specific_id} | okex/btc.usdt-xxx |用于追踪订单信息，{specific_id}由交易所生成 
 
 
@@ -209,7 +231,7 @@ import onetoken as ot
     
     * 参数：
     
-        `client_oid|exchange_oid`: str，格式为<交易所代码>/<交易对>-<字符串>，支持由逗号（,）隔开的多个订单号，例如binance/btc.usdt-xxx1,binance/btc.usdt-xxx2
+        `client_oid|exchange_oid`: str，支持由逗号（,）隔开的多个订单号，例如binance/btc.usdt-xxx1,binance/btc.usdt-xxx2
     
     * 返回值：`(order, err)`
     
