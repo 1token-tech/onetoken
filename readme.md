@@ -27,8 +27,10 @@ OneToken is a application to fetch tick and play with orders. OTS is a friendly 
 
 目前只支持以上交易所，其他交易所会陆续上线。
 
+
 ### 系统需求
 - python 3.6
+
 
 ### 开始使用
 获取OneToken SDK
@@ -54,15 +56,15 @@ import onetoken as ot
 
 ### 示例
 
-To try Quote:
+使用Quote:
 
 `$ python quote.py`
 
-To try Account, prepare your api_key and api_secret, then:
+使用Account前需要准备好OneToken的api_key和api_secret，然后:
 
 `$ python account.py`
 
-api_key and api_secret will be required in the console.
+根据命令行提示输入api_key和api_secret。
 
 
 ### 命名规则
@@ -249,6 +251,7 @@ api_key and api_secret will be required in the console.
         }
         ```
 
+
 * `async def get_order_list(self, contract, state)`
 
     * 参数：
@@ -264,6 +267,7 @@ api_key and api_secret will be required in the console.
         `res`: list，列表包含多个dict对象，参考get_order_use_client_oid
 
         `err`: `{"code":"...", "message":"..."}`
+
 
 * `async def cancel_order_use_client_oid(self, client_oid)`    
     `async def cancel_order_use_exchange_oid(self, exchange_oid)`   
@@ -314,6 +318,7 @@ api_key and api_secret will be required in the console.
                     }
         }
         ```
+
 
 * `def get_total_amount(self, pos_symbol)`
     
