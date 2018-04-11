@@ -101,7 +101,7 @@ OneToken is a application to fetch tick and play with orders. OTS is a friendly 
 目前只支持以上交易所，其他交易所会陆续上线。
 
 
-### 安装
+### 安装步骤
 
 * Python
     
@@ -113,25 +113,6 @@ OneToken is a application to fetch tick and play with orders. OTS is a friendly 
         $ pip install onetoken -U
         ```
     
-    * 在Python程序中导入onetoken模块
-    
-        ```
-        import onetoken as ot
-        ```
-
-
-### 示例
-
-使用Quote:
-
-`$ python quote.py`
-
-使用Account前需要准备好OneToken的api_key和api_secret，然后:
-
-`$ python account.py`
-
-根据命令行提示输入api_key和api_secret。
-
 
 ### 命名规则
 
@@ -141,6 +122,31 @@ OneToken is a application to fetch tick and play with orders. OTS is a friendly 
 |contract| {exchange}/{tpa}.{tpb} | okex/btc.usdt | <交易所>/<交易对>，用点（.）分隔两个币种
 |client_oid|任意非空字符串 | okex/btc.usdt-xxx |用于追踪订单信息，{specific_id}由用户指定或者由OneToken随机生成
 |exchange_oid|{exchange}/{tpa}.{tpb}-{specific_id} | okex/btc.usdt-xxx |用于追踪订单信息，{specific_id}由交易所生成 
+
+
+### 使用
+
+* 用户可以在自己开发的Python程序中导入onetoken模块
+
+    ```
+    import onetoken as ot
+    ```
+
+* 运行示例程序`quote.py`获取行情Tick:
+
+    `$ python quote.py`
+
+* 运行示例程序Account前需要准备好OneToken的api_key和api_secret
+
+    * 用户可以访问[OneToken官网](https://1token.trade/)按照[新手指引](https://1token.trade/r/ot-guide/index)注册账号，获取api_key和api_secret
+    
+    * 运行:
+    
+        `$ python account.py`
+    
+        根据命令行提示输入api_key和api_secret。
+
+
 
 
 ### Account支持的操作
