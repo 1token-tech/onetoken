@@ -118,10 +118,10 @@ OneToken is a application to fetch tick and play with orders. OTS is a friendly 
 
 | | 规则 | 示例 | 详细解释 |
 |:---:|:---:|:---:|:---|
-|account|{exchange}/{specific_id} | okex/demo1| <交易所>/<用户名>
-|contract| {exchange}/{tpa}.{tpb} | okex/btc.usdt | <交易所>/<交易对>，用点（.）分隔两个币种
-|client_oid|任意非空字符串 | okex/btc.usdt-xxx |用于追踪订单信息，{specific_id}由用户指定或者由OneToken随机生成
-|exchange_oid|{exchange}/{tpa}.{tpb}-{specific_id} | okex/btc.usdt-xxx |用于追踪订单信息，{specific_id}由交易所生成 
+|account|{交易所}/{用户名} | okex/demo|
+|contract| {交易所}/{tpa}.{tpb}.{交割时间} | okex/btc.usdt或okef/btc.usd.n | <交易所>/<交易对>，普通币币交易和杠杆交易两个币种用点（.）分隔，合约交易在两个币种之后还要添加交割时间标识。
+|client_oid|任意非空字符串| abc |用于追踪订单信息，{specific_id}由用户指定或者由OneToken随机生成
+|exchange_oid|{exchange}/{tpa}.{tpb}-{字符串} | okex/btc.usdt-123 |用于追踪订单信息，{字符串}由交易所生成 
 
 
 ### 使用
@@ -138,7 +138,7 @@ OneToken is a application to fetch tick and play with orders. OTS is a friendly 
 
 * 运行示例程序Account前需要准备好OneToken的api_key和api_secret
 
-    * 用户可以访问[OneToken官网](https://1token.trade/)按照[新手指引](https://1token.trade/r/ot-guide/index)注册账号，获取api_key和api_secret
+    * 用户请访问[OneToken官网](https://1token.trade/)，按照[新手指引](https://1token.trade/r/ot-guide/index)注册账号，获取api_key和api_secret
     
     * 运行:
     
