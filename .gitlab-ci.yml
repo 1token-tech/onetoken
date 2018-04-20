@@ -1,4 +1,4 @@
 test:
   script:
   - pip install -r requirements.txt
-  - python examples/quote.py --test
+  - python --version
