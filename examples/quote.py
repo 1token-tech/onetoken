@@ -4,7 +4,7 @@ Usage:
 
 Options:
     --print-only-delay     Print only delay tick
-
+    --test  test cases
 """
 
 import asyncio
@@ -18,6 +18,7 @@ from onetoken import Tick
 
 class Config:
     print_only_delay = False
+    test = False
 
 
 def on_update_1(tk: Tick):
@@ -47,6 +48,9 @@ async def subscribe_from_ws():
 
     contract = 'binance/eth.btc'
     await ot.quote.subscribe_tick(contract, on_update_2)
+    await asyncio.sleep(60)
+    for q in ot.quote._client_pool.values():
+        await q.ws.close()
 
 
 async def get_last():
@@ -73,8 +77,13 @@ async def main():
 
     await subscribe_from_ws()
     await get_last()
-    while True:
-        await asyncio.sleep(1)
+
+    if Config.test:
+        await asyncio.sleep(30)
+        return
+    else:
+        while True:
+            await asyncio.sleep(1)
 
 
 if __name__ == '__main__':
@@ -89,6 +98,7 @@ if __name__ == '__main__':
 
     docopt = docoptinit(__doc__)
     Config.print_only_delay = docopt['--print-only-delay']
+    Config.test = docopt['--test']
     print('ots folder', ot)
     print('ots version', ot.__version__)
     print('aiohttp version', aiohttp.__version__)
