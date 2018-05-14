@@ -1,5 +1,6 @@
-in ~/qb/onetoken
+
 ```
+cd ~/qb/onetoken
 npm install -g docsify-cli
 docsify serve docs
 ```
