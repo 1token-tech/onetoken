@@ -1,7 +1,7 @@
 Websocket API
 --
 ### 简介
-实时行情，推送包括实时candle，tick以及逐笔数据，以Json格式发送并接受请求。如：
+实时行情，推送包括实时candle，tick以及逐笔数据，以Json格式发送并接受请求。如：
 ```$xslt
 {
     "uri":"",
