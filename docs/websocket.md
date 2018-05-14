@@ -1,8 +1,8 @@
 Websocket API
 --
 ### 简介
-实时行情，推送包括实时candle，tick以及逐笔数据，以Json格式发送并接受请求。如：
-```$xslt
+实时行情，推送包括实时candle，24小时涨跌幅数据，tick以及逐笔数据，以Json格式发送并接受请求。如：
+```
 {
     "uri":"",
     "command":""
@@ -10,7 +10,7 @@ Websocket API
 ```
 
 所有接口支持心跳方式检测服务器是否在线，心跳时长为30秒。若客户端超过30秒未发送心跳包，服务端会返回丢失心跳的通知，但目前并不会主动断开连接的客户端。示例如下：
-```$xslt  
+```  
 //Websocket Client request
 {
     "uri": "ping"
@@ -18,12 +18,13 @@ Websocket API
 
 //Websocket Server response
 {
-    "uri": "pong"
+    "uri": "pong",
+    "timestamp":123456
 } 
 ```
 
 同时支持UUID字段以标示不同连接(服务端返回相同UUID)，如：
-```$xslt    
+```    
 //Websocket Client request
 {
     "uri": "ping",
@@ -33,7 +34,8 @@ Websocket API
 //Websocket Server response
 {
     "uri": "pong",
-    "uuid": "deadbeef"
+    "uuid": "deadbeef",
+    "timestamp":123456
 } 
 ```
 
@@ -67,6 +69,29 @@ Websocket API
 } 
 ```
 
+### 24小时涨跌幅数据接口
+推送各个合约的当前价格以及24小时涨跌幅。
+
+地址 `wss://api.1token.trade/v1/quote/low-freq-quote`
+
+支持同时订阅不同交易所的不同合约：
+```
+//Websocket Client request
+{
+    "uri":"subscribe",
+    "contract":"huobip/btc.usdt"
+}
+
+
+//Websocket Server response
+{
+    "contract":"huobip/btc.usdt", 
+    "rise":1.919558,
+    "price":8754.89,
+    "price_s":"8754.89"
+}
+```
+其中，rise的单位为百分比，同时推送float64以及string类型的当前价格（price）。
 
 ### 实时tick、逐笔交易数据接口
 推送各交易所的tick、逐笔交易数据。
