@@ -1,3 +1,0 @@
-## onetoken
-
-> OneToken.Trade

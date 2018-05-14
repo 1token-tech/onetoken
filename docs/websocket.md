@@ -1,6 +1,3 @@
-Direct API
-===
-
 Websocket API
 --
 ### 简介
