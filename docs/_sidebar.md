@@ -7,5 +7,8 @@
   * [Websocket行情](websocket.md)
   * [Ip White List](ip.md)
 
+* 历史数据
+  * [Historical Data](historical-data.md)
+
 * Extra
   * [ChangeLog](changelog.md)
