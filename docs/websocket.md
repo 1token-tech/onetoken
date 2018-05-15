@@ -19,7 +19,7 @@ Websocket API
 //Websocket Server response
 {
     "uri": "pong",
-    "timestamp":123456
+    "timestamp": 1526357597.237
 } 
 ```
 
@@ -35,8 +35,83 @@ Websocket API
 {
     "uri": "pong",
     "uuid": "deadbeef",
-    "timestamp":123456
+    "timestamp": 1526357597.237
 } 
+```
+
+
+### 实时tick、逐笔交易数据接口
+推送各交易所的tick、逐笔交易数据。
+
+地址 `wss://api.1token.trade/v1/quote/ws`
+
+支持同时订阅不同交易所的不同合约，首先需要发送auth进行认证：
+```
+//Websocket Client request
+{
+    "uri":"auth"
+}
+
+//Websocket Server response
+{
+    "uri":"auth",
+    "message":"Auth succeed."
+}
+```
+
+订阅逐笔数据：
+```
+//Websocket Client request
+{
+    "uri": "subscribe-single-zhubi-verbose",
+    "contract": "bitfinex/btc.usd"
+}
+
+//Websocket Server response
+{
+    "uri":"single-zhubi-verbose",
+    "data":
+    [
+        {
+            "amount": 0.21,
+            "bs": "s",
+            "contract": "bitfinex/btc.usd",
+            "exchange_time": "2018-05-03T08:14:20.307000+00:00",
+            "price": 9231.8,
+            "time": "2018-05-03T16:14:20.541068+08:00"
+        }
+    ]
+}
+```
+
+订阅tick数据：
+```
+//Websocket Client request
+{
+    "uri": "subscribe-single-tick-verbose",
+    "contract": "bitfinex/btc.usd"
+}
+
+//Websocket Server response
+{
+    "uri":"single-tick-verbose",
+    "data":
+    {
+        "amount": 0.0,
+         "asks":
+         [
+             {"price": 9218.5, "volume": 1.7371},
+             ...
+         ],
+         "bids":
+         [
+             {"price": 9218.4, "volume": 0.81871728},
+             ...
+         ],
+         "contract": "bitfinex/btc.usd",
+         "last": 9219.3,
+         "time": "2018-05-03T16:16:41.630400+08:00", "volume": 0}
+}
 ```
 
 ### 实时candle数据接口
@@ -92,78 +167,4 @@ Websocket API
 }
 ```
 其中，rise的单位为百分比，同时推送float64以及string类型的当前价格（price）。
-
-### 实时tick、逐笔交易数据接口
-推送各交易所的tick、逐笔交易数据。
-
-地址 `wss://api.1token.trade/v1/quote/ws`
-
-支持同时订阅不同交易所的不同合约，首先需要发送auth进行认证：
-```
-//Websocket Client request
-{
-    "uri":"auth"
-}
-
-//Websocket Server response
-{
-    "uri":"auth",
-    "message":"Auth succeed."
-} 
-```
-
-订阅逐笔数据：
-```
-//Websocket Client request
-{
-    "uri": "subscribe-single-zhubi-verbose", 
-    "contract": "bitfinex/btc.usd"
-}
-
-//Websocket Server response
-{
-    "uri":"single-zhubi-verbose",
-    "data":
-    [
-        {
-            "amount": 0.21, 
-            "bs": "s",
-            "contract": "bitfinex/btc.usd", 
-            "exchange_time": "2018-05-03T08:14:20.307000+00:00", 
-            "price": 9231.8, 
-            "time": "2018-05-03T16:14:20.541068+08:00"
-        }
-    ]
-} 
-```
-
-订阅tick数据：
-```
-//Websocket Client request
-{
-    "uri": "subscribe-single-tick-verbose", 
-    "contract": "bitfinex/btc.usd"
-}
-
-//Websocket Server response
-{
-    "uri":"single-tick-verbose",
-    "data":
-    {
-        "amount": 0.0,
-         "asks": 
-         [
-             {"price": 9218.5, "volume": 1.7371},
-             ...
-         ], 
-         "bids":
-         [
-             {"price": 9218.4, "volume": 0.81871728}, 
-             ...
-         ], 
-         "contract": "bitfinex/btc.usd", 
-         "last": 9219.3,
-         "time": "2018-05-03T16:16:41.630400+08:00", "volume": 0}
-} 
-```
 
