@@ -4,6 +4,7 @@
 ## Tutorial
 * 首先从api 获取某一天的所有交易对的列表 [http://alihz-net-0.qbtrade.org/contracts?date=2018-01-02](http://alihz-net-0.qbtrade.org/contracts?date=2018-01-02)
 * 选好想要的下载的交易对 比如 okex/btc.usdt 以及 okef/btc.usd.q
+* 合约命名规则 交易易所symbol 可以参考 [支持交易所](https://1token.trade/r/docs#/support-exchanges)
 * 使用 /hist-tick 接口 下载特定日期 指定交易对的数据
   * [http://alihz-net-0.qbtrade.org/hist-ticks?date=2018-01-02&contract=okex/btc.usdt](http://alihz-net-0.qbtrade.org/hist-ticks?date=2018-01-02&contract=okex/btc.usdt)
   * [http://alihz-net-0.qbtrade.org/hist-ticks?date=2018-01-02&contract=okef/btc.usd.q](http://alihz-net-0.qbtrade.org/hist-ticks?date=2018-01-02&contract=okef/btc.usd.q)
@@ -77,7 +78,7 @@ Example: [http://alihz-net-0.qbtrade.org/contracts?date=2018-01-02](http://alihz
 
 *  [http://alihz-net-0.qbtrade.org/hist-ticks?date=2018-01-02&contract=okex/btc.usdt](http://alihz-net-0.qbtrade.org/hist-ticks?date=2018-01-02&contract=okex/btc.usdt)
 
-## Know Issues
+## Known Issues
 
 ### 文件格式问题
 
