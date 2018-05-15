@@ -20,7 +20,7 @@
 |[Poloniex](https://www.poloniex.com)|杠杆交易|||美国|
 |[Quoinex](https://quoinex.com)|币币交易|quoinex|[Quoinex](https://github.com/qbtrade/onetoken/wiki/Exchange-Markets#quoinex)|日本|
 
-[命名规则](id:NamingRules)
+命名规则
 ===
 
 | | 规则 | 示例 | 详细解释 |
@@ -68,7 +68,7 @@ bitmex/btc.usd             表示bitmex交易所btc.usd的合约的指数
 ===
 需要注意的是每个交易所都有细微的差异，以下文档详细说明了各个交易所的差异。
 
-[币安 Binance](id:Binance)
+币安 Binance
 ===
 交易所代码: binance
 * 请求限制每个ip的weight
@@ -111,7 +111,7 @@ Gate
 
 火币 Huobi
 ===
-交易所代码: huobip, huobim, hadax
+交易所代码: huobip, huobim
 * 用户需要设置account_id
 * 查询订单信息时如果不添加contract会返回所有交易对的订单
 * 单个交易对支持最近**1天**的成交记录
@@ -122,18 +122,18 @@ HADAX
 * 首先去 https://www.hadax.com/zh-cn/ 开通交易
 * 填入和huobip同样的api key和api secret
 
-[OKex](id:Okex)
+OKex
 ===
 交易所代码: okex, okef
 * 成交记录**无法获得exchange_tid**
 * 单个交易对支持最近**2天**的成交记录
 
-[Poloniex](id:Poloniex)
+Poloniex
 ===
 * 用contract查询订单信息仅支持以下**3种**状态：pending, part-deal-pending, active
 * 单个交易对支持最近**1天**的成交记录
 
-[Quoinex](id:Quoinex)
+Quoinex
 ===
 交易所代码: quoinex
 * 由于交易所严格限制请求次数，OneToken会缓存账户信息和下单信息**5秒**。

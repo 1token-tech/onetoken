@@ -1,7 +1,7 @@
 API Reference
 ====
 
-## [账户信息](id:AccountInfo)
+## 账户信息
 
 OneToken支持**3种**不同的账户类型：现货账户，杠杆交易账户，期货账户
 
@@ -129,7 +129,7 @@ OneToken支持**3种**不同的账户类型：现货账户，杠杆交易账户�
 }
 ```
 
-## [订单信息](id:OrderInfo)
+## 订单信息
 ```$xslt
 {
     "account": "binance/test_account",              # 账户名
@@ -153,7 +153,7 @@ OneToken支持**3种**不同的账户类型：现货账户，杠杆交易账户�
 }
 ```
 
-## [成交记录](id:Trans)
+## 成交记录
 ```$xslt
 {
     "account": "binance/test_account",                  # 账户名
@@ -172,7 +172,7 @@ OneToken支持**3种**不同的账户类型：现货账户，杠杆交易账户�
 }
 ```
 
-## [错误码](id:ErrorCode)
+## 错误码
 
 * OTS错误码
   * invalid-white-list  `错误的白名单 ip, ots 并不支持的 ip`
@@ -214,47 +214,9 @@ OneToken支持**3种**不同的账户类型：现货账户，杠杆交易账户�
   * unknown-exg-error `交易所系统错误, 状态不明`
   * bad-gateway  `交易所 bad-gateway`
 
-## [RESTful API](id:RESTful-API)
+## RESTful API
 
   Restful host is `https://1token.trade/api/v1/trade`
 
   API Explorer(https://1token.trade/r/swagger)
 
-## [Websocket API](id:Websocket-API)
-
-  ### General
-
-  Connect your websocket client to `wss://1token.trade/api/v1/quote/ws`
-
-  A basic command is sent in the following format:
-  ```$xslt
-  {
-      "uri": "<command>",
-      "args": {"arg1":"value1", "arg2":"value2", ...}
-  }
-  ```
-  The following commands are available without authentication:
-  * `subscribe-single-tick-verbose` subscribe a real-time ticker info of a given contract
-
-  ### Subscribe
-  Subscribe ticker
-  ```$xslt
-  //request
-  {
-      "uri": "subscribe-single-tick-verbose",
-      "args": {"contract": "<contract>"}
-  }
-  ```
-
-  ### Heartbeat
-  ```
-  //webSocket Client request
-  {
-      "uri": "ping"
-  }
-
-  //webSocket Server response
-  {
-      "uri": "pong"
-  }
-  ```
