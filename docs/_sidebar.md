@@ -1,14 +1,19 @@
-* [Home](README.md)
-* [Getting started](getting-started.md)
+* [Installation](./a/installation.md)
+
+* Instruction
+  * [Home](./a/instruction/home.md)
+  * [Getting started](./a/instruction/getting-started.md)
+  * [Support exchange](./a/instruction/supported-exchange.md)
+  * [Naming rules](./a/instruction/naming-rules.md)
+  * [Data structure](./a/instruction/data-structure.md)
+  * [Error code](./a/instruction/error-code.md)
+
+
 * Api Reference
-  * [安装](install.md)
-  * [支持交易所](support-exchanges.md)
-  * [api参考](api-reference.md)
-  * [Websocket行情](websocket.md)
-  * [Ip White List](ip.md)
+  * [Restful API](./a/api-refer/rest-api.md)
+  * [Websocket API](./a/api-refer/ws-api.md)
 
-* 数据服务
-  * [Historical Data](historical-data.md)
-
-* Extra
-  * [ChangeLog](changelog.md)
+* More
+  * [Historical Data](./a/more/historical-data.md)
+  * [IP white list](./a/more/ip-white-list.md)
+  * [Change log](./a/more/change-log.md)
