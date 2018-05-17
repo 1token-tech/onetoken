@@ -1,28 +1,28 @@
 
-* __[Home](./README.md)__
+* __[Home](/README.md)__
 
 * Getting started
-  * [Website](./getting-started/website-user.md)
-  * [API](./getting-started/api-user.md)
+  * [Website](/getting-started/website-user)
+  * [API](/getting-started/api-user)
 
 
 
-* __[Installation](./installation.md)__
+* __[Installation](/installation)__
 
 
 * __Instruction__
-  * [Support exchange](./instruction/supported-exchange.md)
-  * [Naming rules](./instruction/naming-rules.md)
-  * [Data structure](./instruction/data-structure.md)
-  * [Error code](./instruction/error-code.md)
+  * [Support exchange](/instruction/supported-exchange)
+  * [Naming rules](/instruction/naming-rules)
+  * [Data structure](/instruction/data-structure)
+  * [Error code](/instruction/error-code)
 
 
 * Api Reference
-  * [Restful API](./api-refer/rest-api.md)
-  * [Websocket API](./api-refer/ws-api.md)
+  * [Restful API](/api-refer/rest-api)
+  * [Websocket API](/api-refer/ws-api)
 
 * More
-  * [Historical Data](./more/historical-data.md)
-  * [IP white list](./more/ip-white-list.md)
-  * [Change log](./change-log.md)
+  * [Historical Data](/more/historical-data)
+  * [IP white list](/more/ip-white-list)
+  * [Change log](/more/change-log)
 
