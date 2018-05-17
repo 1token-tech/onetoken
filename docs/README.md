@@ -27,7 +27,7 @@
 
 * [Rest API](https://1token.trade/r/swagger?url=/r/swagger/quote.yml)
 
-* [Websocket API](./a/api-refer/ws-api.md)
+* [Websocket API](./api-refer/ws-api.md)
 
 
 
