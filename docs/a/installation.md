@@ -24,8 +24,6 @@
     * 用户请访问[OneToken官网](https://1token.trade/)，按照[新手指引](https://1token.trade/r/ot-guide/index)注册账号，获取api_key和api_secret
 
 
-## Python
-
 * 用户可以在自己开发的Python程序中导入onetoken模块
 
     ```python

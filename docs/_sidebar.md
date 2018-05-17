@@ -16,4 +16,5 @@
 * More
   * [Historical Data](./a/more/historical-data.md)
   * [IP white list](./a/more/ip-white-list.md)
-  * [Change log](./a/more/change-log.md)
+  * [Change log](./a/change-log.md)
+
