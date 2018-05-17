@@ -1,5 +1,5 @@
 
-* [Home](./README.md)
+* __[Home](./README.md)__
 
 * Getting started
   * [Website](./getting-started/website-user.md)
@@ -7,10 +7,10 @@
 
 
 
-* [Installation](./installation.md)
+* __[Installation](./installation.md)__
 
 
-* Instruction
+* __Instruction__
   * [Support exchange](./instruction/supported-exchange.md)
   * [Naming rules](./instruction/naming-rules.md)
   * [Data structure](./instruction/data-structure.md)
