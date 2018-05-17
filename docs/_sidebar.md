@@ -1,8 +1,14 @@
+* Getting started
+  * [Website](./a/getting-started/website-user.md)
+  * [API](./a/getting-started/api-user.md)
+
+
+
 * [Installation](./a/installation.md)
+
 
 * Instruction
   * [Home](./a/instruction/home.md)
-  * [Getting started](./a/instruction/getting-started.md)
   * [Support exchange](./a/instruction/supported-exchange.md)
   * [Naming rules](./a/instruction/naming-rules.md)
   * [Data structure](./a/instruction/data-structure.md)

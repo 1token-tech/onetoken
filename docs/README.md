@@ -25,10 +25,9 @@
 
 行情API支持websocket以及rest的方式去获取最新的行情信息
 
-* [行情Rest API](https://1token.trade/r/swagger?url=/r/swagger/quote.yml)
+* [Rest API](https://1token.trade/r/swagger?url=/r/swagger/quote.yml)
 
-websocket 行情可以加
-* [Websocket行情](websocket.md)
+* [Websocket API](./a/api-refer/ws-api.md)
 
 
 
