@@ -1,7 +1,7 @@
 # Websocket API
 
 ### 简介
-实时行情，推送包括实时candle，24小时涨跌幅数据，tick以及逐笔数据，以Json格式发送并接受请求。如：
+实时行情，推送包括实时candle，24小时涨跌幅数据，tick以及逐笔数据，以Json格式发送并接受请求。如：
 ```
 {
     "uri":"",
@@ -59,7 +59,7 @@
 }
 ```
 
-订阅逐笔数据：
+订阅逐笔数据：
 ```
 //Websocket Client request
 {
@@ -97,8 +97,7 @@
     "uri":"single-tick-verbose",
     "data":
     {
-        "amount": 0.0,
-         "asks":
+         "asks":
          [
              {"price": 9218.5, "volume": 1.7371},
              ...
@@ -109,8 +108,12 @@
              ...
          ],
          "contract": "bitfinex/btc.usd",
-         "last": 9219.3,
-         "time": "2018-05-03T16:16:41.630400+08:00", "volume": 0}
+         "last": 9219.3,  // 最新成交价
+         "time": "2018-05-03T16:16:41.630400+08:00",  // 1token的系统时间 ISO 格式 带时区
+         "exchange_time": "2018-05-03T16:16:41.450400+08:00",  // 交易所给的时间 ISO 格式 带时区
+         "amount": 16592.4,  //成交额 (CNY)
+         "volume": 0.3   // 成交量
+   }
 }
 ```
 
@@ -132,15 +135,15 @@
 
 //Websocket Server response
 {
-    "amount":0,
-    "close":9220.11,
-    "high":9221,
-    "low":9220.07,
-    "open":9220.07,
-    "volume":1.0925081444528795,
-    "contract":"huobip/btc.usdt",
-    "duration":"1m",
-    "time":"2018-05-03T07:30:00Z"
+    "amount": 16592.4, //成交量
+    "close": 9220.11,
+    "high": 9221,
+    "low": 9220.07,
+    "open": 9220.07,
+    "volume": 0.3, //成交额
+    "contract": "huobip/btc.usdt",
+    "duration": "1m",
+    "time": "2018-05-03T07:30:00Z" // 时间戳 isoformat
 } 
 ```
 
@@ -161,9 +164,9 @@
 //Websocket Server response
 {
     "contract":"huobip/btc.usdt", 
-    "rise":1.919558,
-    "price":8754.89,
-    "price_s":"8754.89"
+    "rise": 1.919558,
+    "price": 8754.89,
+    "price_s": "8754.89" //根据交易所的min_change format的字符串
 }
 ```
 其中，rise的单位为百分比，同时推送float64以及string类型的当前价格（price）。
