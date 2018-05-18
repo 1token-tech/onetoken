@@ -28,13 +28,13 @@
 //Websocket Client request
 {
     "uri": "ping",
-    "uuid": "deadbeef"
+    "uuid": "this-is-a-uuid"
 }
 
 //Websocket Server response
 {
     "uri": "pong",
-    "uuid": "deadbeef",
+    "uuid": "this-is-a-uuid",
     "timestamp": 1526357597.237
 } 
 ```
