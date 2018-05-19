@@ -38,30 +38,36 @@
 
 ### 币安 Binance
 
+#### 行情
+币安的orderbook 限制了只会每秒来一个, 但是逐笔数据是实时的, 所以如果想要判断最及时的行情 可以使用逐笔数据
+#### 交易
 交易所代码: binance
 * 请求限制每个ip的weight
 * 一般接口限制每个ip的weight累加不得超过**每分钟1200**
 * 交易接口限制每个账号**每秒10单，每天限制100000单**
 * 查询订单信息**无法获得average_dealt_price**
 * 单个交易对支持最近**500条**历史成交记录
-* [币安API交易规则说明](https://support.binance.com/hc/zh-cn/articles/115003235691-%E5%B8%81%E5%AE%89API%E4%BA%A4%E6%98%93%E8%A7%84%E5%88%99%E8%AF%B4%E6%98%8E)介绍了对交易行为的其他限制。
-
+* 币安会对下单使用机器学习的限制 具体详见 [币安API交易规则说明](https://support.binance.com/hc/zh-cn/articles/115003235691-%E5%B8%81%E5%AE%89API%E4%BA%A4%E6%98%93%E8%A7%84%E5%88%99%E8%AF%B4%E6%98%8E)
 ### Bitfinex
 
 交易所代码: bitfinex
+* 背后的接口用的是bitfinex v2的websocket
+* bitfinex 的 v1 rest接口 非常不稳定
 
 ### Bitflyer
 
 交易所代码: bitflyer（现货）
  bitflex (期货）
 
-### Bitfinex
+### bithumb
 
 交易所代码: bithumb
 
 ### Bitmex
 
 交易所代码: bitmex
+* 交易频繁/行情剧烈的时候 bitmex经常会system overload
+* bitmex 普通时候 交易数秒才能返回 都是正常的 (不是网络因素 他们系统的因素)
 
 ### Bittrex
 
@@ -76,18 +82,19 @@
 * 用contract查询订单信息仅支持以下**3种**状态：pending, part-deal-pending, active
 * 撤单时向交易所发送无效的exchange_oid(比如已经撤掉的单子)也会返回撤单成功，不会返回错误。
 * 单个交易对支持最近**1天**的成交记录
+* 交易所下单之后 要过两三秒钟才能查询到撤单  (如果你使用一个HTTP Session的话 速度会快一点 估计他们服务器内部有一些奇怪的缓存)
 
 ### 火币 Huobi
 
-交易所代码: huobip, huobim
-* 用户需要设置account_id
+交易所代码: huobip(币币交易), huobim(杠杆交易)
 * 查询订单信息时如果不添加contract会返回所有交易对的订单
 * 单个交易对支持最近**1天**的成交记录
-* 限制每个交易接口**10秒最多100次**请求
+* 限制每个交易接口**10秒最多100次**请求 按用户限制
+* 火币现在没有提供websocket接口. 所有查询都是通过rest的
 
 ### HADAX
 
-* 首先去 https://www.hadax.com/zh-cn/ 开通交易
+* 首先去 https://www.hadax.com/zh-cn/ 登录并且开通交易
 * 填入和huobip同样的api key和api secret
 
 ### OKex
@@ -95,6 +102,8 @@
 交易所代码: okex, okef
 * 成交记录**无法获得exchange_tid**
 * 单个交易对支持最近**2天**的成交记录
+* okex的websocket **非常非常非常** 不稳定 所以所有的接口都是通过rest的
+* okex **号称** 马上就会上v2的接口(就是他们网页版使用的接口) 但是已经跳票好几个月了
 
 ### Poloniex
 
