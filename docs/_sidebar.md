@@ -4,8 +4,6 @@
 * Getting started
   * [Website](/getting-started/website-user)
   * [API](/getting-started/api-user)
-  * [Installation](/installation)
-
 
 
 * Instruction

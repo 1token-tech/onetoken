@@ -1,4 +1,6 @@
 
+
+
 # 通过API来进行交易
 
 ### 1. 创建 ot key 和 ot secret，请务必保管好新建的 ot key 和 ot secret
@@ -18,6 +20,10 @@
   git clone git@github.com:qbtrade/onetoken.git
 ```
 
+也可以通过`pip`来安装onetoken sdk
+```shell
+pip install onetoken -U
+```
 
 
 ### 4. 执行 quote 样例
@@ -53,3 +59,5 @@
 
 
 ![step1](https://1token.trade/oss/web/guide2/pic7.jpg)
+
+
