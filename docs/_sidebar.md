@@ -1,22 +1,20 @@
 
-* __[Home](/README.md)__
+* [__Home__](/README.md)
 
 * Getting started
   * [Website](/getting-started/website-user)
   * [API](/getting-started/api-user)
+  * [Installation](/installation)
 
 
 
-* __[Installation](/installation)__
-
-
-* __Instruction__
-
+* Instruction
   * [Naming rules](/instruction/naming-rules)
   * [Data structure](/instruction/data-structure)
   * [Error code](/instruction/error-code)
 
-* [Support exchange](/supported-exchange)
+* Exchange
+  * [Support exchange](/supported-exchange)
 
 * Api Reference
   * [Restful API](/api-refer/rest-api)

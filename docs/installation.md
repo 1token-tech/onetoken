@@ -44,6 +44,6 @@
 
     `$ python examples/account.py`
 
-    根据命令行提示输入OneToken的ot_key和ot_secret。程序运行后会在控制台输出用户在交易所的账户信息，拥有的比特币数量和当前未成交的订单列表。
+    根据命令行提示输入OneToken的`ot_key`和`ot_secret`。程序运行后会在控制台输出用户在交易所的账户信息，拥有的比特币数量和当前未成交的订单列表。
 
     用户初次使用账户时程序可能返回`Acc is initializing, please try later.`错误，过2秒重试即可。
