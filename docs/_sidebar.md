@@ -11,11 +11,12 @@
 
 
 * __Instruction__
-  * [Support exchange](/instruction/supported-exchange)
+
   * [Naming rules](/instruction/naming-rules)
   * [Data structure](/instruction/data-structure)
   * [Error code](/instruction/error-code)
 
+* [Support exchange](/supported-exchange)
 
 * Api Reference
   * [Restful API](/api-refer/rest-api)
