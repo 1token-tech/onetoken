@@ -1,10 +1,14 @@
 
 # Official Documentation 1Token APIs and Streams.
 
+初次使用请先参考
 
-## 手工交易者
+https://1token.trade/r/docs#/getting-started/website-user
 
-## API 用户
+
+如果需要使用API连接1Token, 请参考API用户的入门指南
+
+https://1token.trade/r/docs#/getting-started/api-user
 
 ### 基本信息
 
