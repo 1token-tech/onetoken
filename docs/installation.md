@@ -36,7 +36,6 @@
     git clone https://github.com/1token-trade/onetoken
     ```
 
-<<<<<<< HEAD
 * 运行示例程序`examples/quote.py`获取行情Tick:
 
     `$ python examples/quote.py`
@@ -46,22 +45,5 @@
     `$ python examples/account.py`
 
     根据命令行提示输入OneToken的ot_key和ot_secret。程序运行后会在控制台输出用户在交易所的账户信息，拥有的比特币数量和当前未成交的订单列表。
-=======
-* 进入onetoken目录：
-    ```shell
-    cd onetoken
-    ```
-
-
-* 运行示例程序`example/quote.py`获取行情Tick:
-
-    `$ python example/quote.py`
-
-* 运行示例程序`example/account.py`:
-
-    `$ python example/account.py`
-
-    根据命令行提示输入OneToken的`api_key`和`api_secret`。程序运行后会在控制台输出用户在交易所的账户信息，拥有的比特币数量和当前未成交的订单列表。
->>>>>>> update
 
     用户初次使用账户时程序可能返回`Acc is initializing, please try later.`错误，过2秒重试即可。
