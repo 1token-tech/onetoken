@@ -13,7 +13,7 @@
 
 * Exchange
   * [OverView](/exchange-overview)
-  * [Support exchange](/supported-exchange)
+  * [Exchange Details](/exchange-details)
 
 * Api Reference
   * [Restful API](/api-refer/rest-api)
