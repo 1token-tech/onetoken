@@ -10,3 +10,7 @@ https://1token.trade/r/docs#/getting-started/website-user
 
 https://1token.trade/r/docs#/getting-started/api-user
 
+
+下载历史数据(tick)请参考
+
+https://1token.trade/r/docs#/more/historical-data
