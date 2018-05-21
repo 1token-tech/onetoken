@@ -43,7 +43,7 @@
 ### 实时tick、逐笔交易数据接口
 推送各交易所的tick、逐笔交易数据。
 
-地址 `wss://api.1token.trade/v1/quote/ws`
+地址 `wss://1token.trade/api/v1/ws/tick`
 
 支持同时订阅不同交易所的不同合约，首先需要发送auth进行认证：
 ```
@@ -120,7 +120,7 @@
 ### 实时candle数据接口
 推送各个交易所的实时candle数据。
 
-地址: `wss://api.1token.trade/v1/quote/candle` 
+地址: `wss://1token.trade/api/v1/ws/candle`
 
 支持不同时长：1m,5m,15m,30m,1h,2h,4h,6h,1d,1w。
 
@@ -150,7 +150,7 @@
 ### 24小时涨跌幅数据接口
 推送各个合约的当前价格以及24小时涨跌幅。
 
-地址 `wss://api.1token.trade/v1/quote/low-freq-quote`
+地址 `wss://1token.trade/api/v1/ws/low-freq-quote`
 
 支持同时订阅不同交易所的不同合约：
 ```
