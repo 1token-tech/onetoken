@@ -16,6 +16,12 @@
 * 币安会对下单使用机器学习的限制 具体详见 [币安API交易规则说明](https://support.binance.com/hc/zh-cn/articles/115003235691-%E5%B8%81%E5%AE%89API%E4%BA%A4%E6%98%93%E8%A7%84%E5%88%99%E8%AF%B4%E6%98%8E)
 * websocket 推送才能拿到所有的挂单
 
+## ZB
+
+交易所代码: zb
+* 不支持dealt-trans，交易所完全没有成交记录这个概念, 网页上可以查询到账单，但是API并不提供支持
+* 杠杆交易尚未支持
+
 ## Bitfinex
 
 交易所代码: bitfinex
