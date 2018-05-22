@@ -32,7 +32,6 @@ okef/btc.usd.q 表示ok交易所BTC当季合约
 
 bitmex/eth.btc.2018-06-29  表示bitmex交易所2018年6月29日到期的eth.btc合约
 bitmex/btc.usd.td          表示bitmex交易所btc.usd的掉期合约
-bitmex/btc.usd             表示bitmex交易所btc.usd的合约的指数
 
 ```
 需要注意的是，okef的合约是连续的，当周交割后次周自动变为当周，因此不同时刻当周、次周、当季合约对应的到期日不是固定的。
