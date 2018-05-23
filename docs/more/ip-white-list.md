@@ -16,6 +16,15 @@
 
 ![step3](../img/my-key.png)
 
+3.在1token官网的账户管理中添加该账户，并将`key`, `secret`以及白名单IP填入
+
+![step4](../img/add_in_1token.png)
+
+4.之后可在账户的api列表中查看刚添加的一项。可以看到，在ip一项里有1token持有的ip`47.52.239.19`，至此，白名单的添加就完成了。
+
+![step4](../img/api-key-list.png)
+
+
 这样子就只有通过`47.52.239.19`这个ip发出的交易请求才会被huobi接受，大大增加了个人账户的安全性。
 
 后续的使用请参考[通过1token网页进行交易](..\getting-started\website-user.md)或是[通过1token API进行交易](..\getting-started\api-user.md)。
