@@ -16,6 +16,7 @@
   * [Exchange Details](/exchange-details)
 
 * Api Reference
+  * [API Keys Usage](/api-refer/api-keys-usage)
   * [Restful API](/api-refer/rest-api)
   * [Websocket API](/api-refer/ws-api)
 
