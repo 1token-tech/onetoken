@@ -6,7 +6,7 @@
 |:---:|:---:|:---:|:---|
 |account|{exchange}/{user_name} | okex/demo|
 |contract|{exchange}/{base}.{quote}(.{delivery}) | okex/btc.usdt或okef/btc.usd.n | 普通币币交易和杠杆交易两个币种用点（.）分隔，用quote货币计价来买卖base货币。合约交易在两个币种之后还要添加交割[时间标识](#期货交易代码)。
-|client_oid|任意非空字符串| abc |由用户指定或者由OneToken随机生成，用于追踪订单信息。
+|client_oid|由'A-Z','a-z','0-9','/','-'组成,最长64最短12的字符串| okex/btc.usdt-20180524-104719-a8uwod1lqgqrkq25osy0lohcr9e |由用户指定或者由OneToken随机生成，用于追踪订单信息。
 |exchange_oid|{contract}-{string}| okex/btc.usd-123或okef/btc.usd.n-123 |由交易所生成，用于追踪订单信息。
 |exchange_tid|{contract}-{string}| quoinex/btc.jpy-12345|由交易所生成，用于追踪历史成交信息。
 
