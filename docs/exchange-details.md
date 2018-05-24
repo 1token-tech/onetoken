@@ -69,6 +69,7 @@
 
 ## HADAX
 
+交易所代码：hadax
 * 首先去 https://www.hadax.com/zh-cn/ 登录并且开通交易
 * 填入和huobip同样的api key和api secret
 * api 的行为和huobi保持一致
@@ -91,6 +92,8 @@
   * 例子 如果现在持有2张多头 请求 sell 3张 则会开出3张空单
 
 ## Poloniex
+
+交易所代码：poloniex
 
 * 用contract查询订单信息仅支持以下**3种**状态：pending, part-deal-pending, active
 * 单个交易对支持最近**1天**的成交记录
