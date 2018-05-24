@@ -12,7 +12,7 @@
 请参考 [Getting Started](https://1token.trade/r/docs#/getting-started/website-user?id=第三步-登录交易所，点击api管理-（以火币为例）)
 
 ### 3. 安装onetoken SDK 
-* 我们目前只提供python的SDK, 不过API是语言无关的, 其他语言您可以使用
+* 我们目前只提供python的SDK, 不过API是语言无关的, 其他语言也可以使用。安装python的SDK，可以使用如下指令
 ```shell
 pip install onetoken -U
 ```
