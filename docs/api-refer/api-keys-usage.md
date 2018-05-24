@@ -9,12 +9,14 @@ Authentication is done by sending the following HTTP headers:
 
 `Api-Key`: Your **onetoken** public API key.
 
-`Api-Signature`: A signature of the request you are making. It is calculated as `hex(HMAC_SHA256(apiSecret, verb + path + nonce + data))`.
+`Api-Signature`: A signature of the request you are making. It is calculated as `hex(HMAC_SHA256(ot_secret, verb + path + nonce + data))`.
 
 ### 'data'
 The `data` part of the HMAC construction should be same with the raw body you send to the server. And just be sure that the keys of the data should be sorted.
  
 ### Code sample
+
+Python sample code as following:
 
 ```python
 ot_key = ''
