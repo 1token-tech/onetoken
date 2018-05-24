@@ -39,6 +39,11 @@
 } 
 ```
 
+所有Websocket接口支持服务端发送gZip格式数据，是否使用gZip以各Websocket的地址参数为准。如`wss://1token.trade/api/v1/ws/tick?gzip=true` 则表明使用gZip压缩传输数据。
+
+注意：除tick-v3行情Websocket接口，在用户没用指明是否使用gZip的情况下，其它接口均默认不使用gZip压缩数据传输。
+
+
 
 ### 实时tick、逐笔交易数据接口
 推送各交易所的tick、逐笔交易数据。
