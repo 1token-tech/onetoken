@@ -1,3 +1,6 @@
+### 2018-05-25
+* Websocket server will shut down the connection if ping message didn't receive in 30s
+
 ### 2018-05-23
 
 * Websocket add gzip=true endpoint, you can use ```wss://1token.trade/api/v1/ws?gzip=true``` to get gzipped websocket
