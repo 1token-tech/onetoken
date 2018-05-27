@@ -1,3 +1,6 @@
+### 2018-05-27
+* The realtime candle websocket service now support multi subscribe in one connection
+
 ### 2018-05-25
 * Websocket server will shut down the connection if ping message didn't receive in 30s
 
