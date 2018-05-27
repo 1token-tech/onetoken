@@ -121,6 +121,23 @@
    }
 }
 ```
+逐笔与tick数据支持订阅后退订，示例如下：
+```
+//Websocket Client request
+{
+    "uri": "unsubscribe-single-tick-verbose",
+    "contract": "bitfinex/btc.usd"
+}
+```
+或：
+```
+//Websocket Client request
+{
+    "uri": "unsubscribe-single-zhubi-verbose",
+    "contract": "bitfinex/btc.usd"
+}
+```
+
 
 ### 实时candle数据接口
 推送各个交易所的实时candle数据。
@@ -175,4 +192,13 @@
 }
 ```
 其中，rise的单位为百分比，同时推送float64以及string类型的当前价格（price）。
+
+支持订阅后退订，示例如下：
+```
+//Websocket Client request
+{
+    "uri":"unsubscribe",
+    "contract":"huobip/btc.usdt"
+}
+```
 
