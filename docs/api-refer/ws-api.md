@@ -202,3 +202,63 @@
 }
 ```
 
+### 实时tick-v3行情 （Alpha）
+推送v3格式的tick行情，每隔30秒服务器会推送snapshot，在此间隔内发送diff，客户端可以通过计算snapshot+diff得出当前行情。
+
+在diff类型的数据中，如bids或者asks中存在[x,y=0]的情况，则删除上个snapshot中bids或asks价格为x的行情，否则更新此行情。
+
+地址 `wss://1token.trade/api/v1/ws/tick-v3`
+
+支持同时订阅不同交易所的不同合约，该接口默认采用gZip压缩数据发送至客户端。示例如下：
+```
+//Websocket Client request
+{
+    "uri":"subscribe-single-tick-verbose","contract":"huobip/btc.usdt"
+}
+
+//Websocket Server response(snapshot)
+ {
+     "tp":"s",                      //type: snapshot
+     "ui":16222,                    //update_id: 16222
+     "tm":1527401596.654875,        //time
+     "et":1527401596.511            //exchange_time
+     "c":"huobip/btc.usdt",         //contract
+     "l":7291.79,                   //last
+     "v":0,                         //volume
+     "b":                           //bids
+     [
+        [7291.97,1],                //[price, volume]
+        ...
+        [7232.65,0.1155]
+     ],
+     "a":                           //asks
+     [
+        [7292.51,0.001],
+        ...
+        [7455.15,0.1]
+     ]
+}
+
+//Websocket Server response(diff)
+{
+    "tp":"d",                       //type: diff
+    "ui":16223,
+    "tm":1527401598.138354,
+    "et":1527401598.013,
+    "c":"huobip/btc.usdt",
+    "l":7291.97,
+    "v":0,
+    "b":
+    [
+        [7291.97,0.8298],
+        ...,
+        [7232.65,0]
+    ],
+    "a":
+    [
+        [7297.19,0.2],
+        ...,
+        [7455.15,0]
+    ]
+}
+```
