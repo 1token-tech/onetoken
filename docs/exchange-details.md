@@ -21,7 +21,6 @@
     * all orders 需要contract参数
 * get_order: 不支持avg_dealt_price，值为None
 * get_order_list: 不支持avg_dealt_price，值为None
-    
 
 ## ZB
 
@@ -30,7 +29,7 @@
 * 杠杆交易尚未支持
 * 没有原生trans接口
 * get_trans_list: 在最近100单里找成交过的单子，转换成trans,拿不到exchange_tid
-* get_order_list: 会多次发送多次请求到交易所然后返回所有active状态的orders，但是end状态最多只有100条
+* get_order_list: end状态list最多只有100条
 
 
 ## Bitfinex
@@ -80,7 +79,6 @@
     * 没有exchange_oid
     * 没有dealt_time
     * 没有taker/maker
-* get_order: 除了调用single call的get_order还要在open_orders里找
 
 
 ## Gate
@@ -90,7 +88,7 @@
 * 撤单时向交易所发送无效的exchange_oid(比如已经撤掉的单子)也会返回撤单成功，不会返回错误。
 * 单个交易对支持最近**1天**的成交记录
 * 交易所下单之后 要过两三秒钟才能查询到撤单  (如果你使用一个HTTP Session的话 速度会快一点 估计他们服务器内部有一些奇怪的缓存)
-* order list: 不需要contract参数，只支持pending list
+* 只支持pending list, 不需要contract参数
 * OTSDealtTrans:
     * 没有commission
     * 没有commission_currency
@@ -104,9 +102,8 @@
 * 单个交易对支持最近**1天**的成交记录
 * 限制每个交易接口**10秒最多100次**请求 按用户限制
 * 火币现在没有提供websocket接口. 所有查询都是通过rest的
-* order list: 不需要contract参数，但官方文档不支持
+* order list: 不需要contract参数，与官方文档冲突 随时可能失效
 * cancel all: 不需要contract参数
-* get_order：除了调用single call的get_order还要在open_orders里找
 * get_accounts: 获得account_id
 
 
@@ -132,8 +129,10 @@
     * exchange_tid: 没有
     * dealt_time: 没有
     * taker/maker: 没有
-* get_order: 除了调用single call的get_order还要在open_orders里找,拿不到手续费
-* get_order_list: 拿不到手续费
+* get_order: 
+    * commission没有
+* get_order_list:
+    * commission没有
 
 
 ## OKef
@@ -153,7 +152,6 @@
 * OTSDealtTrans:
     * commission_currency: 没有
     * taker/maker: 没有
-* get_order: 除了调用single call的get_order还要在open_orders里找
 
 ## Quoinex
 
@@ -166,8 +164,8 @@
 * trans list: 不需要contract参数
 * OTSDealtTrans:
     * 没有commission_currency
-* get_trans_list：获得的信息比较少，没有手续费等信息，所以不用get_trans，用get_order_list转换得到
-* get_order_list：state支持pending, part-deal-pending, dealt, part-deal-withdrawn, withdrawn
+* get_trans_list：获得的信息比较少，没有commission等信息，所以不用get_trans，用get_order_list转换得到
+* get_order_list：支持pending, part-deal-pending, dealt, part-deal-withdrawn, withdrawn状态的list
     
 ## Bibox
 交易所代码： bibox
