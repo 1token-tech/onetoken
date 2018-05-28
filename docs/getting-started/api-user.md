@@ -53,6 +53,4 @@ git clone https://github.com/1token-trade/onetoken
 看到如下输出说明样例执行成功:
 
 
-![step7](../img/107.png)
-
-
+![step5](../img/105.png)
