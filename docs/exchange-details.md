@@ -15,10 +15,10 @@
 * 单个交易对支持最近**500条**历史成交记录
 * 币安会对下单使用机器学习的限制 具体详见 [币安API交易规则说明](https://support.binance.com/hc/zh-cn/articles/115003235691-%E5%B8%81%E5%AE%89API%E4%BA%A4%E6%98%93%E8%A7%84%E5%88%99%E8%AF%B4%E6%98%8E)
 * websocket 
-* cancel all 不需要contract
+* cancel all 不需要contract参数
 * order list:
-    * open orders list 不需要contract
-    * all orders 需要
+    * open orders list 不需要contract参数
+    * all orders 需要contract参数
 * get_order: 不支持avg_dealt_price，值为None
 * get_order_list: 不支持avg_dealt_price，值为None
     
@@ -38,8 +38,8 @@
 交易所代码: bitfinex
 * 背后的接口用的是bitfinex v2的websocket
 * bitfinex 的 v1 rest接口 非常不稳定
-* order_list： 不需要contract
-* cancel all：不需要contract
+* order_list： 不需要contract参数
+* cancel all：不需要contract参数
 
 ## Bitflyer
 
@@ -60,8 +60,8 @@
 交易所代码: bitmex
 * 交易频繁/行情剧烈的时候 bitmex经常会system overload
 * bitmex 普通时候 交易数秒才能返回 都是正常的 (不是网络因素 他们系统的因素)
-* order list: 不需要contract
-* cancel all: 不需要contract
+* order list: 不需要contract参数
+* cancel all: 不需要contract参数
 
 
 ## Bittrex
@@ -71,9 +71,9 @@
 * 限制最多同时**500个**未成交订单
 * 限制每天最多下**200000单**
 * 没有原生trans接口
-* order list: 不需要contract
-* cancel all: 不需要contract
-* trans list: 不需要contract
+* order list: 不需要contract参数
+* cancel all: 不需要contract参数
+* trans list: 不需要contract参数
 * OTSDealtTrans:
     * 没有commission
     * 没有commission_currency
@@ -90,7 +90,7 @@
 * 撤单时向交易所发送无效的exchange_oid(比如已经撤掉的单子)也会返回撤单成功，不会返回错误。
 * 单个交易对支持最近**1天**的成交记录
 * 交易所下单之后 要过两三秒钟才能查询到撤单  (如果你使用一个HTTP Session的话 速度会快一点 估计他们服务器内部有一些奇怪的缓存)
-* order list: 不需要，但官方文档不支持
+* order list: 不需要contract参数，只支持pending list
 * OTSDealtTrans:
     * 没有commission
     * 没有commission_currency
@@ -104,8 +104,8 @@
 * 单个交易对支持最近**1天**的成交记录
 * 限制每个交易接口**10秒最多100次**请求 按用户限制
 * 火币现在没有提供websocket接口. 所有查询都是通过rest的
-* order list: 不需要，但官方文档不支持
-* cancel all: 不需要
+* order list: 不需要contract参数，但官方文档不支持
+* cancel all: 不需要contract参数
 * get_order：除了调用single call的get_order还要在open_orders里找
 * get_accounts: 获得account_id
 
@@ -161,9 +161,9 @@
 * 由于交易所严格限制请求次数，OneToken会缓存账户信息和下单信息**5秒**。
 * 单个交易对支持最近**1000条**的成交记录
 * 有原生trans接口: 有(但不能用)
-* 不需要contract拿order list
-* 不需要contract调用cancel all
-* 不需要contract拿trans list
+* order list: 不需要contract参数
+* cancel all: 不需要contract参数
+* trans list: 不需要contract参数
 * OTSDealtTrans:
     * 没有commission_currency
 * get_trans_list：获得的信息比较少，没有手续费等信息，所以不用get_trans，用get_order_list转换得到
@@ -172,6 +172,7 @@
 ## Bibox
 交易所代码： bibox
 * 没有原生trans接口
+* open orders: 不支持avg_dealt_price，值为None
 * OTSDealtTans:
     * commission_currency: 没有
     * taker/maker: 没有
@@ -179,7 +180,9 @@
 ## Btcc
 交易所代码： btcc
 * 有原生trans接口: 没有
-* 是否需要contract拿order list: open orders接口不需要，all orders需要
+* order list: 
+    * open orders 不需要contract参数
+    * all orders 需要contract参数
 * OTSDealtTrans:
     * commission: 没有
     * commission_currency: 没有
