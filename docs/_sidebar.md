@@ -10,6 +10,7 @@
   * [Naming rules](/instruction/naming-rules)
   * [Data structure](/instruction/data-structure)
   * [Error code](/instruction/error-code)
+  * [Order Status Flow](/instruction/order-status)
 
 * Exchange
   * [OverView](/exchange-overview)
