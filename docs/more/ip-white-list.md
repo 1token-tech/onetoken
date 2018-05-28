@@ -6,7 +6,9 @@
 
 以火币Huobi为例
 
-1.在生成`key`, `secret`时填入1token持有的ip中的一个或多个。如下图中将生成一对专供在1token交易使用的`key`, `secret`，我们将他命名为__1token__，并将[1token持有的ip](https://1token.trade/api/v1/basic/ip-pool)中的一个或几个填入图中的指定ip地址。这里我们只将ip列表中的`47.52.239.19`这个ip填入白名单。
+1.在生成`key`, `secret`时填入1token持有的ip中的一个或多个。如下图中将生成一对专供在1token交易使用的`key`, `secret`，我们将他命名为__1token__，并将[1token持有的ip](https://1token.trade/api/v1/basic/ip-pool)中的一个或几个填入图中的指定ip地址。
+
+以下假设用户将添加的白名单ip为`12.34.56.78`(用户在实际操作时，请务必确认所填入的IP在[IP列表](https://1token.trade/api/v1/basic/ip-pool)中能够查到)。
 
 ![step1](../img/add-white-list-ip.png)
 
@@ -16,16 +18,22 @@
 
 ![step3](../img/my-key.png)
 
-3.在1token官网的账户管理中添加该账户，并将`key`, `secret`以及`白名单IP`填入。此处的白名单ip与第一步中在huobi填入的ip应该一致，否则1token将无法得知应当使用哪台机器来完成本对`key-secret`相关操作。
+3.在1token官网的账户管理中添加该账户，并将`key`, `secret`以及`白名单IP`填入。此处的白名单ip与第一步中在huobi填入的ip应该一致，否则1token将无法得知应当使用哪台机器来完成本对`key-secret`相关操作。在第一步中我们填入了`12.34.56.78`，则在此处填入相同的IP。
 
 ![step4](../img/add_in_1token.png)
 
-4.之后可在账户的api列表中查看刚添加的一项。可以看到，在ip一项里有第一步中填入的ip`47.52.239.19`，至此，白名单的添加就完成了。
+4.之后可在账户的api列表中查看刚添加的一项。可以看到，在ip一项里有第一步中填入的ip`12.34.56.78`，至此，白名单的添加就完成了。
 
 ![step5](../img/api-key-list.png)
 
 
-这样子就只有通过`47.52.239.19`这个ip发出的交易请求才会被huobi接受，大大增加了个人账户的安全性。
+这样子就只有通过`12.34.56.78`这个ip发出的交易请求才会被huobi接受，大大增加了个人账户的安全性。
+
+
+### 注意
+
+用户在实际操作时，请务必确认所填入的IP在[IP列表](https://1token.trade/api/v1/basic/ip-pool)中能够查到
+
 
 后续的使用请参考[通过1token网页进行交易](..\getting-started\website-user.md)或是[通过1token API进行交易](..\getting-started\api-user.md)。
 
