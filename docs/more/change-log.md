@@ -7,7 +7,7 @@
 
 ### 2018-05-23
 
-* Websocket add gzip=true endpoint, you can use ```wss://1token.trade/api/v1/ws?gzip=true``` to get gzipped websocket
+* Websocket add gzip=true endpoint, you can use ```wss://1token.trade/api/v1/ws/tick?gzip=true``` to get gzipped websocket
 * non gzip websockets will be deprecated
 
 ### 2018-05-14
