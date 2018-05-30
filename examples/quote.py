@@ -49,6 +49,7 @@ async def subscribe_from_ws():
     contract = 'binance/eth.btc'
     await ot.quote.subscribe_tick(contract, on_update_2)
     await asyncio.sleep(60)
+    logging.warning('i am going to test reconnect')
     for q in ot.quote._client_pool.values():
         await q.ws.close()
 
