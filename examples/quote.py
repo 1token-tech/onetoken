@@ -40,7 +40,11 @@ def on_update_2(tk: Tick):
 
 
 async def subscribe_from_ws():
-    for contract in ['okex/ltc.btc', 'okex/bch.btc']:
+    # sub_list = ['okex/ltc.btc', 'okex/bch.btc', 'binance/btc.usdt', 'binance/bch.btc', 'binance/eos.btc',
+    #             'binance/trx.btc', 'binance/eth.btc', 'binance/ada.btc', 'binance/icx.btc', 'binance/ont.btc',
+    #             'binance/arn.btc', 'binance/zrx.btc']
+    sub_list = ['okex/ltc.btc', 'okex/bch.btc']
+    for contract in sub_list:
         await ot.quote.subscribe_tick(contract, on_update_1)
 
     contract = 'okex/btc.usdt'
