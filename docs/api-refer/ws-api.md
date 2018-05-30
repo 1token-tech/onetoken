@@ -209,7 +209,22 @@
 
 地址 `wss://1token.trade/api/v1/ws/tick-v3`
 
-支持同时订阅不同交易所的不同合约，该接口默认采用gZip压缩数据发送至客户端。示例如下：
+该接口默认采用gZip压缩数据发送至客户端，客户端首先需要发送auth进行认证：
+```
+//Websocket Client request
+{
+    "uri":"auth"
+}
+
+//Websocket Server response
+{
+    "uri":"auth",
+    "message":"Auth succeed."
+}
+```
+
+接口支持同时订阅不同交易所的不同合约，示例如下：
+
 ```
 //Websocket Client request
 {
