@@ -205,7 +205,7 @@
 ### 实时tick-v3行情 （Alpha）
 推送v3格式的tick行情，每隔30秒服务器会推送snapshot，在此间隔内发送diff，客户端可以通过计算snapshot+diff得出当前行情。
 
-在diff类型的数据中，如bids或者asks中存在[x,y=0]的情况，则删除上个snapshot中bids或asks价格为x的行情，否则更新此行情。
+在diff类型的数据中，如bids或者asks中存在[x,y=0]的情况，则删除上个snapshot中bids或asks价格为x的行情，否则更新此行情。
 
 地址 `wss://1token.trade/api/v1/ws/tick-v3`
 
