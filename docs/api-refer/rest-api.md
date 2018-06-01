@@ -1,8 +1,9 @@
 # RESTful API
 
-1Token 所有的API(包括websocket和REST) 都是以下面这两个前缀之一开头的, 这两个前缀提供完全一致的API接口, 唯一的区别是一个是直连香港阿里云, 一个是通过cloudflare的CDN
+1Token 所有的API(包括websocket和REST) 都是以下面这两个前缀之一开头的, 这两个前缀提供完全一致的API接口, 唯一的区别是一个是直连香港阿里云, 一个是通过cloudflare的CDN 您可以选择不同的前缀来满足您不同的需求
 
-您可以选择不同的前缀来满足您不同的需求, 举个例子, 如果您的服务器在国内, 我们推荐您使用 `https://1token.trade/api/v1/` 来通过CDN连接 1Token 这样可以避免网络的抖动. 如果您的服务器在海外, 而且直连香港阿里云比较稳定, 我们推荐您使用 `https://api.1token.trade/v1/` 来直接连接1Token
+举个例子, 如果您的服务器在国内, 我们推荐您使用 `https://1token.trade/api/v1/` 来通过CDN连接 1Token。 这样可以避免网络的抖动。
+如果您的服务器在海外, 而且直连香港阿里云比较稳定, 我们推荐您使用 `https://api.1token.trade/v1/` 来直接连接1Token的服务器
   
   * `https://api.1token.trade/v1/`  (direct to aliyun)  
   * `https://1token.trade/api/v1/`  (through cloudflare CDN)
