@@ -24,9 +24,9 @@
 
 通过api，用户可以拿到基本的信息，比如交易所列表，交易所的contract信息等。通过Websocket API（[websocket API教程](/api-refer/ws-api)）可以订阅逐笔和tick。通过Rest API（[Rest API教程](/api-refer/rest-api)）可以进行下单等交易操作。
 
-### Rest API的swagger说明
+### 详细的API说明
 
-用户可以查看更加详尽的api说明
+我们提供有关API的详细swagger说明，用户可以查看：
 
 * [Swagger Basic API](https://1token.trade/r/swagger?url=/r/swagger/quote.yml)
 * [Swagger Quote API](https://1token.trade/r/swagger?url=/r/swagger/quote.yml)
