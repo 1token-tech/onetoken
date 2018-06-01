@@ -22,6 +22,17 @@
 
 3. 通过运行样例来初步了解SDK中quote和account相关功能
 
-下载历史数据(tick)请参考
+通过api，用户可以拿到基本的信息，比如交易所列表，交易所的contract信息等。通过Websocket API（[websocket API教程](/api-refer/ws-api)）可以订阅逐笔和tick。通过Rest API（[Rest API教程](/api-refer/rest-api)）可以进行下单等交易操作。
 
-https://1token.trade/r/docs#/more/historical-data
+### Rest API的swagger说明
+
+用户可以查看更加详尽的api说明
+
+* [Swagger Basic API](https://1token.trade/r/swagger?url=/r/swagger/quote.yml)
+* [Swagger Quote API](https://1token.trade/r/swagger?url=/r/swagger/quote.yml)
+* [Swagger Trade API](https://1token.trade/r/swagger?url=/r/swagger/trade.yml)
+
+
+### 历史数据(tick)
+
+1token提供历史行情的下载，具体教程请查看[历史数据](https://1token.trade/r/docs#/more/historical-data)一节。
