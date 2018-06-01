@@ -4,7 +4,7 @@
 
 |交易所|交易类型|交易所 Symbol|详细说明|国家|
 |------|-------|------------------------|:---:|:------------:|
-|[币安 Binance](https://www.binance.com)|币币交易|biannce|[币安 Binance](/exchange-details#币安-binance)|日本|
+|[币安 Binance](https://www.binance.com)|币币交易|binance|[币安 Binance](/exchange-details#币安-binance)|日本|
 |[Bitfinex](https://www.bitfinex.com)|币币交易|bitfinex|[Bitfinex](/exchange-details#bitfinex)|英属维尔京群岛|
 |[Bitfinex](https://www.bitfinex.com)|杠杆交易|bitfinex|[Bitfinex](/exchange-details#bitfinex)|英属维尔京群岛|
 |[Bitflyer](https://bitflyer.jp)|现货交易|bitflyer|[Bitflyer](/exchange-details#bitflyer)|日本|
