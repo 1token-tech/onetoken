@@ -37,7 +37,7 @@ __注意__: 1token提供的API是__语言无关__的，可以通过任何支持�
 * [Swagger Quote API](https://1token.trade/r/swagger?url=/r/swagger/quote.yml)
 * [Swagger Trade API](https://1token.trade/r/swagger?url=/r/swagger/trade.yml)
 
-在直接查阅详细API之前，推荐先阅读[API Reference](/api-refer/rest-api)这一小节，大致了解一下基本信息、行情API、交易加密方式、交易API、历史数据API，之后的API对接会更加容易上手。
+在直接查阅详细API之前，推荐先阅读[API Reference](/api-refer/rest-api)这一小节，大致了解一下[基本信息](/api-refer/rest-api#基本信息)、[行情API](/api-refer/rest-api#行情API)、[交易加密方式](/api-refer/rest-api#交易加密方式)、[交易API](/api-refer/rest-api#交易API)、[历史数据API](/api-refer/rest-api#历史数据API)，之后的API对接会更加容易上手。
 
 ### 历史数据(tick)
 

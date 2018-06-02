@@ -19,6 +19,7 @@
 * Api Reference
   * [Restful API](/api-refer/rest-api)
   * [Websocket API](/api-refer/ws-api)
+  * [API Details](/api-refer/swagger)
 
 * More
   * [Historical Data](/more/historical-data)
