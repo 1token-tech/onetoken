@@ -35,7 +35,6 @@ Example: [http://alihz-net-0.qbtrade.org/contracts?date=2018-01-02](http://alihz
 * GET /historical-quote/hist-ticks
 * 默认的输出格式为gzip文件.
 * 每一行数据都是JSON对象
-
 * bids/买单 按价格从高到低排序 asks/卖单 按价格从低到高排序 深度不同交易所不同 一般有20档
 * last 最新成交价
 * time isoformat的时间 (不保证是utc+8时区)
@@ -78,7 +77,7 @@ Example: [http://alihz-net-0.qbtrade.org/contracts?date=2018-01-02](http://alihz
 
 *  [http://alihz-net-0.qbtrade.org/hist-ticks?date=2018-01-02&contract=okex/btc.usdt](http://alihz-net-0.qbtrade.org/hist-ticks?date=2018-01-02&contract=okex/btc.usdt)
 
-## Known Issues
+## 已知存在的问题
 
 ### 文件格式问题
 
