@@ -7,11 +7,13 @@
 
 1token将不同交易所的API进行整理和封装，提供给用户一套统一的API。用户使用1token提供的统一API，以及对应的[交易所标识](/exchange-overview?#支持的交易所)就可在对应交易所进行交易。
 
-举例来说，Abo是一个数字货币的交易者，他想在AA和BB这两个交易所做跨交易所套利。
+举例来说，Abo是一个数字货币的交易者，他想在huobi.pro和gate.io这两个交易所做跨交易所套利。
 
-* __不使用1token__: Abo需要编写两个程序来分别实现与AA和BB两个交易所API的对接，或是在AA和BB的网站之间切换以进行交易。
+* __不使用1token__: Abo需要编写两个程序来分别实现与huobi.pro和gate.io两个交易所API的对接，或是在huobi.pro和gate.io的网站之间切换以进行交易。
 
-* __使用1token__：Abo在1token完成相应账户设置之后，只需实现与1token API的对接（或使用1token提供的SDK），或是直接在1token网站内即可完成AA和BB两个交易所的交易。
+* __使用1token__：Abo在1token完成相应账户设置之后，只需使用1token提供的SDK(或自己实现1token API的对接），或是直接在1token网站内即可完成huobi.pro和gate.io两个交易所的交易。
+
+Abo使用1token之后，交易前的准备由对接huobi.pro和gate.io两个系统，变为只需对接1token一个系统（使用1token SDK的话这一步可以大大简化），工作量至少由2变为了1甚至更少。如果Abo想要在n个交易所进行交易，1token可以将交易前的准备工作量由n变为1。
 
 __交易者涉及的交易所越多，1token的优势越明显。__
 
