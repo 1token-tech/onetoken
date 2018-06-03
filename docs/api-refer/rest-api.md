@@ -44,7 +44,7 @@ API的详细介绍 请参考 [行情 Swagger API](https://1token.trade/r/swagger
 ## 交易加密方式
 
 #### OT-API/KEY 加密方式
-
+<!-- 
 Authentication is done by sending the following HTTP headers:
 
 `Api-Nonce`: A value that should increase between the bounds of 0 and 2^53
@@ -53,11 +53,21 @@ Authentication is done by sending the following HTTP headers:
 
 `Api-Signature`: A signature of the request you are making. It is calculated as `hex(HMAC_SHA256(ot_secret, verb + path + nonce + data))`.
 
-The `data` part of the HMAC construction should be same with the raw body you send to the server. And just be sure that the keys of the data should be sorted.
+The `data` part of the HMAC construction should be same with the raw body you send to the server. And just be sure that the keys of the data should be sorted. -->
 
-### Code sample
+用API来交易时需要在请求的`HTTP header`中加入以下内容以完成__身份验证__：
 
-Python sample code as following:
+|key|value|
+|---|---|
+|`Api-Nonce`|一个在0到2^53大小范围内增加的值|
+|`Api-Key`|在1token生成的`OT-KEY`（若没有，请参考[生成OT_KEY](/getting-started/api-user#通过API来进行交易)）|
+|`Api-Signature`|本次请求的签名，计算方法为<br/>`hex(HMAC_SHA256(ot_secret, verb + path + nonce + data))`|
+
+`Api-Signature`计算公式中的`data`应与本次请求发送到服务器的`raw body`相同。
+
+### 代码示例
+
+Python例程:
 
 ```python
 ot_key = ''
@@ -84,9 +94,10 @@ signature = hmac.new(bytes(ot_secret, 'utf8'), bytes(message, 'utf8'), digestmod
 
 ```
 
-### Troubleshooting
+### 遇到了问题？
 
-* If there is a request body, make sure your `Content-Type` set to `application/json`.
+<!-- * If there is a request body, make sure your `Content-Type` set to `application/json`. -->
+* 如果本次请求包含`body`，请确保将`Content-Type`设置为`application/json`。
 
 
 ## 交易API
