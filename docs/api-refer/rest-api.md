@@ -70,27 +70,87 @@ The `data` part of the HMAC construction should be same with the raw body you se
 Python例程:
 
 ```python
+import time
+import json
+import urllib.parse
+import hmac
+import hashlib
+import requests
+
+# 填入你的ot_key
 ot_key = ''
+# 填入你的ot_secret
 ot_secret = ''
 
-verb = 'POST'
-path = '/huobip/test/orders'
-nonce = str(int(time.time() * 1000000))
-data = {"contract":"huobip/btc.usdt","price":7800.2,"bs":"b","amount":0.6}
 
-if data is None:
-    data_str = ''
-else:
-    assert isinstance(data, dict)
-    data_str = json.dumps(data)
+def gen_nonce():
+    return str((int(time.time() * 1000000)))
 
-parsed_url = urllib.parse.urlparse(path)
-parsed_path = parsed_url.path
 
-message = verb + path + str(nonce) + data_str
-signature = hmac.new(bytes(ot_secret, 'utf8'), bytes(message, 'utf8'), digestmod=hashlib.sha256).hexdigest()
+def gen_headers(nonce, key, sig):
+    headers = {
+        'Api-Nonce': nonce,
+        'Api-Key': key,
+        'Api-Signature': sig,
+        'Content-Type': 'application/json'
+    }
+    return headers
 
-# TODO add requests.send() example
+
+def gen_sign(secret, verb, path, nonce, data=None):
+    if data is None:
+        data_str = ''
+    else:
+        assert isinstance(data, dict)
+        data_str = json.dumps(data)
+        # data_str=data_str.replace(' ','')
+    parsed_url = urllib.parse.urlparse(path)
+    parsed_path = parsed_url.path
+
+    message = verb + parsed_path + str(nonce) + data_str
+    signature = hmac.new(bytes(secret, 'utf8'), bytes(message, 'utf8'), digestmod=hashlib.sha256).hexdigest()
+    print(f'nonce:\n{nonce}')
+    print(f'parsed_path:\n{parsed_path}')
+    print(f'data_str:\n{data_str}')
+    print(f'message:\n{message}')
+    return signature
+
+
+def place_order():
+    verb = 'POST'
+
+    # 下单的api前缀如下，具体请查看1token API文档
+    url = 'https://1token.trade/api/v1/trade'
+
+    # path的具体构成方法请查看1token API文档
+    path = '/huobip/zannb/orders'
+
+    nonce = gen_nonce()
+    data = {"contract": "huobip/btc.usdt", "price": 1, "bs": "b", "amount": 0.6}
+    sig = gen_sign(ot_secret, verb, path, nonce, data)
+    headers = gen_headers(nonce, ot_key, sig)
+    resp = requests.post(url + path, headers=headers, json=data)
+    print(resp.json())
+
+
+def get_info():
+    verb = 'GET'
+    url = 'https://1token.trade/api/v1/trade'
+    path = '/huobip/zannb/info'
+    nonce = gen_nonce()
+    sig = gen_sign(ot_secret, verb, path, nonce)
+    headers = gen_headers(nonce, ot_key, sig)
+    resp = requests.get(url + path, headers=headers)
+    print(resp.json())
+
+
+def main():
+    place_order()
+    get_info()
+
+
+if __name__ == '__main__':
+    main()
 
 ```
 
