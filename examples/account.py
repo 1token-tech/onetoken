@@ -31,8 +31,8 @@ async def main():
         except:
             print('file not found: ', os.path.expanduser(file_path))
             print('input manually:')
-            api_key = input('api_key: ')
-            api_secret = input('api_secret: ')
+            api_key = input('ot-key: ')
+            api_secret = input('ot-secret: ')
             account = input('account: ')
     acc = Account(account, api_key=api_key, api_secret=api_secret)
     await asyncio.sleep(5)
