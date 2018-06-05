@@ -34,7 +34,7 @@ async def main():
             api_key = input('ot-key: ')
             api_secret = input('ot-secret: ')
             account = input('account: ')
-    acc = Account(account, api_key=api_key, api_secret=api_secret)
+    acc = Account(account, api_key, api_secret)
     await asyncio.sleep(5)
     log.info('Initialized account {}'.format(account))
 
