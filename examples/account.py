@@ -13,6 +13,8 @@ def load_api_key_secret():
     if os.path.isfile(path):
         try:
             js = yaml.load(open(path).read())
+            if 'ot_key' in js:
+                return js['ot_key'], js['ot_secret'], js['account']
             return js['api_key'], js['api_secret'], js['account']
         except:
             log.exception('failed load api key/secret')
@@ -25,9 +27,14 @@ async def main():
         file_path = '~/.onetoken/config.yml'
         try:
             config = yaml.load(open(os.path.expanduser(file_path)).read())
-            api_key = config['api_key']
-            api_secret = config['api_secret']
-            account = config['account']
+            if 'ot_key' in config:
+                api_key = config['ot_key']
+                api_secret = config['ot_secret']
+                account = config['account']
+            else:
+                api_key = config['api_key']
+                api_secret = config['api_secret']
+                account = config['account']
         except:
             print('file not found: ', os.path.expanduser(file_path))
             print('input manually:')
