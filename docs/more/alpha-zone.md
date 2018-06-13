@@ -5,4 +5,4 @@
 
 ## 桌面版下载
 
-[1token-0.1](https://1token.trade/oss/1token-0.1.exe)
+[1token-0.1](https://1token.trade/oss/1token-0.1.exe) 40MB
