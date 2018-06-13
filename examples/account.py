@@ -7,6 +7,13 @@ import onetoken as ot
 import yaml
 from onetoken import Account, log
 
+demo_args = {
+    'OT_KEY': '',
+    'OT_SECRET': '',
+    'account': 'mock/test',
+    'conract': 'mock/test',
+}
+
 
 def load_api_key_secret():
     path = os.path.expanduser('~/.onetoken/config.yml')
@@ -22,26 +29,26 @@ def load_api_key_secret():
 
 
 async def main():
-    api_key, api_secret, account = load_api_key_secret()
-    if api_key is None or api_secret is None:
+    ot_key, ot_secret, account = load_api_key_secret()
+    if ot_key is None or ot_secret is None:
         file_path = '~/.onetoken/config.yml'
         try:
             config = yaml.load(open(os.path.expanduser(file_path)).read())
             if 'ot_key' in config:
-                api_key = config['ot_key']
-                api_secret = config['ot_secret']
+                ot_key = config['ot_key']
+                ot_secret = config['ot_secret']
                 account = config['account']
             else:
-                api_key = config['api_key']
-                api_secret = config['api_secret']
+                ot_key = config['api_key']
+                ot_secret = config['api_secret']
                 account = config['account']
         except:
             print('file not found: ', os.path.expanduser(file_path))
             print('input manually:')
-            api_key = input('ot-key: ')
-            api_secret = input('ot-secret: ')
+            ot_key = input('ot-key: ')
+            ot_secret = input('ot-secret: ')
             account = input('account: ')
-    acc = Account(account, api_key, api_secret)
+    acc = Account(account, ot_key, ot_secret)
     await asyncio.sleep(5)
     log.info('Initialized account {}'.format(account))
 
