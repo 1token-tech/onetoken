@@ -76,6 +76,8 @@ async def get_last():
 
 
 async def main():
+    # if you are in China Mianland, you can uncomment the following line to use another host
+    ot.Config.change_host()
     cons, err = await ot.quote.get_contracts('binance')
     print(cons, err)
     con, err = await ot.quote.get_contract('binance/btc.usdt')
