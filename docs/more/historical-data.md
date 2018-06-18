@@ -135,6 +135,10 @@ GET /historical-quote/hist-ticks?date={date}
 
 * <https://1token.trade/api/v1/quote/zhubi?contract=binance/btc.usdt&since=2018-05-01T00&#58;00&#58;00Z&until=2018-05-01T00&#58;10&#58;00Z&size=2000>
 
+## 限制
+
+* `alihz-net-0`限制为1秒1个请求，超过这个数量会返回`429`
+
 ## 已知存在的问题
 
 ### Tick数据文件格式问题
