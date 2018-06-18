@@ -11,6 +11,7 @@
   * [数据结构](/instruction/data-structure)
   * [错误码](/instruction/error-code)
   * [订单状态流程](/instruction/order-status)
+  * [标的代码调整](/instruction/symbol-name-modify)
 
 * 交易所
   * [概览](/exchange-overview)
