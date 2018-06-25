@@ -1,3 +1,5 @@
+### 2018-06-25
+* Low-freq-quote websocket service has upgraded to version 2. For more information please refer to [ws-api](/api-refer/ws-api.md)
 ### 2018-05-27
 * The realtime candle websocket service now support multi subscribe in one connection
 * Add tick-v3 websocket service readme(Alpha)

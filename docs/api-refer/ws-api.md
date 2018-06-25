@@ -172,23 +172,40 @@
 ### 24小时涨跌幅数据接口
 推送各个合约的当前价格以及24小时涨跌幅。
 
-地址 `wss://1token.trade/api/v1/ws/low-freq-quote`
+地址 `wss://1token.trade/api/v1/ws/low-freq-quote-v2`
 
 支持同时订阅不同交易所的不同合约：
 ```
 //Websocket Client request
 {
-    "uri":"subscribe",
-    "contract":"huobip/btc.usdt"
+    "uri":"batch-subscribe",
+    "contracts":["huobip/btc.usdt", "huobip/ht.usdt"]
 }
-
 
 //Websocket Server response
 {
-    "contract":"huobip/btc.usdt", 
-    "rise": 1.919558,
-    "price": 8754.89,
-    "price_s": "8754.89" //根据交易所的min_change format的字符串
+    "uri":"batch-subscribe",
+    "code":"success"
+}
+
+//Websocket Server response
+{
+    "uri":"low-freq-quote",
+    "data":
+    [
+        {
+            "contract":"huobip/btc.usdt", 
+            "rise":3.345103,
+            "price":6152.32,
+            "price_s":"6152.32"         //根据交易所的min_change format的字符串
+        },
+        {
+            "contract":"huobip/ht.usdt", 
+            "rise":-0.539916,
+            "price":3.7027,
+            "price_s":"3.7027"
+        }
+    ]
 }
 ```
 其中，rise的单位为百分比，同时推送float64以及string类型的当前价格（price）。
@@ -197,8 +214,14 @@
 ```
 //Websocket Client request
 {
-    "uri":"unsubscribe",
-    "contract":"huobip/btc.usdt"
+    "uri":"batch-unsubscribe",
+    "contracts":["huobip/btc.usdt", "huobip/ht.usdt"]
+}
+
+//Websocket Server response
+{
+    "uri":"batch-unsubscribe",
+    "code": "success"
 }
 ```
 
