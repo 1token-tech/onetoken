@@ -20,7 +20,7 @@
      "time": "2018-05-03T16:16:41.630400+08:00",  // 1token的系统时间 ISO 格式 带时区
      "exchange_time": "2018-05-03T16:16:41.450400+08:00",  // 交易所给的时间 ISO 格式 带时区
      "amount": 16592.4,  //上一个snapshot到这一个snapshot中间的成交额 (CNY)
-     "volume": 0.3   // 成交量
+     "volume": 0.3   // 上一个snapshot到这一个snapshot中间的成交量
 }
 ```
 

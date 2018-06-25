@@ -7,6 +7,7 @@
 
 
 * 基础
+  * [名词解释](/instruction/word-explanation)
   * [变量命名规则](/instruction/naming-rules)
   * [数据结构](/instruction/data-structure)
   * [错误码](/instruction/error-code)
