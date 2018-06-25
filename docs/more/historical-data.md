@@ -14,6 +14,7 @@
   * 合约命名规则 交易所symbol 可以参考 [支持交易所](exchange-overview)
   * 使用 /zhubi 接口来获得数据，可以指定时间区间、指定交易对以及本次请求的最大zhubi数目。
     * https://1token.trade/api/v1/quote/zhubi?contract=binance/btc.usdt&since=2018-05-01T00&#58;00&#58;00Z&until=2018-05-01T00&#58;10&#58;00Z&size=2000
+* 关于zhubi和tick，可以先查看[名词解释](/instruction/word-explanation)和[数据结构](/instruction/data-structure)两个小节。
 
 
 ## 获取支持的合约列表
