@@ -19,7 +19,7 @@
 
 ## 使用
 
-* 运行Account示例程序前需要准备好OneToken的api_key和api_secret
+* 运行Account示例程序前需要准备好OneToken的ot_key和ot_secret
 
     * 用户请访问[OneToken官网](https://1token.trade/)，按照[新手指引](https://1token.trade/r/docs#/getting-started/website-user)注册账号，获取ot_key和ot_secret
 
