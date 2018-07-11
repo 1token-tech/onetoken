@@ -64,32 +64,9 @@
 }
 ```
 
-订阅逐笔数据：
-```
-//Websocket Client request
-{
-    "uri": "subscribe-single-zhubi-verbose",
-    "contract": "bitfinex/btc.usd"
-}
 
-//Websocket Server response
-{
-    "uri":"single-zhubi-verbose",
-    "data":
-    [
-        {
-            "amount": 0.21,
-            "bs": "s",
-            "contract": "bitfinex/btc.usd",
-            "exchange_time": "2018-05-03T08:14:20.307000+00:00",
-            "price": 9231.8,
-            "time": "2018-05-03T16:14:20.541068+08:00"
-        }
-    ]
-}
-```
+订阅tick数据, 如果需要请求多个tick， 可以在同一个websocket里面发送多个subscribe-single-tick-verbose的请求
 
-订阅tick数据：
 ```
 //Websocket Client request
 {
@@ -121,7 +98,35 @@
    }
 }
 ```
+
+订阅逐笔数据, 如果需要请求多个contract的逐笔数据， 可以在同一个websocket里面发送多个subscribe-single-zhubi-verbose的请求
+
+```
+//Websocket Client request
+{
+    "uri": "subscribe-single-zhubi-verbose",
+    "contract": "bitfinex/btc.usd"
+}
+
+//Websocket Server response
+{
+    "uri":"single-zhubi-verbose",
+    "data":
+    [
+        {
+            "amount": 0.21,
+            "bs": "s",
+            "contract": "bitfinex/btc.usd",
+            "exchange_time": "2018-05-03T08:14:20.307000+00:00",
+            "price": 9231.8,
+            "time": "2018-05-03T16:14:20.541068+08:00"
+        }
+    ]
+}
+```
+
 逐笔与tick数据支持订阅后退订，示例如下：
+
 ```
 //Websocket Client request
 {
