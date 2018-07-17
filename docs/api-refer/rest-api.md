@@ -63,7 +63,7 @@ The `data` part of the HMAC construction should be same with the raw body you se
 |`Api-Key`|在1token生成的`OT-KEY`（若没有，请参考[生成OT_KEY](/getting-started/api-user#通过API来进行交易)）|
 |`Api-Signature`|本次请求的签名，计算方法为<br/>`hex(HMAC_SHA256(ot_secret, verb + path + nonce + data))`|
 
-`Api-Signature`计算公式中的`data`应与本次请求发送到服务器的`raw body`相同。
+`Api-Signature`计算公式中的`data`应与本次请求发送到服务器的`raw body`相同，`data`在stringfy时不要求按key排序。
 
 ### 代码示例
 
@@ -81,7 +81,6 @@ import requests
 ot_key = ''
 # 填入你的ot_secret
 ot_secret = ''
-
 
 def gen_nonce():
     return str((int(time.time() * 1000000)))
@@ -102,7 +101,8 @@ def gen_sign(secret, verb, path, nonce, data=None):
         data_str = ''
     else:
         assert isinstance(data, dict)
-        data_str = json.dumps(data)
+        # server并不要求data_str按key排序，只需此处用来签名的data_str和所发送请求中的data相同即可，是否排序请按实际情况选择
+        data_str = json.dumps(data, sort_keys=True)
         # data_str=data_str.replace(' ','')
     parsed_url = urllib.parse.urlparse(path)
     parsed_path = parsed_url.path
@@ -129,7 +129,8 @@ def place_order():
     data = {"contract": "huobip/btc.usdt", "price": 1, "bs": "b", "amount": 0.6}
     sig = gen_sign(ot_secret, verb, path, nonce, data)
     headers = gen_headers(nonce, ot_key, sig)
-    resp = requests.post(url + path, headers=headers, json=data)
+    # server并不要求请求中的data按key排序，只需所发送请求中的data与用来签名的data_str和相同即可，是否排序请按实际情况选择
+    resp = requests.post(url + path, headers=headers, data=json.dumps(data, sort_keys=True))
     print(resp.json())
 
 
