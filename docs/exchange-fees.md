@@ -11,8 +11,8 @@
   </tr>
   <tr>
     <td class="tg-lymx">交易所</td>
-    <td class="tg-lymx">taker</td>
     <td class="tg-lymx">maker</td>
+    <td class="tg-lymx">taker</td>
     <td class="tg-lymx">maker</td>
     <td class="tg-4s2o">taker</td>
   </tr>
