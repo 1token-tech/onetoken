@@ -1,17 +1,8 @@
 # 交易所手续费
 
-### 手续费补贴活动1个月，截止到8月15日
-### 后续手续费会根据交易量划分阶梯
+* 手续费补贴活动1个月，截止到8月15日!
+* 后续手续费会根据交易量划分阶梯
 
-
-<style type="text/css">
-.tg  {border-collapse:collapse;border-spacing:0;}
-.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
-.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
-.tg .tg-2ktp{font-size:16px;vertical-align:top}
-.tg .tg-lymx{font-size:16px;border-color:inherit}
-.tg .tg-4s2o{font-size:16px;border-color:inherit;vertical-align:top}
-</style>
 <table class="tg">
   <tr>
     <th class="tg-2ktp"></th>
