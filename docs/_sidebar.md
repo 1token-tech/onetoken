@@ -17,6 +17,7 @@
 * 交易所
   * [概览](/exchange-overview)
   * [交易所的详细介绍](/exchange-details)
+  * [1Token手续费](/exchange-fees)
 
 * API介绍
   * [Restful API](/api-refer/rest-api)
