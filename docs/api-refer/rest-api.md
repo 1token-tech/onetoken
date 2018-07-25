@@ -1,17 +1,12 @@
 # RESTful API
 
-1Token 所有的API(包括websocket和REST) 都是以下面这两个前缀之一开头的, 这两个前缀提供完全一致的API接口, 唯一的区别是一个是直连香港阿里云, 一个是通过cloudflare的CDN 您可以选择不同的前缀来满足您不同的需求
+1Token 所有的API(包括websocket和REST) 都是以`https://1token.trade/api/v1/` 开头的
 
-举个例子, 如果您的服务器在国内, 我们推荐您使用 `https://1token.trade/api/v1/` 来通过CDN连接 1Token。 这样可以避免网络的抖动。
-如果您的服务器在海外, 而且直连香港阿里云比较稳定, 我们推荐您使用 `https://api.1token.trade/v1/` 来直接连接1Token的服务器
-  
-  * `https://api.1token.trade/v1/`  (direct to aliyun)  
-  * `https://1token.trade/api/v1/`  (through cloudflare CDN)
 
 ### API 的详细swagger说明请参考
-* [Swagger Basic API](https://1token.trade/r/swagger?url=/r/swagger/quote.yml)
-* [Swagger Quote API](https://1token.trade/r/swagger?url=/r/swagger/quote.yml)
-* [Swagger Trade API](https://1token.trade/r/swagger?url=/r/swagger/trade.yml)
+* [Swagger Basic API](https://1token.trade/swagger?url=/swagger/quote.yml)
+* [Swagger Quote API](https://1token.trade/swagger?url=/swagger/quote.yml)
+* [Swagger Trade API](https://1token.trade/swagger?url=/swagger/trade.yml)
 
 ## 基本信息
 
@@ -25,7 +20,7 @@
 * min_notional 下单的最小资产 （ price * amount )
 * symbol 交易对的唯一标示  ${exchange}/${currency}.${underlying}
 
-详细api请参考 [基本信息API](https://1token.trade/r/swagger?url=/r/swagger/basic.yml)
+详细api请参考 [基本信息API](https://1token.trade/swagger?url=/r/swagger/basic.yml)
 
 
 ## 行情API
@@ -37,7 +32,7 @@
 * 单个交易所当前的tick
 * 单个交易所单个合约当前的tick
 
-API的详细介绍 请参考 [行情 Swagger API](https://1token.trade/r/swagger?url=/r/swagger/quote.yml)
+API的详细介绍 请参考 [行情 Swagger API](https://1token.trade/swagger?url=/swagger/quote.yml)
 
 
 
@@ -103,16 +98,15 @@ def gen_sign(secret, verb, path, nonce, data=None):
         assert isinstance(data, dict)
         # server并不要求data_str按key排序，只需此处用来签名的data_str和所发送请求中的data相同即可，是否排序请按实际情况选择
         data_str = json.dumps(data, sort_keys=True)
-        # data_str=data_str.replace(' ','')
     parsed_url = urllib.parse.urlparse(path)
     parsed_path = parsed_url.path
 
     message = verb + parsed_path + str(nonce) + data_str
     signature = hmac.new(bytes(secret, 'utf8'), bytes(message, 'utf8'), digestmod=hashlib.sha256).hexdigest()
-    print(f'nonce:\n{nonce}')
-    print(f'parsed_path:\n{parsed_path}')
-    print(f'data_str:\n{data_str}')
-    print(f'message:\n{message}')
+    print('nonce:', nonce)
+    print('parsed_path:', parsed_path)
+    print('data_str:', data_str)
+    print('message:', message)
     return signature
 
 
@@ -174,7 +168,7 @@ if __name__ == '__main__':
 * 对某个账号进行提现
 
 
-详情请参考 [交易 Swagger API](https://1token.trade/r/swagger?url=/r/swagger/trade.yml)
+详情请参考 [交易 Swagger API](https://1token.trade/swagger?url=/swagger/trade.yml)
 
 
 ## 历史数据API
