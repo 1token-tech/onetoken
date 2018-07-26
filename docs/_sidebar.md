@@ -28,5 +28,4 @@
   * [获取历史行情](/more/historical-data)
   * [添加IP白名单](/more/ip-white-list)
   * [Change log](/more/change-log)
-  * [Alpha Zone](/more/alpha-zone)
 
