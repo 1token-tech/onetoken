@@ -90,6 +90,22 @@
 * api 不支持开仓和平仓的选择 每次下单前会检查是否有足够仓位可以平仓 如果有的话 会尝试平仓，如果仓位不够平仓 则会主动开仓
   * 例子 如果现在持有2张多头 请求 sell 1张 则会去平掉这一张
   * 例子 如果现在持有2张多头 请求 sell 3张 则会开出3张空单
+* API用户需要在配置文件中配置interest_con,建议不超过6个,否则会收到交易所访问频率过高的错误,以下是配置文件的示例:
+
+    ```json
+      {
+        "account": "example",
+        "exchange": "okef",
+        "interest_con": [
+          "btc.usd.t",
+          "btc.usd.q",
+          "eth.usd.t",
+          "eth.usd.q",
+          "eos.usd.t",
+          "eos.usd.q"
+        ]
+      }
+    ```
 
 ## Poloniex
 
