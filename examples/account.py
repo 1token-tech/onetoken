@@ -11,7 +11,7 @@ demo_args = {
     'OT_KEY': '',
     'OT_SECRET': '',
     'account': 'mock/test',
-    'conract': 'mock/test',
+    'contract': 'mock/test',
 }
 
 
