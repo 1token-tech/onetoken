@@ -5,7 +5,7 @@ import os
 
 import onetoken as ot
 import yaml
-from onetoken import Account, log
+from onetoken import Account, log, util
 
 demo_args = {
     'OT_KEY': '',
