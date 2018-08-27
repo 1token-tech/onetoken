@@ -1,8 +1,8 @@
 import asyncio
 import logging
-import aiohttp
 import os
 
+import aiohttp
 import onetoken as ot
 import yaml
 from onetoken import Account, log, util
@@ -10,8 +10,8 @@ from onetoken import Account, log, util
 demo_args = {
     'OT_KEY': '',
     'OT_SECRET': '',
-    'account': 'mock/test',
-    'contract': 'mock/test',
+    'account': 'huobip/mock-demo',
+    'contract': 'huobip/btc.usdt',
 }
 
 
@@ -49,123 +49,125 @@ async def main():
             ot_secret = input('ot-secret: ')
             account = input('account: ')
     acc = Account(account, ot_key, ot_secret)
-    await asyncio.sleep(5)
     log.info('Initialized account {}'.format(account))
 
     # 获取账号 info
     info, err = await acc.get_info()
     if err:
-        log.warning('Get info failed...', err)
+        log.warning('Get info failed.', err)
     else:
         log.info(f'Account info: {info.data}')
 
-    # 根据 pos symbol 获取账号 amount
+    # 根据 pos_symbol 获取账号持仓数量
     # 现货类似 btc, bch
     # 期货类似 btc.usd.q
-    currency = 'btc'
-    amount = info.get_total_amount(currency)
-    log.info(f'Amount: {amount} {currency}')
+    pos_symbol = 'btc'
+    amount = info.get_total_amount(pos_symbol)
+    log.info(f'Amount: {amount} {pos_symbol}')
 
-    # 获取当前开放的 orders
-    p_list, err = await acc.get_order_list()
+    contract_symbol_1 = 'huobip/btc.usdt'
+    contract_symbol_2 = 'huobip/eth.usdt'
+
+    # 下单
+    order_1, err = await acc.place_order(con=contract_symbol_1, price=20000, bs='s', amount=0.01)
     if err:
-        log.warning('Get pending list failed...', err)
+        log.warning('Place order failed.', err)
+    else:
+        log.info(f'New order: {order_1}')
+
+    client_oid = util.rand_client_oid(contract_symbol_2)  # client oid 为预设下单 id，方便策略后期跟踪
+    log.info(f'Random client_oid: {client_oid}')
+
+    order_2, err = await acc.place_order(con=contract_symbol_2, price=10000, bs='s', amount=1.3, client_oid=client_oid)
+    if err:
+        log.warning('Place order failed.', err)
+    else:
+        log.info(f'New order: {order_2}')
+
+    # 根据contract和state获取订单列表, 此处获取的是active状态的订单列表
+    o_list, err = await acc.get_order_list(contract=contract_symbol_1, state='active')
+    if err:
+        log.warning('Get active order list failed.', err)
+    else:
+        log.info(f'Active order list: {o_list}')
+
+    # 用get_pending_list方法可以更快捷地获取active状态的订单列表
+    p_list, err = await acc.get_pending_list(contract=contract_symbol_2)
+    if err:
+        log.warning('Get pending list failed.', err)
     else:
         log.info(f'Pending list: {p_list}')
-    #
-    # # 获取指定 order 的 info
-    # o_info_2, err = await acc.get_order_use_exchange_oid('huobip/qtum.usdt-1786556131')
-    # if err:
-    #     log.warning('Get order info failed...', err)
-    # else:
-    #     log.info(f'Order information by exchange_oid: {o_info_2}')
-    #
-    # await asyncio.sleep(5)
-    #
-    # # 下单
-    # contract_symbol = 'huobip/btc.usdt'
-    # contract_symbol_2 = 'huobip/iost.usdt'
-    #
-    # coid = util.rand_client_oid(contract_symbol)  # client oid 为预设下单 id，方便策略后期跟踪
-    # order_1, err = await acc.place_order(con=contract_symbol, price=20000, bs='s', amount=0.01)
-    # if err:
-    #     log.warning('Place order failed...', err)
-    # else:
-    #     log.info(f'New order: {order_1}')
-    # await asyncio.sleep(0.5)
-    #
-    # order_2, err = await acc.place_order(con=contract_symbol_2, price=10000, bs='s', amount=1.3)
-    # if err:
-    #     log.warning('Place order failed...', err)
-    # else:
-    #     log.info(f'New order: {order_2}')
-    # await asyncio.sleep(3)
-    #
-    # # 获取指定 order 的 info
-    # o_info_1, err = await acc.get_order_use_client_oid(order_1['client_oid'])
-    # if err:
-    #     log.warning('Get order info failed...', err)
-    # else:
-    #     log.info(f'Order information by client_oid: {o_info_1}')
-    #
-    # o_info_2, err = await acc.get_order_use_exchange_oid(order_2['exchange_oid'])
-    # if err:
-    #     log.warning('Get order info failed...', err)
-    # else:
-    #     log.info(f'Order information by exchange_oid: {o_info_2}')
-    #
-    # # 获取当前开放的 orders
-    # p_list, err = await acc.get_order_list()
-    # if err:
-    #     log.warning('Get pending list failed...', err)
-    # else:
-    #     log.info(f'Pending list: {p_list}')
-    #
-    # # 撤单
-    # res, err = await acc.cancel_use_client_oid(order_1['client_oid'])
-    # if err:
-    #     log.warning('cancel order failed...', err)
-    # else:
-    #     log.info(f'Canceled order: {res}')
-    # res, err = await acc.cancel_use_exchange_oid(order_2['exchange_oid'])
-    # if err:
-    #     log.warning('cancel order failed...', err)
-    # else:
-    #     log.info(f'Canceled order: {res}')
-    #
-    # # add more orders
-    # order_more, err = await acc.place_order(con=contract_symbol, price=20000, bs='s', amount=0.1)
-    # if err:
-    #     log.warning('Place order failed...', err)
-    # else:
-    #     log.info(f'New order: {order_more}')
-    # order_more, err = await acc.place_order(con=contract_symbol_2, price=20000, bs='s', amount=1.2)
-    # if err:
-    #     log.warning('Place order failed...', err)
-    # else:
-    #     log.info(f'New order: {order_more}')
 
-    # # # 测试cancel_all 谨慎调用!
-    # # await acc.cancel_all()
-    # # p_list, err = await acc.get_order_list()
-    # # if err:
-    # #     log.warning('Get pending list failed...', err)
-    # # else:
-    # #     log.info(f'Pending list: {p_list}')
-    #
-    # # 测试place_and_cancel
-    # res, err = await acc.place_and_cancel(con=contract_symbol, price=20000, bs='s', amount=0.01, sleep=2)
-    # if err:
-    #     log.warning('cancel order failed...', err)
-    # else:
-    #     log.info(f'Placed and canceled order: {res}')
-    #
-    # # 获取当前开放的 orders
-    # p_list, err = await acc.get_order_list()
-    # if err:
-    #     log.warning('Get pending list failed...', err)
-    # else:
-    #     log.info(f'Pending list: {p_list}')
+    exchange_oid_1 = order_1['exchange_oid']
+    exchange_oid_2 = order_2['exchange_oid']
+
+    # 通过exchange_oid获取order_1的订单详情
+    o_info_1, err = await acc.get_order_use_exchange_oid(exchange_oid_1)
+    if err:
+        log.warning('Get order info by exchange_oid failed.', err)
+    else:
+        log.info(f'Order info by exchange_oid: {o_info_1}')
+
+    # 可以输入多个exchange_oid并且用逗号分割,以实现批量查询
+    o_info_bulk, err = await acc.get_order_use_exchange_oid(','.join([exchange_oid_1, exchange_oid_2]))
+    if err:
+        log.warning('Get order info by exchange_oid failed.', err)
+    else:
+        log.info(f'Order info by exchange_oid: {o_info_bulk}')
+
+    # 通过client_oid获取order_2的订单详情
+    o_info_2, err = await acc.get_order_use_client_oid(client_oid)
+    if err:
+        log.warning('Get order info by client_oid failed.', err)
+    else:
+        log.info(f'Order info by client_oid: {o_info_2}')
+
+    # 通过exchange_oid撤单
+    res, err = await acc.cancel_use_exchange_oid(exchange_oid_1)
+    if err:
+        log.warning('Cancel order by exchange_oid failed.', err)
+    else:
+        log.info(f'Canceled order by exchange_oid: {res}')
+
+    # 通过client_oid撤单
+    res, err = await acc.cancel_use_client_oid(client_oid)
+    if err:
+        log.warning('Cancel order by client_oid failed.', err)
+    else:
+        log.info(f'Canceled order by client_oid: {res}')
+
+    # 根据contract和state获取历史订单列表
+    o_list, err = await acc.get_order_list(contract=contract_symbol_1, state='end')
+    if err:
+        log.warning('Get order history failed.', err)
+    else:
+        log.info(f'Order history: {o_list}')
+    o_list, err = await acc.get_order_list(contract=contract_symbol_2, state='end')
+    if err:
+        log.warning('Get order history failed.', err)
+    else:
+        log.info(f'Order history: {o_list}')
+
+    # 继续下单
+    order_more, err = await acc.place_order(con=contract_symbol_1, price=20000, bs='s', amount=0.1)
+    if err:
+        log.warning('Place order failed.', err)
+    else:
+        log.info(f'New order: {order_more}')
+
+    # 下单收到返回后撤单
+    res, err = await acc.place_and_cancel(con=contract_symbol_1, price=20000, bs='s', amount=0.01, sleep=2)
+    if err:
+        log.warning('Place and cancel order failed.', err)
+    else:
+        log.info(f'Place and cancel order result: {res}')
+
+    # 撤掉指定contract的所有订单
+    res, err = await acc.cancel_all(contract=contract_symbol_1)
+    if err:
+        log.warning('Cancel all orders failed.', err)
+    else:
+        log.info(f'Cancel all orders result: {res}')
 
     acc.close()
 
