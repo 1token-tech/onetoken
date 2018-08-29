@@ -48,6 +48,6 @@ def unzip_and_read(path):
 
 if __name__ == '__main__':
     # this file size is about 3.5MB
-    # download('okex/btc.usdt', '2018-01-02')
+    download('okex/btc.usdt', '2018-01-02')
 
     unzip_and_read('examples/tick-2018-01-02-okex-btc.usdt.gz')
