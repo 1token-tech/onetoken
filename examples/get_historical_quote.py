@@ -5,6 +5,7 @@ git clone https://github.com/1token-trade/onetoken
 cd onetoken
 python examples/get_historical_quote.py
 """
+import random
 
 import requests
 import gzip
@@ -33,19 +34,20 @@ def download(contract, date):
 def unzip_and_read(path):
     data = open(path, 'rb').read()
     r = gzip.decompress(data).decode()
-    cnt = 0
-    for line in r.splitlines():
+    total = len(r.splitlines())
+    print('total', total, 'ticks')
+    print('--------this script will print randomly ticks--------------')
+    for i, line in enumerate(r.splitlines()):
         try:
             tick = json.loads(line)
-            cnt += 1
-            if cnt < 10:
-                print(tick)
+            if random.random() < 0.001:
+                print('{}/{}'.format(i, total), tick)
         except:
             pass
 
 
 if __name__ == '__main__':
     # this file size is about 3.5MB
-    download('okex/btc.usdt', '2018-01-02')
+    # download('okex/btc.usdt', '2018-01-02')
 
     unzip_and_read('examples/tick-2018-01-02-okex-btc.usdt.gz')
