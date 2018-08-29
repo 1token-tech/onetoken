@@ -12,17 +12,19 @@ import gzip
 import json
 
 
-def get_contracts():
-    r = requests.get('http://alihz-net-0.qbtrade.org/contracts?date=2018-01-02')
+def get_contracts(date):
+    url = 'http://alihz-net-0.qbtrade.org/contracts?date={}'.format(date)
+    r = requests.get(url)
     print('----------available contracts------------')
-    print(r.json()[:10])
+    print('total size', len(r.json()))
+    print('first 10 contracts', r.json()[:10])
 
 
 def download(contract, date):
     url = 'http://alihz-net-0.qbtrade.org/hist-ticks?date={}&contract={}'.format(date, contract)
     print('downloading', url)
     r = requests.get(url, stream=True)
-    block_size = 100 * 1024
+    block_size = 300 * 1024
     total = 0
     with open('examples/tick-{}-{}.gz'.format(date, contract.replace('/', '-')), 'wb') as f:
         for data in r.iter_content(block_size):
@@ -40,14 +42,16 @@ def unzip_and_read(path):
     for i, line in enumerate(r.splitlines()):
         try:
             tick = json.loads(line)
-            if random.random() < 0.001:
+            if random.random() < 0.0001:
                 print('{}/{}'.format(i, total), tick)
         except:
             pass
 
 
 if __name__ == '__main__':
-    # this file size is about 3.5MB
-    download('okex/btc.usdt', '2018-01-02')
+    date = '2018-02-02'
+    get_contracts(date)
 
-    unzip_and_read('examples/tick-2018-01-02-okex-btc.usdt.gz')
+    download('huobip/btc.usdt', '2018-02-02')  # this file size is around 15MB
+
+    unzip_and_read('examples/tick-2018-02-02-huobip-btc.usdt.gz')
