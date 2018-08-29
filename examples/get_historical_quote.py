@@ -36,10 +36,10 @@ def unzip_and_read(path):
     cnt = 0
     for line in r.splitlines():
         try:
-            js = json.loads(line)
+            tick = json.loads(line)
             cnt += 1
             if cnt < 10:
-                print(js)
+                print(tick)
         except:
             pass
 
