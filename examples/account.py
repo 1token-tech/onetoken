@@ -21,15 +21,16 @@ def load_api_key_secret():
         try:
             js = yaml.load(open(path).read())
             if 'ot_key' in js:
-                return js['ot_key'], js['ot_secret'], js['account']
-            return js['api_key'], js['api_secret'], js['account']
+                return js['ot_key'], js['ot_secret']
+            return js['api_key'], js['api_secret']
         except:
             log.exception('failed load api key/secret')
-    return None, None, None
+    return None, None
 
 
 async def main():
-    ot_key, ot_secret, account = load_api_key_secret()
+    ot_key, ot_secret = load_api_key_secret()
+    account = demo_args['account']
     if ot_key is None or ot_secret is None:
         file_path = '~/.onetoken/config.yml'
         try:
@@ -37,17 +38,18 @@ async def main():
             if 'ot_key' in config:
                 ot_key = config['ot_key']
                 ot_secret = config['ot_secret']
-                account = config['account']
+                account = demo_args['account']
             else:
                 ot_key = config['api_key']
                 ot_secret = config['api_secret']
-                account = config['account']
+                account = demo_args['account']
         except:
             print('file not found: ', os.path.expanduser(file_path))
             print('input manually:')
             ot_key = input('ot-key: ')
             ot_secret = input('ot-secret: ')
             account = input('account: ')
+    log.info('new account', account, ot_key[:5], ot_secret[:5])
     acc = Account(account, ot_key, ot_secret)
     log.info('Initialized account {}'.format(account))
 
@@ -55,6 +57,7 @@ async def main():
     info, err = await acc.get_info()
     if err:
         log.warning('Get info failed.', err)
+        return
     else:
         log.info(f'Account info: {info.data}')
 
