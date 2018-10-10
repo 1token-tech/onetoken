@@ -177,4 +177,7 @@ if __name__ == '__main__':
     print('ots folder', ot)
     print('ots version', ot.__version__)
     print('aiohttp version', aiohttp.__version__)
+    # change host example, only for advanced user.
+    # DO NOT use it when your server is in China
+    # ot.Config.change_host('1token.trade/api/', 'api.1token.trade/')
     asyncio.get_event_loop().run_until_complete(main())
