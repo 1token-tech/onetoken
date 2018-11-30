@@ -54,12 +54,12 @@ def read(path):
 
 
 def main():
-    date = '2018-02-02'
+    date = '2018-07-01'
     get_contracts(date)
 
-    download('huobip/btc.usdt', '2018-11-25')  # this file size is around 15MB
+    download('huobip/btc.usdt', '2018-07-01')  # this file size is around 15MB
 
-    read('zhubi-2018-11-25-huobip-btc.usdt.gz')
+    read('zhubi-2018-07-01-huobip-btc.usdt.gz')
 
 
 if __name__ == '__main__':
