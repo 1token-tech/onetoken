@@ -6,14 +6,20 @@ cd onetoken
 python examples/get_historical_quote.py
 """
 import random
-
 import requests
-import gzip
 import json
+import gzip
 
 
-def get_contracts(date):
-    url = 'http://hist-quote.1tokentrade.cn/contracts?date={}'.format(date)
+#已申请的ot-key
+headers = {
+    'ot-key': ''
+}
+
+
+def get_contracts(date, quote_type):
+    url = 'http://hist-quote.1tokentrade.cn/{}/contracts?date={}'.format(quote_type, date)
+    print('get contracts: ', url)
     r = requests.get(url, timeout=5)
     if r.status_code != 200:
         print('fail get contracts', r.status_code, r.text)
@@ -22,44 +28,93 @@ def get_contracts(date):
     print('first 10 contracts', r.json()[:10])
 
 
-def download(contract, date):
-    url = 'http://hist-quote.1tokentrade.cn/hist-ticks?date={}&contract={}'.format(date, contract)
+def download(url, file_path):
     print('downloading', url)
-    r = requests.get(url, stream=True)
+    r = requests.get(url, headers=headers, stream=True)
     if r.status_code != 200:
-        print('fail get historical tick', r.status_code, r.text)
+        print('fail get historical data', r.status_code, r.text)
         return
     block_size = 300 * 1024
     total = 0
-    with open('tick-{}-{}.gz'.format(date, contract.replace('/', '-')), 'wb') as f:
+    with open(file_path, 'wb') as f:
         for data in r.iter_content(block_size):
             f.write(data)
             total += len(data) / 1024
-            print('{} {} downloaded {}kb'.format(contract, date, round(total)))
+            print('downloaded {}kb'.format(round(total)))
 
 
-def unzip_and_read(path):
+def download_simple_ticks(contract, date, file_path):
+    url = 'http://hist-quote.1tokentrade.cn/ticks/simple?date={}&contract={}'.format(date, contract)
+    download(url, file_path)
+
+
+def download_full_ticks(contract, date, file_path):
+    url = 'http://hist-quote.1tokentrade.cn/ticks/full?date={}&contract={}'.format(date, contract)
+    download(url, file_path)
+
+
+def download_zhubis(contract, date, file_path):
+    url = 'http://hist-quote.1tokentrade.cn/trades/?date={}&contract={}'.format(date, contract)
+    download(url, file_path)
+
+
+def download_and_print_candles(contract, since, until, duration):
+    #support format: json & csv, default json
+    url = 'http://hist-quote.1tokentrade.cn/candles/?since={}&until={}&contract={}&duration={}&format=json'.format(
+        since, until, contract, duration)
+    print('downloading', url)
+    r = requests.get(url, headers=headers)
+    if r.status_code != 200:
+        print('fail get candles', r.status_code, r.text)
+        return
+    r = r.json()
+    total = len(r)
+    print('total', total, 'data')
+    print('--------this script will print randomly data--------------')
+    for i, candle in enumerate(r):
+        if random.random() < 0.01:
+            print('{}/{}'.format(i, total), json.dumps(candle))
+
+
+def unzip_and_read(path, rate):
     data = open(path, 'rb').read()
     r = gzip.decompress(data).decode()
     total = len(r.splitlines())
-    print('total', total, 'ticks')
-    print('--------this script will print randomly ticks--------------')
+    print('total', total, 'data')
+    print('--------this script will print randomly data--------------')
     for i, line in enumerate(r.splitlines()):
         try:
-            tick = json.loads(line)
-            if random.random() < 0.0001:
-                print('{}/{}'.format(i, total), tick)
+            if random.random() < rate:
+                print('{}/{}'.format(i, total), line)
         except:
             pass
 
 
 def main():
-    date = '2018-02-02'
-    get_contracts(date)
+    date = '2018-11-11'
+    contract = 'okex/eos.eth'
 
-    download('huobip/btc.usdt', '2018-02-02')  # this file size is around 15MB
+    #simple tick
+    get_contracts(date, 'ticks')
+    file_path = 'tick-simple-{}-{}.gz'.format(date, contract.replace('/', '-'))
+    download_simple_ticks(contract, date, file_path)
+    unzip_and_read('tick-simple-2018-11-11-okex-eos.eth.gz', 0.0001)
 
-    unzip_and_read('tick-2018-02-02-huobip-btc.usdt.gz')
+    # #full tick
+    # file_path = 'tick-full-{}-{}.gz'.format(date, contract.replace('/', '-'))
+    # download_full_ticks(contract, date, file_path)
+    # unzip_and_read('tick-full-2018-11-11-okex-eos.eth.gz', 0.0001)
+
+    # #zhubi
+    # get_contracts(date, 'trades')
+    # file_path = 'zhubi-{}-{}.gz'.format(date, contract.replace('/', '-'))
+    # download_zhubis(contract, date, file_path)
+    # unzip_and_read('zhubi-2018-11-11-okex-eos.eth.gz', 0.001)
+
+    #candle
+    # since = date
+    # until = '2018-11-12'
+    # download_and_print_candles(contract, since, until, '1m')
 
 
 if __name__ == '__main__':
