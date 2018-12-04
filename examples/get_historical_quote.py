@@ -54,13 +54,13 @@ def download_full_ticks(contract, date, file_path):
 
 
 def download_zhubis(contract, date, file_path):
-    url = 'http://hist-quote.1tokentrade.cn/trades/?date={}&contract={}'.format(date, contract)
+    url = 'http://hist-quote.1tokentrade.cn/trades?date={}&contract={}'.format(date, contract)
     download(url, file_path)
 
 
 def download_and_print_candles(contract, since, until, duration):
     #support format: json & csv, default json
-    url = 'http://hist-quote.1tokentrade.cn/candles/?since={}&until={}&contract={}&duration={}&format=json'.format(
+    url = 'http://hist-quote.1tokentrade.cn/candles?since={}&until={}&contract={}&duration={}&format=json'.format(
         since, until, contract, duration)
     print('downloading', url)
     r = requests.get(url, headers=headers)
