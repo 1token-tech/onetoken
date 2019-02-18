@@ -172,6 +172,38 @@ async def main():
     else:
         log.info(f'Cancel all orders result: {res}')
 
+    res, err = await acc.cancel_all(contract=contract_symbol_2)
+    if err:
+        log.warning('Cancel all orders failed.', err)
+    else:
+        log.info(f'Cancel all orders result: {res}')
+
+    # 从交易所获取指定contract的成交单 dealt transactions
+    res, err = await acc.get_dealt_trans(con=contract_symbol_1)
+    if err:
+        log.warning('Get dealt trans list failed.', err)
+    else:
+        log.info(f'Dealt trans list  result: {res}')
+
+    # 从db获取指定contract的成交单 trans_list
+    res, err = await acc.get_dealt_trans_from_db(con=contract_symbol_1)
+    if err:
+        log.warning('Get dealt trans list from db failed.', err)
+    else:
+        log.info(f'Dealt trans list from db result: {res}')
+
+    # 根据contract和state从db获取历史订单列表
+    o_list, err = await acc.get_order_list_from_db(contract=contract_symbol_1, state='end')
+    if err:
+        log.warning('Get order history from db failed.', err)
+    else:
+        log.info(f'Order history from db: {o_list}')
+    o_list, err = await acc.get_order_list_from_db(contract=contract_symbol_2, state='end')
+    if err:
+        log.warning('Get order history from db failed.', err)
+    else:
+        log.info(f'Order history from db: {o_list}')
+
     acc.close()
 
 
