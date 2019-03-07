@@ -8,13 +8,10 @@ python examples/get_historical_quote.py
 import random
 import requests
 import json
+import yaml
 import gzip
-
-
-#已申请的ot-key
-headers = {
-    'ot-key': ''
-}
+import os
+import logging
 
 
 def get_contracts(date, quote_type):
@@ -30,7 +27,7 @@ def get_contracts(date, quote_type):
 
 def download(url, file_path):
     print('downloading', url)
-    r = requests.get(url, headers=headers, stream=True)
+    r = requests.get(url, headers={'ot-key': ot_key}, stream=True)
     if r.status_code != 200:
         print('fail get historical data', r.status_code, r.text)
         return
@@ -63,7 +60,7 @@ def download_and_print_candles(contract, since, until, duration):
     url = 'http://hist-quote.1tokentrade.cn/candles?since={}&until={}&contract={}&duration={}&format=json'.format(
         since, until, contract, duration)
     print('downloading', url)
-    r = requests.get(url, headers=headers)
+    r = requests.get(url, headers={'ot-key': ot_key})
     if r.status_code != 200:
         print('fail get candles', r.status_code, r.text)
         return
@@ -88,6 +85,19 @@ def unzip_and_read(path, rate):
                 print('{}/{}'.format(i, total), line)
         except:
             pass
+
+
+def load_otkey():
+    path = os.path.expanduser('~/.onetoken/config.yml')
+    if os.path.isfile(path):
+        try:
+            js = yaml.load(open(path).read())
+            if 'ot_key' in js:
+                return js['ot_key']
+            return js['api_key']
+        except:
+            logging.exception('failed load otkey')
+    return None, None
 
 
 def main():
@@ -118,4 +128,5 @@ def main():
 
 
 if __name__ == '__main__':
+    ot_key = load_otkey()
     main()
