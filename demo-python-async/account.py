@@ -210,8 +210,8 @@ async def main():
 
 if __name__ == '__main__':
     ot.log_level(logging.INFO)
-    print('ots folder', ot)
-    print('ots version', ot.__version__)
+    print('1token folder', ot)
+    print('1token version', ot.__version__)
     print('aiohttp version', aiohttp.__version__)
     # change host example, only for advanced user.
     # DO NOT use it when your server is in China
