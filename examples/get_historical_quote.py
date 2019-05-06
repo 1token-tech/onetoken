@@ -15,7 +15,7 @@ import logging
 
 
 def get_contracts(date, quote_type):
-    url = 'http://hist-quote.1tokentrade.cn/{}/contracts?date={}'.format(quote_type, date)
+    url = 'https://hist-quote.1tokentrade.cn/{}/contracts?date={}'.format(quote_type, date)
     print('get contracts: ', url)
     r = requests.get(url, timeout=5)
     if r.status_code != 200:
@@ -41,23 +41,23 @@ def download(url, file_path):
 
 
 def download_simple_ticks(contract, date, file_path):
-    url = 'http://hist-quote.1tokentrade.cn/ticks/simple?date={}&contract={}'.format(date, contract)
+    url = 'https://hist-quote.1tokentrade.cn/ticks/simple?date={}&contract={}'.format(date, contract)
     download(url, file_path)
 
 
 def download_full_ticks(contract, date, file_path):
-    url = 'http://hist-quote.1tokentrade.cn/ticks/full?date={}&contract={}'.format(date, contract)
+    url = 'https://hist-quote.1tokentrade.cn/ticks/full?date={}&contract={}'.format(date, contract)
     download(url, file_path)
 
 
 def download_zhubis(contract, date, file_path):
-    url = 'http://hist-quote.1tokentrade.cn/trades?date={}&contract={}'.format(date, contract)
+    url = 'https://hist-quote.1tokentrade.cn/trades?date={}&contract={}'.format(date, contract)
     download(url, file_path)
 
 
 def download_and_print_candles(contract, since, until, duration):
-    #support format: json & csv, default json
-    url = 'http://hist-quote.1tokentrade.cn/candles?since={}&until={}&contract={}&duration={}&format=json'.format(
+    # support format: json & csv, default json
+    url = 'https://hist-quote.1tokentrade.cn/candles?since={}&until={}&contract={}&duration={}&format=json'.format(
         since, until, contract, duration)
     print('downloading', url)
     r = requests.get(url, headers={'ot-key': ot_key})
@@ -104,24 +104,24 @@ def main():
     date = '2018-11-11'
     contract = 'okex/eos.eth'
 
-    #simple tick
+    # simple tick
     get_contracts(date, 'ticks')
     file_path = 'tick-simple-{}-{}.gz'.format(date, contract.replace('/', '-'))
     download_simple_ticks(contract, date, file_path)
     unzip_and_read('tick-simple-2018-11-11-okex-eos.eth.gz', 0.0001)
 
-    # #full tick
+    # full tick
     # file_path = 'tick-full-{}-{}.gz'.format(date, contract.replace('/', '-'))
     # download_full_ticks(contract, date, file_path)
     # unzip_and_read('tick-full-2018-11-11-okex-eos.eth.gz', 0.0001)
 
-    # #zhubi
+    # zhubi
     # get_contracts(date, 'trades')
     # file_path = 'zhubi-{}-{}.gz'.format(date, contract.replace('/', '-'))
     # download_zhubis(contract, date, file_path)
     # unzip_and_read('zhubi-2018-11-11-okex-eos.eth.gz', 0.001)
 
-    #candle
+    # candle
     # since = date
     # until = '2018-11-12'
     # download_and_print_candles(contract, since, until, '1m')
