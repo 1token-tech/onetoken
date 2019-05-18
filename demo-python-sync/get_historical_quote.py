@@ -67,10 +67,9 @@ def download_and_print_candles(contract, since, until, duration):
     r = r.json()
     total = len(r)
     print('total', total, 'data')
-    print('--------this script will print randomly data--------------')
+    print('--------this script will print all  data--------------')
     for i, candle in enumerate(r):
-        if random.random() < 0.01:
-            print('{}/{}'.format(i, total), json.dumps(candle))
+        print('{}/{}'.format(i, total), json.dumps(candle))
 
 
 def unzip_and_read(path, rate):
@@ -78,11 +77,10 @@ def unzip_and_read(path, rate):
     r = gzip.decompress(data).decode()
     total = len(r.splitlines())
     print('total', total, 'data')
-    print('--------this script will print randomly data--------------')
+    print('--------this script will print all data--------------')
     for i, line in enumerate(r.splitlines()):
         try:
-            if random.random() < rate:
-                print('{}/{}'.format(i, total), line)
+            print('{}/{}'.format(i, total), line)
         except:
             pass
 
