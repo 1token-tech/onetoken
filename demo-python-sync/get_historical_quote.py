@@ -95,7 +95,7 @@ def load_otkey():
             return js['api_key']
         except:
             logging.exception('failed load otkey')
-    return None, None
+    return input('input your otkey: ')
 
 
 def main():
