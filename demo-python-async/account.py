@@ -10,8 +10,8 @@ from onetoken import Account, log, util
 demo_args = {
     'OT_KEY': '',
     'OT_SECRET': '',
-    'account': 'huobip/mock-demo',
-    'contract': 'huobip/btc.usdt',
+    'account': 'okef/mock',
+    'contract': 'okef/btc.usd.q',
 }
 
 
@@ -26,6 +26,18 @@ def load_api_key_secret():
         except:
             log.exception('failed load api key/secret')
     return None, None
+
+
+async def sub_order_demo():
+    acc = Account(demo_args['account'], demo_args['OT_KEY'], demo_args['OT_SECRET'])
+    await acc.cancel_all()
+    async def on_order(order):
+        print('order snapshot arriving', order)
+    await acc.subscribe_orders(on_order)
+    await asyncio.sleep(2) # sleep for a while, waiting for websocket connected.
+    res, err = await acc.place_order(demo_args['contract'], 10000, 'b', 1)
+    print('place order success', res, err)
+    await asyncio.sleep(999)
 
 
 async def main():
