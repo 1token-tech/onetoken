@@ -30,6 +30,7 @@ def download(url, file_path):
     r = requests.get(url, headers={'ot-key': ot_key}, stream=True)
     if r.status_code != 200:
         print('fail get historical data', r.status_code, r.text)
+        print('failed ot-key', ot_key[:5], ot_key[-5:], len(ot_key))
         return
     block_size = 300 * 1024
     total = 0
