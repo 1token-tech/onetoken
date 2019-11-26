@@ -3,18 +3,19 @@ Usage:
     quote_tick_v3.py [options]
 
 Options:
-    --print-only-delay     Print only delay tick
-    --test  test cases
+    --print-only-delay     Print only delayed tick
+
 """
-import json
-from collections import defaultdict
-import time
 import _thread as thread
-import queue
+import json
+import logging
+from collections import defaultdict
+
 import arrow
+import queue
+import time
 import websocket
 from websocket import ABNF
-import logging
 
 
 class Quote:
@@ -31,28 +32,12 @@ class Quote:
         self.is_running = False
 
     def ws_connect(self):
-        logging.debug('Connecting to {}'.format(self.ws_url))
-        sleep_seconds = 2
-        while True:
-            try:
-                if self.ws:
-                    self.ws.close()
-                self.ws = websocket.WebSocketApp(self.ws_url,
-                                                 on_open=self.on_open,
-                                                 on_data=self.on_data,
-                                                 on_error=self.on_error,
-                                                 on_close=self.on_close)
-            except Exception as e:
-                try:
-                    self.ws.close()
-                except:
-                    logging.exception('close ws fail')
-                self.ws = None
-                logging.warning('try connect to %s failed, sleep for %s seconds...' % (self.ws_url, sleep_seconds), e)
-                time.sleep(sleep_seconds)
-                sleep_seconds = min(sleep_seconds * 2, 64)
-            else:
-                break
+        print('Connecting to {}'.format(self.ws_url))
+        self.ws = websocket.WebSocketApp(self.ws_url,
+                                         on_open=self.on_open,
+                                         on_data=self.on_data,
+                                         on_error=self.on_error,
+                                         on_close=self.on_close)
         self.ws.run_forever()
 
     def send_message(self, message):
@@ -117,6 +102,8 @@ class Quote:
             logging.warning('msg error...', e)
 
     def on_open(self):
+        print('on open')
+
         def run():
             self.pong = time.time()
             self.heart_beat_loop()
@@ -144,6 +131,7 @@ class Quote:
         :param error:
         :return: None
         """
+        print('on error')
         logging.exception(error)
 
     def on_close(self):
@@ -151,8 +139,9 @@ class Quote:
         websocket 关闭的回调
         :return: None
         """
+        print('on close')
         self.authorized = False
-        logging.info("### websocket closed ###")
+        print("### websocket closed ###")
 
     def subscribe_data(self, uri, on_update=None, **kwargs):
         logging.info('subscribe', uri, **kwargs)
@@ -270,7 +259,7 @@ class TickV3Quote(Quote):
                 self.ticks[c] = tick
                 return q_key, tick
         except Exception as e:
-            logging.warning('parse error', e, data)
+            logging.exception('parse error', e, data)
         return None, None
 
     def subscribe_tick_v3(self, contract, on_update):
@@ -356,7 +345,6 @@ class Tick:
 
 class Config:
     print_only_delay = False
-    test = False
 
 
 def on_update_1(tk: Tick):
@@ -419,5 +407,4 @@ if __name__ == '__main__':
 
     docopt = docoptinit(__doc__)
     Config.print_only_delay = docopt['--print-only-delay']
-    Config.test = docopt['--test']
     main()
