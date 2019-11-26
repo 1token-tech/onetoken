@@ -236,11 +236,6 @@ class TickV3Quote(Quote):
             et = arrow.get(data['et']) if 'et' in data else None
             tp = data['tp']
             q_key = json.dumps({'contract': c, 'uri': self.channel}, sort_keys=True)
-            if len(data['b']) > 0 and len(data['a']) > 0:
-                bid1, _ = data['b'][0]
-                ask1, _ = data['a'][0]
-                if bid1 >= ask1:
-                    logging.warning('bid1 >= ask1 %s %s', bid1, ask1)
             if tp == 's':
                 bids = [{'price': p, 'volume': v} for p, v in data['b']]
                 asks = [{'price': p, 'volume': v} for p, v in data['a']]
@@ -366,6 +361,9 @@ class Config:
 
 def on_update_1(tk: Tick):
     delay = (arrow.now() - tk.time).total_seconds()
+    if tk.bid1 and tk.ask1:
+        if tk.bid1 >= tk.ask1:
+            logging.warning('bid1 >= ask1 %s %s', tk.bid1, tk.ask1)
     if delay > 10:
         logging.warning('tick delay comes')
         print(arrow.now(), 'tick come 1', delay, tk)
@@ -375,6 +373,9 @@ def on_update_1(tk: Tick):
 
 def on_update_2(tk: Tick):
     delay = (arrow.now() - tk.time).total_seconds()
+    if tk.bid1 and tk.ask1:
+        if tk.bid1 >= tk.ask1:
+            logging.warning('bid1 >= ask1 %s %s', tk.bid1, tk.ask1)
     if delay > 10:
         logging.warning('tick delay comes')
         print(arrow.now(), 'tick come 2', delay, tk)
