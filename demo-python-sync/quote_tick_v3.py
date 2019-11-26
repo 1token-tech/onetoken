@@ -61,7 +61,7 @@ class Quote:
             while self.ws and self.ws.keep_running:
                 try:
                     if time.time() - self.pong > 20:
-                        logging.warning('connection heart beat lost')
+                        print('connection heart beat lost')
                         self.ws.close()
                         break
                     else:
@@ -83,23 +83,23 @@ class Quote:
                 if uri == 'pong':
                     self.pong = arrow.now().timestamp
                 elif uri == 'auth':
-                    logging.info(data)
+                    print(data)
                     self.authorized = True
                 elif uri == 'subscribe-single-tick-verbose':
-                    logging.info(data)
+                    print(data)
                 elif uri == 'subscribe-single-zhubi-verbose':
-                    logging.info(data)
+                    print(data)
                 elif uri == 'subscribe-single-candle':
-                    logging.info(data)
+                    print(data)
                 else:
                     q_key, parsed_data = self.data_parser(data)
                     if q_key is None:
-                        logging.warning('unknown message', data)
+                        print('unknown message', data)
                         return
                     if q_key in self.data_queue:
                         self.data_queue[q_key].put(parsed_data)
         except Exception as e:
-            logging.warning('msg error...', e)
+            print('msg error...', e)
 
     def on_open(self):
         print('on open')
@@ -112,11 +112,11 @@ class Quote:
             while not self.authorized and time.time() - wait_for_auth < 5:
                 time.sleep(0.1)
             if not self.authorized:
-                logging.warning('wait for auth success timeout')
+                print('wait for auth success timeout')
                 self.ws.close()
             q_keys = list(self.queue_handlers.keys())
             if q_keys:
-                logging.info('recover subscriptions', q_keys)
+                print('recover subscriptions', q_keys)
                 for q_key in q_keys:
                     sub_data = json.loads(q_key)
                     self.subscribe_data(**sub_data)
@@ -131,8 +131,7 @@ class Quote:
         :param error:
         :return: None
         """
-        print('on error')
-        logging.exception(error)
+        print('on error', error)
 
     def on_close(self):
         """
@@ -144,7 +143,7 @@ class Quote:
         print("### websocket closed ###")
 
     def subscribe_data(self, uri, on_update=None, **kwargs):
-        logging.info('subscribe', uri, **kwargs)
+        print('subscribe', uri, **kwargs)
         while not self.ws or not self.ws.keep_running or not self.authorized:
             time.sleep(1)
         sub_data = {'uri': uri}
@@ -153,14 +152,14 @@ class Quote:
         with self.lock:
             try:
                 self.send_json(sub_data)
-                logging.info('sub data', sub_data)
+                print('sub data', sub_data)
                 if q_key not in self.data_queue:
                     self.data_queue[q_key] = queue.Queue()
                     if on_update:
                         if not self.queue_handlers[q_key]:
                             self.handle_q(q_key)
             except Exception as e:
-                logging.warning('subscribe {} failed...'.format(kwargs), e)
+                print('subscribe {} failed...'.format(kwargs))
             else:
                 if on_update:
                     self.queue_handlers[q_key].append(on_update)
@@ -172,7 +171,7 @@ class Quote:
                 try:
                     tk = q.get()
                 except:
-                    logging.warning('get data from queue failed')
+                    print('get data from queue failed')
                     continue
                 for callback in self.queue_handlers[q_key]:
                     try:
@@ -193,7 +192,7 @@ class Quote:
                 self.ws_connect()
 
         if self.is_running:
-            logging.warning('ws is already running')
+            print('ws is already running')
         else:
             self.is_running = True
             thread.start_new_thread(_run, ())
@@ -233,7 +232,7 @@ class TickV3Quote(Quote):
                 return q_key, tick
             elif tp == 'd':
                 if c not in self.ticks:
-                    logging.warning('update arriving before snapshot', self.channel, data)
+                    print('update arriving before snapshot' + str(self.channel) + str(data))
                     return None, None
                 tick = self.ticks[c].copy()
 
@@ -259,7 +258,8 @@ class TickV3Quote(Quote):
                 self.ticks[c] = tick
                 return q_key, tick
         except Exception as e:
-            logging.exception('parse error', e, data)
+            print('fail', data, e, type(e))
+            logging.exception('parse error')
         return None, None
 
     def subscribe_tick_v3(self, contract, on_update):
@@ -351,9 +351,9 @@ def on_update_1(tk: Tick):
     delay = (arrow.now() - tk.time).total_seconds()
     if tk.bid1 and tk.ask1:
         if tk.bid1 >= tk.ask1:
-            logging.warning('bid1 >= ask1 %s %s', tk.bid1, tk.ask1)
+            print('bid1 >= ask1 %s %s', tk.bid1, tk.ask1)
     if delay > 10:
-        logging.warning('tick delay comes')
+        print('tick delay comes')
         print(arrow.now(), 'tick come 1', delay, tk)
     if not Config.print_only_delay:
         print(arrow.now(), 'tick come 1', delay, tk, len(tk.bids), len(tk.asks))
@@ -363,9 +363,9 @@ def on_update_2(tk: Tick):
     delay = (arrow.now() - tk.time).total_seconds()
     if tk.bid1 and tk.ask1:
         if tk.bid1 >= tk.ask1:
-            logging.warning('bid1 >= ask1 %s %s', tk.bid1, tk.ask1)
+            print('bid1 >= ask1 %s %s', tk.bid1, tk.ask1)
     if delay > 10:
-        logging.warning('tick delay comes')
+        print('tick delay comes')
         print(arrow.now(), 'tick come 2', delay, tk)
     if not Config.print_only_delay:
         print(arrow.now(), 'tick come 2', delay, tk)
