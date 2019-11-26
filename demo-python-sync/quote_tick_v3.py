@@ -356,7 +356,7 @@ def on_update_1(tk: Tick):
         logging.warning('tick delay comes')
         print(arrow.now(), 'tick come 1', delay, tk)
     if not Config.print_only_delay:
-        print(arrow.now(), 'tick come 1', delay, tk)
+        print(arrow.now(), 'tick come 1', delay, tk, len(tk.bids), len(tk.asks))
 
 
 def on_update_2(tk: Tick):
@@ -371,7 +371,26 @@ def on_update_2(tk: Tick):
         print(arrow.now(), 'tick come 2', delay, tk)
 
 
-def subscribe_from_ws():
+def main_single():
+    """
+    订阅一个交易对
+    :return:
+    """
+    tick_v3 = TickV3Quote()
+    tick_v3.run()
+    sub_list = ['binance/btc.usdt']
+    for contract in sub_list:
+        tick_v3.subscribe_tick_v3(contract, on_update_1)
+
+    time.sleep(20)
+    tick_v3.close()
+
+
+def main_multiple():
+    """
+    订阅多个交易对
+    :return:
+    """
     tick_v3 = TickV3Quote()
     tick_v3.run()
     sub_list = ['okex/ltc.btc', 'okex/bch.btc']
@@ -384,15 +403,7 @@ def subscribe_from_ws():
     contract = 'binance/eth.btc'
     tick_v3.subscribe_tick_v3(contract, on_update_2)
     time.sleep(20)
-    logging.warning('i am going to test reconnect')
-    time.sleep(1)
-    tick_v3.ws.close()
-    time.sleep(20)
     tick_v3.close()
-
-
-def main():
-    subscribe_from_ws()
 
 
 if __name__ == '__main__':
@@ -407,4 +418,4 @@ if __name__ == '__main__':
 
     docopt = docoptinit(__doc__)
     Config.print_only_delay = docopt['--print-only-delay']
-    main()
+    main_single()
