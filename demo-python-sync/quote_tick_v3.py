@@ -143,7 +143,7 @@ class Quote:
         print("### websocket closed ###")
 
     def subscribe_data(self, uri, on_update=None, **kwargs):
-        print('subscribe', uri, **kwargs)
+        print('subscribe', uri, kwargs)
         while not self.ws or not self.ws.keep_running or not self.authorized:
             time.sleep(1)
         sub_data = {'uri': uri}
