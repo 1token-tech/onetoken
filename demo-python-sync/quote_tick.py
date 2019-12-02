@@ -122,7 +122,7 @@ class Quote:
 
 
 def main():
-    q = Quote(contract=['okef/btc.usd.q', 'binance/btc.usdt', 'huobip/btc.usdt'])
+    q = Quote(contract=['okef/eos.usd.q', 'binance/btc.usdt', 'huobip/btc.usdt'])
     q.run()
 
 
