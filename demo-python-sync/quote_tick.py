@@ -1,20 +1,16 @@
+import gzip
 import json
 import logging
-import random
-from typing import List
 
 import arrow
 import threading
 import time
-import gzip
 import websocket
+from typing import List
 from websocket import ABNF
 
-sz = 0
-start = arrow.now()
 
-
-class QuoteV2:
+class Quote:
     def __init__(self, contract: List):
         self.ws_url = 'wss://1token.trade/api/v1/ws/tick'
         self.ws = None
@@ -56,14 +52,9 @@ class QuoteV2:
                 else:
                     self.send_json({'uri': 'ping'})
             except:
-                logging.exception('failed')
+                logging.exception('unexpected failed')
 
     def on_data(self, msg, msg_type, *args):
-        global sz
-        sz += (len(msg))
-        tm = (arrow.now() - start).total_seconds()
-        if random.random() < 0.01:
-            print(sz / tm / 1000, 'kb/s')
         try:
             if msg_type == ABNF.OPCODE_BINARY or msg_type == ABNF.OPCODE_TEXT:
                 if msg_type == ABNF.OPCODE_TEXT:
@@ -81,10 +72,11 @@ class QuoteV2:
                     pass
                 else:
                     print('unhandled', data)
-        except Exception as e:
-            logging.exception('failed', e)
+        except:
+            logging.exception('unexpected failed')
 
     def on_open(self):
+        print('connected on open')
         self.pong = time.time()
         threading.Thread(target=self.heart_beat_loop).start()
 
@@ -130,7 +122,7 @@ class QuoteV2:
 
 
 def main():
-    q = QuoteV2(contract=['okex/btc.usdt', 'binance/btc.usdt', 'huobip/btc.usdt'])
+    q = Quote(contract=['okef/btc.usd.q', 'binance/btc.usdt', 'huobip/btc.usdt'])
     q.run()
 
 
