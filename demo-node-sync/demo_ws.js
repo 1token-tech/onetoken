@@ -31,8 +31,9 @@ class AutoWS{
             this.pingpongCheck(this.socket)
         }
         this.socket.onmessage=(e)=>{
-            if(e.data.uri==='pong') this.pong=true
-            else this.handler&&this.handler(JSON.parse(e.data))
+            let data=JSON.parse(e.data)
+            if(data.uri==='pong') this.pong=true
+            else this.handler&&this.handler(data)
         }
         this.socket.onclose=(e)=>{
             this.status='closed'
