@@ -32,6 +32,8 @@ def download(url, file_path):
         print('fail get historical data', r.status_code, r.text)
         print('failed ot-key', ot_key[:5], ot_key[-5:], len(ot_key))
         return
+    print('quota-remaining:', r.headers.get('ot-quota-remaining'),
+          'quota-consumption:', r.headers.get('ot-quota-consumption'))
     block_size = 300 * 1024
     total = 0
     with open(file_path, 'wb') as f:
@@ -110,23 +112,23 @@ def main():
     get_contracts(date, 'ticks')
     file_path = 'data/tick-simple-{}-{}.gz'.format(date, contract.replace('/', '-'))
     download_simple_ticks(contract, date, file_path)
-    unzip_and_read(file_path)
-
-    # full tick
-    file_path = 'data/tick-full-{}-{}.gz'.format(date, contract.replace('/', '-'))
-    download_full_ticks(contract, date, file_path)
-    unzip_and_read(file_path)
-
-    # trades
-    get_contracts(date, 'trades')
-    file_path = 'data/trades-{}-{}.gz'.format(date, contract.replace('/', '-'))
-    download_zhubis(contract, date, file_path)
-    unzip_and_read(file_path)
-
-    # candle
-    since = date
-    until = '2019-12-13'
-    download_and_print_candles(contract, since, until, '1m')
+    # unzip_and_read(file_path)
+    #
+    # # full tick
+    # file_path = 'data/tick-full-{}-{}.gz'.format(date, contract.replace('/', '-'))
+    # download_full_ticks(contract, date, file_path)
+    # unzip_and_read(file_path)
+    #
+    # # trades
+    # get_contracts(date, 'trades')
+    # file_path = 'data/trades-{}-{}.gz'.format(date, contract.replace('/', '-'))
+    # download_zhubis(contract, date, file_path)
+    # unzip_and_read(file_path)
+    #
+    # # candle
+    # since = date
+    # until = '2019-12-13'
+    # download_and_print_candles(contract, since, until, '1m')
 
 
 if __name__ == '__main__':
