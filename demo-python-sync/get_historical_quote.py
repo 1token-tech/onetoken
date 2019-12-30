@@ -5,13 +5,13 @@ git clone https://github.com/1token-trade/onetoken
 cd onetoken
 python examples/get_historical_quote.py
 """
-import random
-import requests
-import json
-import yaml
 import gzip
-import os
+import json
 import logging
+import os
+
+import requests
+import yaml
 
 
 def get_contracts(date, quote_type):
@@ -73,10 +73,12 @@ def download_and_print_candles(contract, since, until, duration):
         print('{}/{}'.format(i, total), json.dumps(candle))
 
 
-def unzip_and_read(path, rate):
+def unzip_and_read(path):
     data = open(path, 'rb').read()
     r = gzip.decompress(data).decode()
     total = len(r.splitlines())
+    csvpath = path.replace('.gz', '.csv')
+    open(csvpath, 'w').write(r)
     print('total', total, 'data')
     print('--------this script will print all data--------------')
     for i, line in enumerate(r.splitlines()):
@@ -100,30 +102,31 @@ def load_otkey():
 
 
 def main():
-    date = '2018-11-11'
+    os.makedirs('data', exist_ok=True)
+    date = '2019-12-12'
     contract = 'okex/eos.eth'
 
     # simple tick
     get_contracts(date, 'ticks')
-    file_path = 'tick-simple-{}-{}.gz'.format(date, contract.replace('/', '-'))
+    file_path = 'data/tick-simple-{}-{}.gz'.format(date, contract.replace('/', '-'))
     download_simple_ticks(contract, date, file_path)
-    unzip_and_read('tick-simple-2018-11-11-okex-eos.eth.gz', 0.0001)
+    unzip_and_read(file_path)
 
     # full tick
-    # file_path = 'tick-full-{}-{}.gz'.format(date, contract.replace('/', '-'))
-    # download_full_ticks(contract, date, file_path)
-    # unzip_and_read('tick-full-2018-11-11-okex-eos.eth.gz', 0.0001)
+    file_path = 'data/tick-full-{}-{}.gz'.format(date, contract.replace('/', '-'))
+    download_full_ticks(contract, date, file_path)
+    unzip_and_read(file_path)
 
-    # zhubi
-    # get_contracts(date, 'trades')
-    # file_path = 'zhubi-{}-{}.gz'.format(date, contract.replace('/', '-'))
-    # download_zhubis(contract, date, file_path)
-    # unzip_and_read('zhubi-2018-11-11-okex-eos.eth.gz', 0.001)
+    # trades
+    get_contracts(date, 'trades')
+    file_path = 'data/trades-{}-{}.gz'.format(date, contract.replace('/', '-'))
+    download_zhubis(contract, date, file_path)
+    unzip_and_read(file_path)
 
     # candle
-    # since = date
-    # until = '2018-11-12'
-    # download_and_print_candles(contract, since, until, '1m')
+    since = date
+    until = '2019-12-13'
+    download_and_print_candles(contract, since, until, '1m')
 
 
 if __name__ == '__main__':
