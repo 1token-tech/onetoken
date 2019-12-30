@@ -104,7 +104,10 @@ def load_otkey():
 
 
 def main():
-    os.makedirs('data', exist_ok=True)
+    try:
+        os.makedirs('data')
+    except:
+        pass
     date = '2019-12-12'
     contract = 'okex/eos.eth'
 
