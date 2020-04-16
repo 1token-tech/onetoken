@@ -13,6 +13,10 @@ import os
 import requests
 import yaml
 
+# change ot key to your own otkey
+# https://1token.trade/account/apis
+OT_KEY = 'aaaaa-bbbbb-ccccc-ddddd'
+
 
 def get_contracts(date, quote_type):
     url = 'https://hist-quote.1tokentrade.cn/{}/contracts?date={}'.format(quote_type, date)
@@ -63,13 +67,15 @@ def download_and_print_candles(contract, since, until, duration):
     url = 'https://hist-quote.1tokentrade.cn/candles?since={}&until={}&contract={}&duration={}&format=json'.format(
         since, until, contract, duration)
     print('downloading', url)
-    r = requests.get(url, headers={'ot-key': ot_key})
-    if r.status_code != 200:
-        print('fail get candles', r.status_code, r.text)
+    resp = requests.get(url, headers={'ot-key': ot_key})
+    if resp.status_code != 200:
+        print('fail get candles', resp.status_code, resp.text)
         return
-    r = r.json()
+    r = resp.json()
     total = len(r)
     print('total', total, 'data')
+    print('quota-remaining:', resp.headers.get('ot-quota-remaining'),
+          'quota-consumption:', resp.headers.get('ot-quota-consumption'))
     print('--------this script will print all  data--------------')
     for i, candle in enumerate(r):
         print('{}/{}'.format(i, total), json.dumps(candle))
@@ -91,6 +97,8 @@ def unzip_and_read(path):
 
 
 def load_otkey():
+    if OT_KEY != 'aaaaa-bbbbb-ccccc-ddddd':
+        return OT_KEY
     path = os.path.expanduser('~/.onetoken/config.yml')
     if os.path.isfile(path):
         try:
@@ -112,9 +120,9 @@ def main():
     contract = 'okex/eos.eth'
 
     # simple tick
-    get_contracts(date, 'ticks')
-    file_path = 'data/tick-simple-{}-{}.gz'.format(date, contract.replace('/', '-'))
-    download_simple_ticks(contract, date, file_path)
+    # get_contracts(date, 'ticks')
+    # file_path = 'data/tick-simple-{}-{}.gz'.format(date, contract.replace('/', '-'))
+    # download_simple_ticks(contract, date, file_path)
     # unzip_and_read(file_path)
     #
     # # full tick
@@ -129,9 +137,9 @@ def main():
     # unzip_and_read(file_path)
     #
     # # candle
-    # since = date
-    # until = '2019-12-13'
-    # download_and_print_candles(contract, since, until, '1m')
+    since = date
+    until = '2019-12-13'
+    download_and_print_candles(contract, since, until, '1m')
 
 
 if __name__ == '__main__':
