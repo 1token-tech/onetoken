@@ -13,8 +13,9 @@ import os
 import requests
 import yaml
 
-# change ot key to your own otkey
+# 把下面的OT Key换成自己的OT Key, 申请方法如下
 # https://1token.trade/account/apis
+# https://1token.trade/dataservice
 OT_KEY = 'aaaaa-bbbbb-ccccc-ddddd'
 
 
@@ -139,7 +140,7 @@ def main():
     # # candle
     since = date
     until = '2019-12-13'
-    download_and_print_candles(contract, since, until, '1m')
+    download_and_print_candles(contract, since, '2020-10-10', '1m')
 
 
 if __name__ == '__main__':
