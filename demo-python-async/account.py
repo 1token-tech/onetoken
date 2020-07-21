@@ -80,9 +80,9 @@ async def main():
     amount = info.get_total_amount(pos_symbol)
     log.info(f'Amount: {amount} {pos_symbol}')
 
-    #测试用交易对，命名规则为 平台标识符/交易对(contract)
-    contract_symbol_1 = 'huobip/btc.usdt'
-    contract_symbol_2 = 'huobip/eth.usdt'
+    # 测试用交易对，命名规则为 平台标识符/交易对(contract) 'huobip/btc.usdt'
+    contract_symbol_1 = demo_args['contract']
+    contract_symbol_2 = demo_args['contract']
 
     # 下单
     order_1, err = await acc.place_order(con=contract_symbol_1, price=20000, bs='s', amount=0.01)
