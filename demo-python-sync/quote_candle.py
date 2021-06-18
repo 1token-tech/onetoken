@@ -117,13 +117,13 @@ class Quote:
         thread.start_new_thread(run, ())
 
     @staticmethod
-    def on_error(error):
+    def on_error(error, msg):
         """
         websocket 发生错误的回调
         :param error:
         :return: None
         """
-        print('on error', error)
+        print('on error', error, msg)
 
     def on_close(self):
         """
